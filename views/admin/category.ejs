@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>add category</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h3 {
+            font-size: 24px;
+            margin-bottom: 35px;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"] {
+            width: 50%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            font-size: 10px;
+        }
+
+        li {
+            margin: 5px 0;
+           
+        }
+
+        h4 {
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
+</head>
+
+  
+<body>
+    <div class="container">
+        <h3>Add Category</h3>
+
+        <div class="form-container">
+            <form action="/admin/addcategory" method="post">
+                <label for="category">Enter the new category:</label>
+                <input type="text" name="category" id="category" placeholder="New category" required>
+                <button type="submit">ADD</button>
+            </form>
+
+            <div>
+                <h3>Available categories are:</h3>
+
+                <ul>
+                    <% categories.forEach(function(categoryItem) { %>
+                        <li><h4><%= categoryItem.category %></h4></li>
+                    <% }); %>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <style>
+        /* General styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Header styles */
+        header {
+            background-color: #65c3f5;
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        /* Navigation styles */
+        nav {
+            background-color: #444;
+            color: #fff;
+            text-align: center;
+        }
+
+        /* Navigation container and item styles */
+        .nav-container {
+            display: flex;
+            justify-content: space-evenly;
+            padding: 10px 0;
+        }
+
+        .nav-item {
+            flex: 1;
+            text-align: center;
+        }
+
+        .nav-item a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 10px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* Button hover effect */
+        .nav-item a:hover {
+            background-color: #555;
+            color: red;
+        }
+
+        /* Main content container */
+        main {
+            padding: 20px;
+        }
+
+        /* Sample content styles */
+        .content {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Admin Panel</h1>
+    </header>
+    <nav>
+        <div class="nav-container">
+            <div class="nav-item"><a href="/admin/users">Users</a></div>
+            <div class="nav-item"><a href="/admin/products">Products</a></div>
+            <div class="nav-item"><a href="/admin/addproducts">AddProducts</a></div>
+            <div class="nav-item"><a href="/admin/category">Category</a></div>
+            <div class="nav-item"><a href="/admin/logout">Logout</a></div>
+        </div>
+    </nav>
+    <main>
+        <div class="content">
+            <!-- Your admin panel content goes here -->
+            <h2>Welcome to  Admin Panel</h2>
+            <p>This is my page for  my admin  </p>
+        </div>
+        
+    </main>
+</body>
+</html>
+
+
+
+
+

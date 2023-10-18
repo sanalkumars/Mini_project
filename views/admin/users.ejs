@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>user details</title>
+    <style>
+        table{
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: aqua;
+        }
+        h1{
+            background-color: rgb(22, 233, 78);
+            display: flex;
+            justify-content: center;
+        }
+        .tab{
+            display: flex;
+            justify-content: center;
+        }
+         td {
+      padding: 12px 15px;
+      text-align: center;
+    }
+        td a {
+      display: inline-block;
+      text-decoration: none;
+      padding: 5px 10px;
+      background-color: #007bff;
+      color: #fff;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+    
+    td a:hover{
+        background-color: rgb(242, 136, 7);
+    }
+    
+    </style>
+</head>
+<body>
+    <!-- users.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Data</title>
+</head>
+<body>
+    <h1>User Data</h1>
+  <div>
+    <form action="/admin/search" method="GET">
+        <input type="text" id="search" name="search" placeholder="Search..." required>
+        <button type="submit">Search</button>
+    </form>
+</div>
+    <h4><%=locals.msg%></h4> <h4><%=locals.searchQuery%></h4>
+
+   <div id="tab">
+    <table>
+        <thead>
+            <tr>
+                <th>user_id</th>
+                <th>Name</th>
+                <th>Email</th>
+                 <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% users.forEach(users => { %>
+                <tr id="trrow">
+                    <td><%=users._id %></td>
+                    <td><%= users.name %></td>
+                    <td><%= users.email %></td>
+                    <td>
+                        <a href="/admin/block/<%= users._id %>">block</a>
+                        <a href="/admin/unblock/<%=users._id %>">unblock</a>
+                    </td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
+
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>products</title>
+    <style>
+        table{
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: aqua;
+        }
+        h1{
+            background-color: rgb(22, 233, 78);
+            display: flex;
+            justify-content: center;
+        }
+        .tab{
+            display: flex;
+            justify-content: center;
+        }
+         td {
+      padding: 12px 15px;
+      text-align: center;
+    }
+        td a {
+      display: inline-block;
+      text-decoration: none;
+      padding: 5px 10px;
+      background-color: #007bff;
+      color: #fff;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+    
+    td a:hover{
+        background-color: rgb(242, 136, 7);
+    }
+    #delete{
+        margin-top: 10px;
+    }
+    
+    </style>
+</head>
+<body>
+    <!-- products.ejs -->
+
+
+<body>
+    <h1>Products</h1>
+     <div>
+        <a href="/admin/add"> Add Products</a>
+     </div>
+
+   <div id="tab">
+    <table>
+        <thead>
+            <tr>
+                <th>product_image</th>
+                <th>Aditional images</th>
+                <th>Product Name</th>
+                <th>Category</th>
+                <th>Description</th>
+                <th>Status</th>
+                 <th>Price</th>
+                 <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% product.forEach(product => { %>
+                <tr id="trrow">
+                    <td><img src="/uploads/<%=product.image %> " width="50px" height="50px" alt="<%= product.name %>"></td>
+                    <td>
+                        <% product.additionalimages.forEach(function(image) { %>
+                          <img src="/uploads/<%= image %>" width="20px" height="20px" alt="<%= product.name %>">
+                        <% }); %>
+                      </td>
+                    <td><%= product.name %></td>
+                    <td><%= product.category %></td>
+                    <td><%= product.description%></td>
+                    <td><%= product.status %></td>
+                    <td> <%=product.price %> </td>
+                    <td> <%=product.quantity %> </td>
+                   <td>
+                    <a href="/admin/editproducts/<%= product.id %>">Edit</a><br>
+                    <a href="/admin/delete/<%= product.id %>" id="delete">Delete</a>
+                </td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
+

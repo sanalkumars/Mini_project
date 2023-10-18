@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP</title>
+</head>
+<style>
+     body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        .otp-container {
+            background-color: #8e7943;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+           
+            width: 300px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        h3 {
+            font-size: 24px;
+            color: #333;
+        }
+        h2 {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+        }
+        .form-group {
+            margin: 10px 0;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin: 0 auto;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            color: #fff;
+        }
+        #message {
+            color: #ff0000;
+        }
+</style>
+<body>
+
+<!-- <h3>Enter the OTP for signing Up</h3>
+
+<div class="otp-container">
+    <h2>Verify OTP</h2>
+    <form action="/verifyOTP" method="post" onsubmit="return validateOTP()">
+        <div class="form-group">
+            <label for="otp">Enter OTP</label>
+            <p id="message"><%= locals.msg %></p>
+            <input type="text" id="otp" name="otp" required>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Submit OTP</button>
+        </div>
+    </form>
+    <div class="form-group">
+        <button type="submit" id="resendOTP" class="btn btn-secondary" disabled>Resend OTP</button>
+        <span id="countdown"></span>
+    </div>
+</div> -->
+<h3>Enter the OTP for Signing Up</h3>
+<div class="otp-container">
+    <h2>Verify OTP</h2>
+    <form action="/verifyOTP" method="post" onsubmit="return validateOTP()">
+        <div class="form-group">
+            <label for="otp">Enter OTP</label>
+            <p id="message"><%= locals.msg %></p>
+            <input type="text" id="otp" name="otp" required>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Submit OTP</button>
+        </div>
+    </form>
+    <div class="form-group">
+        <button type="submit" id="resendOTP" class="btn btn-secondary" disabled>Resend OTP</button>
+        <span id="countdown"></span>
+    </div>
+</div>
+
+
+
+
+
+ <!-- script for validating the otp form -->
+<script>
+    
+    function validateOTP() {
+        const otpInput = document.getElementById("otp");
+        const message = document.getElementById("message");
+        const otpValue = otpInput.value;
+
+        
+        if (!otpValue.match(/^\d+$/)) {
+            message.innerText = "OTP must contain only numeric characters.";
+            return false;
+        } else {
+            message.innerText = "";
+            return true;
+        }
+    }
+</script>
+
+
+
+
+<script>
+    let timer;                      
+        let countdown = 60; 
+
+        function startCountdown() {
+            timer = setInterval(function() {
+                countdown--;
+                if (countdown >= 0) {
+                    const minutes = Math.floor(countdown / 60).toString().padStart(2, '0');
+                    const seconds = (countdown % 60).toString().padStart(2, '0');
+                    document.getElementById('countdown').textContent =`${minutes}:${seconds}`;
+                }
+                if (countdown === 0) {
+                    clearInterval(timer);
+                    document.getElementById('resendOTP').disabled = false;
+                    document.getElementById('resendOTP').classList.remove('btn-secondary');
+                    document.getElementById('resendOTP').classList.add('btn-primary');
+                }
+            }, 1000);
+        }
+
+        document.getElementById('resendOTP').addEventListener('click', function() {
+           
+            const generatedOTP = Math.floor(1000 + Math.random() * 900000); 
+            console.log(`Generated OTP: ${generatedOTP}`
+            );
+            
+           
+            countdown = 60;
+            startCountdown();
+
+            
+            this.disabled = true;
+            this.classList.remove('btn-primary');
+            this.classList.add('btn-secondary');
+
+            fetch('/resendOTP', {method: "POST"})
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById("message").innerText = data.msg;
+                }).catch(err => {
+                    document.getElementById("message").innerText = "An error occured.";
+                });
+        });
+
+        startCountdown();
+</script>
+
+
+
+</body>
+</html>

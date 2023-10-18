@@ -1,0 +1,41 @@
+.container.w-25.border.py-5{
+    margin-top: 100px;
+    background-color:slategrey;
+     
+  }
+  
+  .btn.btn-success.rounded-pill{
+    margin-top: 25px;
+  }
+  
+  #span{
+    font-size: .8rem;   
+  }
+
+
+  /*adding styles for the admin dash board*/
+
+  /* Style for the navigation menu */
+nav ul {
+  list-style: none; 
+  padding: 0;
+  margin: 0;
+  display: flex; 
+  align-items: center;
+  justify-content: center;
+}
+
+nav li {
+  margin-right: 20px; /* Add some spacing between navigation items */
+}
+
+nav a {
+  text-decoration: none;
+  color: #333; /* Set the link color */
+  font-weight: bold; 
+}
+
+
+nav a:hover {
+  color: #007bff; /* Change the link color on hover */
+}
