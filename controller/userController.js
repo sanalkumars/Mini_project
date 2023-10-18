@@ -102,6 +102,7 @@ function generateOTP(recipientEmail){
 const loginPost = async(req,res)=>{
  console.log("madara");
      try{
+      console.log('hello');
         const check = await userData.findOne({email:req.body.email})
 
         const recipientEmail=check.email
