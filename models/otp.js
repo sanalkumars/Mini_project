@@ -2,7 +2,7 @@ const mongoose = require("mongoose")
 
 const otpSchema = new mongoose.Schema({
     otp :{
-        type:number,
+        type:Number,
         required:true
     },
     createdAT: { type: Date, default: Date.now, index: { expires: 60 } }

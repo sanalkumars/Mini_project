@@ -55,5 +55,6 @@ router.get("/category",adminController.getCategory)
 router.get("/logout",adminController.logout)
 router.post("/addcategory",adminController.addCategory)
 
-
+// route for getting user order
+router.get("/orderManagement",adminController.getUserOrder)
 module.exports = router

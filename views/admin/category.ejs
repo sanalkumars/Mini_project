@@ -77,6 +77,7 @@
 
   
 <body>
+    <%- include("../partials/adminHeader.ejs") %>
     <div class="container">
         <h3>Add Category</h3>
 
@@ -88,6 +89,7 @@
             </form>
 
             <div>
+                <h3> <%=locals.msg %></h3>
                 <h3>Available categories are:</h3>
 
                 <ul>

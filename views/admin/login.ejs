@@ -19,7 +19,7 @@
                 <span id="span">Log for admin</span>
             </div>
             <h6> <%= locals.msg %></h6> 
-            <form  class="pt-3" action="/admin/login" method="post">
+            <form  class="pt-3" action="/admin/login" method="post" onsubmit="return validateForm()">
                 <div class="form-group">
                     
                     <input type="text" class="form-control" placeholder="username" name="username" required>
@@ -36,5 +36,38 @@
         </div>
         
         </div>
-</body>
+
+
+        <script>
+            // Function to perform client-side validation
+            function validateForm() {
+               
+                const username = document.querySelector('input[name="username"]').value;
+                const password = document.querySelector('input[name="password"]').value;
+        
+                // Perform client side validation
+                if (username === "") {
+                    alert("Please enter a username.");
+                    return false;
+                }
+        
+                if (password === "") {
+                    alert("Please enter a password.");
+                    return false;
+                }
+        
+                return true;
+            }
+        
+           
+            document.querySelector('form').addEventListener('submit', function(event) {
+            if (!validateForm()) {
+                event.preventDefault(); 
+            }
+        });
+        
+        </script>
+        
+        
+</body> 
 </html>

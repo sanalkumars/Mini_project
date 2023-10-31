@@ -8,6 +8,7 @@ mongoose.connect("mongodb://127.0.0.1:27017/BE_FIT")
     console.log("failed to connect to mongodb");
 })
 
+
 const loginSchema = new mongoose.Schema({
  name:{
        type: String,
@@ -27,6 +28,7 @@ const loginSchema = new mongoose.Schema({
         type:Boolean,
         dafault:false
     },
+   
 
 })
 

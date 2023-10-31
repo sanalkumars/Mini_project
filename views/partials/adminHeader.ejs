@@ -1,0 +1,45 @@
+
+<style>
+      nav {
+            background-color: #444;
+            color: #fff;
+            text-align: center;
+        }
+
+        /* Navigation container and item styles */
+        .nav-container {
+            display: flex;
+            justify-content: space-evenly;
+            padding: 10px 0;
+        }
+.nav-item {
+    flex: 1;
+    text-align: center;
+}
+
+.nav-item a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 10px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Button hover effect */
+.nav-item a:hover {
+    background-color: #555;
+    color: red;
+}
+</style>
+
+<nav>
+    <div class="nav-container">
+        <div class="nav-item"><a href="/admin/dashboard">Home</a></div>
+        <div class="nav-item"><a href="/admin/users">Users</a></div>
+        <div class="nav-item"><a href="/admin/products">Products</a></div>
+        <div class="nav-item"><a href="/admin/addproducts">AddProducts</a></div>
+        <div class="nav-item"><a href="/admin/category">Category</a></div>
+        <div class="nav-item"><a href="/admin/orderManagement">Order Management</a></div>
+        <div class="nav-item"><a href="/admin/logout">Logout</a></div>
+    </div>
+</nav>

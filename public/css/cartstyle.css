@@ -1,0 +1,35 @@
+.card {
+    border: 1px solid #ccc;
+    width: 300px;
+    margin: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+.card-image {
+    max-width: 100%;
+    height: auto;
+}
+
+.card-content {
+    padding: 15px;
+}
+
+.product-name {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.product-description {
+    margin-top: 10px;
+}
+
+.product-quantity {
+    margin-top: 10px;
+}
+
+.product-price {
+    font-size: 18px;
+    font-weight: bold;
+    color: #ff5733;
+    margin-top: 10px;
+}

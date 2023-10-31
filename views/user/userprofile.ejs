@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+    *{
+        font-family: sans-serif;
+    }
+    #username{
+        font-size: large;
+        font-weight: 600;
+    }
+    .h6head{
+        font-size: 18px;
+    }
+   
+   
+    </style>
+</head>
+<body style="background-color: blanchedalmond; ">
+    <%- include("../partials/header.ejs") -%>
+
+
+<div class="container-fluid p-0 min-vh-100" style="margin-top: 1%;">
+  
+        <div class="container ">
+            <div class="row p-4 mb-4">
+                <div class="container col-lg-3 col-md-3 col-12 p-3 m-0">
+                    <div class="container bg-white profile_left p-5  min-vh-100" style="font-size: 18px;">
+                        <div class="mb-4 d-flex flex-column">
+                           
+                            <i class="fa-solid fa-user" style="font-size: 24px; margin-left: 10px;"></i>
+                            <h4 id="username"><%=user.name%></h4>
+                           
+                            <h6 class="h6head">Manage My Account</h6 >
+                            <a href="/updatepassword" class="text-decoration-none">Change Password</a>
+                        </div>
+                        <div class="mb-4 d-flex flex-column">
+                            <h6 class="h6head">My Orders</h6>
+                            <a href="/myorder" class="text-decoration-none">My Orders</a>
+                            <a href="/profile/orderReturn" class="text-decoration-none">My Return</a>
+                        </div>
+                        <div class="mb-4 d-flex flex-column">
+                            <h6 class="h6head">My Address</h6>
+                            <a href="/myaddress" class="text-decoration-none  text-danger">My Address</a>
+                        </div>
+                        <div class="mb-4 d-flex flex-column">
+                            <h6 class="h6head">Money Wallet</h6>
+                            <a href="/profile/wallet" class="text-decoration-none">My Wallet</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="container col-lg-9 col-md-9 col-12 py-3 p-0 m-0 min-vh-50">
+                    <div class="container-fluid bg-white profile_Right p-4" style="border: 1px solid rgb(163, 144, 144); margin-top: 15px; box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;">
+                        <div class="p-3">
+                            <h5 class=" fw-bold h6head">My Address</h5>
+                        </div>
+                        <div class="row px-3">
+                            <div class="container p-0 m-0 px-1">
+                               
+                            </div>
+                            <div class="container p-0 m-0 px-1 pb-3">
+                                <div class="address_Form p-4">
+                                    <form action="/profile/updateAddress" method="post">
+                                        <div class="row d-flex">
+                                            <div class="col-lg-6 col-12 d-flex flex-column p-2 gap-2 ">
+                                                <label for="">Full Name*</label>
+                                                <input type="text" name="name" required>
+                                            </div>
+                                            <div class="col-lg-6 col-12 d-flex flex-column p-2 gap-2 ">
+                                                <label for="">House Name*</label>
+                                                <input type="text" name="houseName" required>
+                                            </div>
+                                        </div>
+                                        <div class="row d-flex">
+                                            <div class="d-flex col-lg-6 col-12 flex-column p-2 gap-2 ">
+                                                <label for="">Street*</label>
+                                                <input type="text" name="street" required>
+                                            </div>
+                                            <div class="d-flex col-lg-6 col-12 flex-column p-2 gap-2 ">
+                                                <label for="">Town/City*</label>
+                                                <input type="text" name="city" required>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex row">
+                                            <div class="d-flex col-lg-6 flex-column p-2 gap-2 ">
+                                                <label for="">State*</label>
+                                                <input type="text" name="state" required>
+                                            </div>
+                                            <div class="d-flex col-lg-6 flex-column p-2 gap-2 ">
+                                                <label for="">pin*</label>
+                                                <input type="number" name="postalCode" required>
+                                            </div>
+                                           
+                                        </div>
+                                        <div class="row f-flex align-items-end">
+            
+                                            <div class="p-2 col-lg-6 billing_button">
+                                                <button class="btn btn-danger p-2" type="submit">
+                                                    Save Changes
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+</body>
+</html> 

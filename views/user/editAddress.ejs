@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Update</title>
+    <!-- Add Bootstrap CSS link here -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        #btn{
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <%- include("../partials/header.ejs") %>
+    <div class="container my-5">
+        <h1 class="text-center">Profile Update</h1>
+          
+            <div class="card p-4 mt-3 d-flex justify-content-center" style="box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px; max-width: 800px;">
+                <form action="/profile/updateAddress" method="post" class="needs-validation">
+                    <div class="row">
+                        <div class="col-lg-6 col-12">
+                            <div class="form-group">
+                                <label for="name">Full Name*</label>
+                                <input type="text" name="name" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="houseName">House Name*</label>
+                                <input type="text" name="houseName" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-12">
+                            <div class="form-group">
+                                <label for="street">Street*</label>
+                                <input type="text" name="street" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="city">Town/City*</label>
+                                <input type="text" name="city" class="form-control" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-12">
+                            <div class="form-group">
+                                <label for="state">State*</label>
+                                <input type="text" name="state" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-12">
+                            <div class="form-group">
+                                <label for="postalCode">Pin*</label>
+                                <input type="number" name="postalCode" class="form-control" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" id="btn">
+                        <div class="col-lg-4 col-12 billing_button">
+                            <button class="btn btn-danger btn-block" type="submit">
+                                Save Changes
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        
+    </div>
+    <!-- Add Bootstrap JS (optional) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

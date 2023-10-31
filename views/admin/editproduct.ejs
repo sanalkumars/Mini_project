@@ -6,6 +6,7 @@
     <title>Edit Product</title>
 </head>
 <body>
+    <%- include("../partials/adminHeader.ejs") %>
     <h1>Edit Product</h1>
     <form action="/admin/editproducts/<%= product.id %>" method="post" enctype="multipart/form-data">
 

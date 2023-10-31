@@ -1,6 +1,7 @@
 const products =require("../models/product")
 const userData =require("../models/userLogin")
 const category = require("../models/category")
+const orders = require("../models/order")
 const multer= require("multer")
 
 const upload = multer({dest:"/public/uploads"})
@@ -47,6 +48,8 @@ const LoginPost = (req,res)=>{
 const adminHome =(req,res)=>{
     if(req.session.admin){
         res.render("admin/dashboard")
+    }else{
+        res.redirect("/")
     }
     
 }
@@ -111,20 +114,7 @@ const getProducts = async(req,res)=>{
     
 }
 
-//function for submiting the data to the collection
-// method:1
 
-// const addProducts =async (req,res)=>{
-//     const data={
-//         name:req.body.productName,
-//         category:req.body.category,
-//         price:req.body.price
-//     }
-    
-//     await products.create(data)
-    
-//     res.render("admin/dashboard")
-// }
 
 // method :2
 const addProducts = async (req, res) => {
@@ -257,7 +247,7 @@ const blockUser= async(req,res)=>{
     const userId= req.params.id;
     
     try{
-        console.log("inside the try")
+        console.log("inside the try hai")
         const user = await userData.findById(userId)
         if (!user) {
             res.status(404).json({ error: 'User not found' });
@@ -314,19 +304,34 @@ const getCategory = async(req,res)=>{
     res.status(500).send("internal server error")
     }
 }
+// function to add new category and also to check wheather it exist already or not
+
 const addCategory= async(req,res)=>{
+
+    const newcata = req.body.category
     try
      {
-        
-        const cata = req.body.category
-        const newcategory = new category({
-            category:cata
-        })
-        await newcategory.save()
-
-            res.redirect('/admin/category')   
+            const existsCata = await category.find({category:newcata})
+                 if(existsCata)
+                 {  
+                    const categories= await category.find()
+                    const msg = "Sorry this category already exists"
+                    res.render("admin/category",{msg,categories})
+            
+                 }else{
+                     
+                    const cata = req.body.category
+                    const newcategory = new category({
+                        category:cata
+                    })
+                    await newcategory.save()
+                    const categories=await category.find()
+                    res.redirect('/admin/category')
 
     } 
+
+          
+}
     catch (error)
      {
        
@@ -336,7 +341,27 @@ const addCategory= async(req,res)=>{
 }
 
 
+// function for getting user orders
+const getUserOrder = async (req, res) => {
+    const userId = req.params.id // Assuming this is the user's ID passed as a route parameter
+    console.log("userid is",userId);
+    try {
+        console.log("hai");
+        // Use Mongoose to find orders for the specific user
+        const order = await orders.find().populate('productid');
+          console.log(order.userid);
+        // Logging the user's orders (you can process them as needed)
+        console.log('User Orders:', order);
+        res.render("admin/orderManage",{order})
 
+        // Render a view or send a response with the user's order details
+        // res.render('userOrderView', { orders: userOrders });
+       
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal server error');
+    }
+};
 
 
 
@@ -369,5 +394,6 @@ module.exports =
     getCategory,
     addCategory,
     logout,
+    getUserOrder,
     
 }

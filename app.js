@@ -1,6 +1,7 @@
 const express = require("express")
 const path = require('path')
-const session = require("express-session")
+const session = require("express-session");
+
 const cookie = require("cookie-parser")
 const multer = require("multer")
 require('dotenv').config()
@@ -20,7 +21,7 @@ const cookieParser = require("cookie-parser")
 
 const app = express()
 
-
+const port = process.env.PORT
 
 app.set('view engine', 'ejs')
 
@@ -38,12 +39,12 @@ app.use(session({
 
 }))
 
-// app.use((req,res,next)=>{
-//   if(!req.user){
-//     res.header('Cache-Control','private,no-cache,no-store,must-revalidate')
-//   }
-//   next();
-// })
+app.use((req,res,next)=>{
+  if(!req.user){
+    res.header('Cache-Control','private,no-cache,no-store,must-revalidate')
+  }
+  next();
+})
 
 // configuring  the multer for image  upload
 
@@ -79,6 +80,6 @@ app.use('/admin', adminRoute)
 
 module.exports = upload
 
-app.listen(4000, () => {
+app.listen(port, () => {
   console.log("server running at localhost:4000");
 })
