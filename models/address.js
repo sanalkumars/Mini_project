@@ -6,7 +6,7 @@ const addressSchema = new mongoose.Schema({
         ref: 'userData', 
         required: true
     },
-        name: {
+        houseName: {
         type: String,
         required: true
     },

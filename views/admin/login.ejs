@@ -1,73 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
-     
-    <link rel="stylesheet" href="/css/style.css"> 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css ">
+    <meta charset="utf-8">
+    <title>DarkPan - Bootstrap 5 Admin Template</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="/img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Roboto:wght@500;700&display=swap" rel="stylesheet"> 
+    
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="/cssAdmin/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="/cssAdmin/style.css" rel="stylesheet">
 </head>
+
 <body>
-     
-     <div class="text-center center-div" id="login">
-        <div class="container w-25 border py-5">
-            <div class="title pb-5">
-                <h2 class="font-weight-bold">
-                    Login 
-                </h2>
-                <span id="span">Log for admin</span>
+    <div class="container-fluid position-relative d-flex p-0">
+        <!-- Spinner Start -->
+        <div id="spinner" class="show bg-dark position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
             </div>
-            <h6> <%= locals.msg %></h6> 
-            <form  class="pt-3" action="/admin/login" method="post" onsubmit="return validateForm()">
-                <div class="form-group">
-                    
-                    <input type="text" class="form-control" placeholder="username" name="username" required>
-                    <small class="form-text text-muted text-left"></small>
-                </div><br>
-                <div class="form-group">
-                    <input type="password" class="form-control" name="password" placeholder="password" required>
-                </div><br>
-               
-                <button type="submit" class="btn btn-primary">LOGIN</button>
-                <br><br><br>
-                
-            </form>
         </div>
-        
-        </div>
+        <!-- Spinner End -->
 
 
-        <script>
-            // Function to perform client-side validation
-            function validateForm() {
-               
-                const username = document.querySelector('input[name="username"]').value;
-                const password = document.querySelector('input[name="password"]').value;
-        
-                // Perform client side validation
-                if (username === "") {
-                    alert("Please enter a username.");
-                    return false;
-                }
-        
-                if (password === "") {
-                    alert("Please enter a password.");
-                    return false;
-                }
-        
-                return true;
-            }
-        
-           
-            document.querySelector('form').addEventListener('submit', function(event) {
-            if (!validateForm()) {
-                event.preventDefault(); 
-            }
-        });
-        
-        </script>
-        
-        
-</body> 
+        <!-- Sign In Start -->
+        <div class="container-fluid">
+            <div class="row h-100 align-items-center justify-content-center" style="min-height: 100vh;">
+                <div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4">
+                    <div class="bg-secondary rounded p-4 p-sm-5 my-4 mx-3">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                           
+                            <h3>Sign In</h3>
+                        </div>
+                        <form id="login_form" class="form_class" action="/admin/login" method="post">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="floatingInput" name="username" placeholder="Enter the username">
+                            <label for="floatingInput">username</label>
+                        </div>
+                        <div class="form-floating mb-4">
+                            <input type="password" class="form-control" id="floatingPassword" name="password" placeholder=" Enter your Password">
+                            <label for="floatingPassword">Password</label>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between mb-4">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                                <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                            </div>
+                            <!-- <a href="">Forgot Password</a> -->
+                        </div>
+                        <button type="submit" class="btn btn-primary py-3 w-100 mb-4">Sign In</button>
+                        <!-- <p class="text-center mb-0">Don't have an Account? <a href="">Sign Up</a></p> -->
+                    </form>
+                </div>
+                </div>
+            </div>
+        </div>
+        <!-- Sign In End -->
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/lib/chart/chart.min.js"></script>
+    <script src="/lib/easing/easing.min.js"></script>
+    <script src="/lib/waypoints/waypoints.min.js"></script>
+    <script src="/lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="/lib/tempusdominus/js/moment.min.js"></script>
+    <script src="/lib/tempusdominus/js/moment-timezone.min.js"></script>
+    <script src="/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="/adminjs/main.js"></script>
+</body>
+
 </html>

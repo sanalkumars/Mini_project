@@ -1,61 +1,111 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <!-- Add Bootstrap CSS link here -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <!-- Your head content here -->
-    <style>
-        /* Custom CSS to increase table border width */
-        table.table-bordered th, table.table-bordered td {
-            border: 2px solid #000; 
-            text-align: center;
-        }
-        h1{
-            text-align: center;
-        }
-    </style>
 
-</head>
-<body style="background-color: blanchedalmond;">
-    <%- include("../partials/adminHeader.ejs") %>
-    <div class="container">
-        <h1 class="my-4" > User Orders</h1>
-        <div class="tablecontainer">
-            <table class="table table-bordered">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>Order ID</th>
-                        <th>UserID</th>
-                        <th>Product Name</th>
-                        <th>Quantity</th>
-                        <th>Price</th>
-                        <th>Payment Method</th>
-                        <th>Date</th>
-                        <th>Status</th>
-                        <th>Edit</th>
-                    
-                        <!-- Add other table headings as needed -->
-                    </tr>
-                </thead>
-                <tbody>
-                    <% order.forEach(order => { %>
-                        <tr>
-                            <td><%= order._id %></td>
-                            <td><%= order.userid %></td>
-                            <td><%= order.productid.name %></td>
-                            <td><%= order.productsDetails[0].quantity %></td>
-                            <td>$<%= order.productsDetails[0].price %></td>
-                            <td><%= order.payment %></td>
-                            <td><%= new Date(order.date).toLocaleString() %></td>
-                            <td><%= order.status %></td>
-                            <td><a href="/editorder/<%=order._id%>"><button type="submit" class="btn btn-danger">edit</button></a></td>
-                            <!-- Add other order details as needed -->
-                        </tr>
-                    <% }); %>
-                </tbody>
-            </table>
+
+<%- include("../partials/adminHeader.ejs") %>
+        <!-- Content Start -->
+        <div class="content">
+           
+            <%- include("../partials/adminNavbar.ejs") %>
+
+          
+            
+
+
+            <!-- Recent Sales Start -->
+            <div class="container-fluid pt-4 px-4">
+                <div class="bg-secondary text-center rounded p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <h6 class="mb-0" style="text-align: center;">Recent Salse</h6>
+                        <a href="">Show All</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table text-start align-middle table-bordered table-hover mb-0">
+                            <thead>
+                                <tr class="text-white">
+                                    <!-- <th scope="col"><input class="form-check-input" type="checkbox"></th> -->
+                                    <th scope="col">Coustomer</th>
+                                    <th scope="col">Order_ID</th>
+                                    <th scope="col">Payment Method</th>
+                                    <th scope="col">Amount</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% order.forEach(order => { %>
+                                    <tr>
+                                        <td><%= order.userId.name %></td>
+                                        <td><%= order._id %></td>
+                                        <td><%= order.paymentMethod %></td>
+                                        <td><%= order.totalPrice %></td>
+                                        
+                                            <td>
+                                                <form class="status-form d-flex align-items-center">
+                                                    <input type="hidden" name="orderId" value="<%= order._id %>">
+                                                    <select name="status" class="form-select action-dropdown" data-order-id="<%= order._id %>">
+                                                        <option value="Pending" <%= order.status === 'Pending' ? 'selected' : '' %>>Pending</option>
+                                                        <option value="Delivered" <%= order.status === 'Delivered' ? 'selected' : '' %>>Delivered</option>
+                                                        <option value="Cancelled" <%= order.status === 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
+                                                        <option value="Shipped" <%= order.status === 'Shipped' ? 'selected' : '' %>>Shipped</option>
+                                                    </select>
+                                                </form>
+                                            </td>
+                                            
+                                        
+                                        <td>
+                                            <!-- <button type="button" class="btn btn-primary view-details-btn" data-bs-toggle="modal" data-bs-target="#productDetailsModal" data-products='<%= JSON.stringify(order.products) %>'>
+                                                View Details
+                                            </button> -->
+                                            <a href="/admin/viewdetails/<%= order._id %>"><button type="button" class="btn btn-primary view-details-btn" data-bs-toggle="modal" data-bs-target="#productDetailsModal" data-products='<%= JSON.stringify(order.products) %>'>
+                                                View Details
+                                             </button></a>
+                                        </td>
+                                        
+                                    </tr>
+                                <% }); %>
+                               
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
+    <script>
+        // Function to handle order status update
+        function updateOrderStatus(orderId, newStatus) {
+            // Send an AJAX request to update the order status
+            fetch(`/admin/updateOrderStatus/${orderId}/${newStatus}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    // Update the status in the table without reloading
+                    const statusCell = document.getElementById(`status-${orderId}`);
+                    statusCell.textContent = newStatus;
+                } else {
+                    // Handle the case where the update was not successful
+                    console.error('Order status update failed');
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+    
+        // Add event listeners for status dropdown changes
+        document.querySelectorAll('.action-dropdown').forEach((dropdown) => {
+            dropdown.addEventListener('change', (event) => {
+                const orderId = event.target.getAttribute('data-order-id');
+                const newStatus = event.target.value;
+                updateOrderStatus(orderId, newStatus);
+            });
+        });
+</script>
+
+
+            <%- include("../partials/adminfooter.ejs") %>
         </div>
-    </div>
-</body>
-</html>

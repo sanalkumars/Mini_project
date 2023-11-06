@@ -1,12 +1,10 @@
 
 
 
-   <%- include("../partials/header.ejs") -%>
-
-      
+   <%- include("../partials/header.ejs") -%> 
       <!-- content -->
-      
     
+
       <section class="py-5">
         <div class="container">
           <div class="row gx-5">
@@ -14,7 +12,7 @@
             <aside class="col-lg-6 product-images">   
                           <div class=" d-flex justify-content-center mb-3 zoom-container main-image ">
                               <div class="border rounded-4 mb-3 d-flex justify-content-center" id="main">
-                                 <img  style="max-width: 80%; max-height: 80vh; margin: auto;" class="img-fluid MainImg" src="/uploads/<%= product.image %>" class="rounded-2 zoom-image"  id="zoom"/>
+                                 <img  style="max-width: 80%; max-height: 80vh; margin: auto;" class="img-fluid MainImg" src="/uploads/<%= product.image %>" class="rounded-2 zoom-image"  id="main"/>
 
                               </div>
                 
@@ -38,8 +36,8 @@
                 <h4 class="title text-dark">
                   <%= product.name %>
                 </h4>
-                <div class="d-flex flex-row my-3">
-                  <div class="text-warning mb-1 me-2">
+                <!-- <div class="d-flex flex-row my-3"> -->
+                  <!-- <div class="text-warning mb-1 me-2">
                     <i class="fa fa-star"></i>
                     <i class="fa fa-star"></i>
                     <i class="fa fa-star"></i>
@@ -47,16 +45,13 @@
                     <i class="fas fa-star-half-alt"></i>
                     <span class="ms-1">
                       4.5
-                    </span>
-                  <!-- </div>
-                  <span class="text-muted"><i class="fas fa-shopping-basket fa-sm mx-1"></i>154 orders</span>
-                  <span class="text-success ms-2">In stock</span>
-                </div> -->
+                    </span> -->
+                 
 
 
                <div class="mb-3">
-                  <span class="h5 text text-danger">&#8377; <%= product.price %></span>
-                  <span class="text-muted text-dark">/per box</span>
+                  <span class="h5 text text-danger"><%= product.price %></span>
+                  <span class="text-muted text-dark">/per item</span>
                 </div>
       
                 <p>
@@ -66,23 +61,14 @@
       
                 <div class="row mb-4">
                
-                  <!-- col.// -->
-                  <!-- <div class="col-md-4 col-6 mb-3">
-                    <label class="mb-2 d-block">Quantity</label>
-                    <div class="input-group mb-3" style="width: 170px;">
-                      <button class="btn btn-white border border-secondary px-3" type="button" id="button-addon1" data-mdb-ripple-color="dark">
-                        <i class="fas fa-minus"></i>
-                      </button>
-                      <input type="text" class="form-control text-center border border-secondary" placeholder="14" aria-label="Example text with button addon" aria-describedby="button-addon1" />
-                      <button class="btn btn-white border border-secondary px-3" type="button" id="button-addon2" data-mdb-ripple-color="dark">
-                        <i class="fas fa-plus"></i>
-                      </button>
-                    </div>
-                  </div> -->
-                </div>
-                <a href="" class="btn btn-warning shadow-0"> Buy now </a>
-                <a href="/user/cart/<%= product._id %>" class="btn btn-primary shadow-0"> <i class="me-1 fa fa-shopping-basket"></i> Add to cart </a>
-                <a href="#" class="btn btn-light border border-secondary py-2 icon-hover px-3"> <i class="me-1 fa fa-heart fa-lg"></i> Save </a>
+                 
+                </div  style="display: flex; justify-content: space-between;">
+              
+                <form action="/cart" method="post">
+                  <input type="hidden" name="productId" value="<%= product._id %>">
+                  <button type="submit" class=" btn btn-primary shadow-1 me-1">Add to Cart <i class="fa-solid fa-cart-shopping"></i></button>
+                </form>
+                <!-- <a href="#"  class="btn btn-success border border-secondary py-2  px-3"> <i class="me-1 fa fa-heart fa-lg"></i> Save </a> -->
               </div>
               
               
@@ -143,35 +129,14 @@
                         </ul>
                       </div>
                     </div>
-                    <table class="table border mt-3 mb-2">
-                      <tr>
-                        <th class="py-2">Display:</th>
-                        <td class="py-2">13.3-inch LED-backlit display with IPS</td>
-                      </tr>
-                      <tr>
-                        <th class="py-2">Processor capacity:</th>
-                        <td class="py-2">2.3GHz dual-core Intel Core i5</td>
-                      </tr>
-                      <tr>
-                        <th class="py-2">Camera quality:</th>
-                        <td class="py-2">720p FaceTime HD camera</td>
-                      </tr>
-                      <tr>
-                        <th class="py-2">Memory</th>
-                        <td class="py-2">8 GB RAM or 16 GB RAM</td>
-                      </tr>
-                      <tr>
-                        <th class="py-2">Graphics</th>
-                        <td class="py-2">Intel Iris Plus Graphics 640</td>
-                      </tr>
-                    </table>
+                   
                   </div>
                   <div class="tab-pane fade mb-2" id="ex1-pills-2" role="tabpanel" aria-labelledby="ex1-tab-2">
                     Tab content or sample information now <br />
                     Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
                     aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
 
-officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+                    officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
                     nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
                   </div>
                   <div class="tab-pane fade mb-2" id="ex1-pills-3" role="tabpanel" aria-labelledby="ex1-tab-3">
@@ -190,28 +155,34 @@ officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consect
                 <!-- Pills content -->
               </div>
             </div>
-          
+           
+
             <div class="col-lg-4">
               <div class="px-0 border rounded-2 shadow-0">
                 <div class="card">
                   <div class="card-body">
                     <h5 class="card-title">Similar items</h5>
-                    <div class="d-flex mb-3">
-                      <a href="/singleproduct/<%= product._id %>" class="me-3">
-                        <img src="/uploads/<%= product.image %>" alt="<%= product.name %> " style="min-width: 96px; height: 96px;" class="img-md img-thumbnail" />
+
+                    <% allproducts.slice(0, 3).forEach(product => { %>
+                      <div class="d-flex mb-3">
+                        <a href="#" class="me-3">
+                          <img src="/uploads/<%= product.image %>" alt="<%= product.name %>" style="min-width: 96px; height: 96px;" class="img-md img-thumbnail" />
                         </a>
                         <div class="info">
-                        <a href="" class="nav-link mb-1">
-                          <%= product.name %> 
-                        </a>
-                        <strong class="text-dark"> <%= product.price %> $</strong>
+                          <a href="#" class="nav-link mb-1">
+                            Rucksack Backpack Large <br />
+                            Line Mounts
+                          </a>
+                          <strong class="text-dark"> $38.90</strong>
+                        </div>
                       </div>
-                    </div>
+                  <%});%>
+
                   </div>
                 </div>
               </div>
             </div>
-          
+           
           </div>
         </div>
       </section>
@@ -255,12 +226,16 @@ officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consect
 
 
 
-<script src="https://unpkg.com/js-image-zoom@0.4.1/js-image-zoom.js" type="application/javascript"></script>
+
+  
 
 
+<script src="https://code.jquery.com/jquery-3.7.0.js"
+            integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" 
+            crossorigin="anonymous"></script>
 
 
-
+<!--<script src="https://unpkg.com/js-image-zoom@0.4.1/js-image-zoom.js" type="application/javascript"></script> -->
 
 
 <script>
@@ -271,94 +246,94 @@ officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consect
   });
 </script>
 <script>
-  /*/http://zoomsl.sergeland.ru Sergey Zaragulov skype: deeserge icq: 287295769 sergeland@mail.ru*/
+  //http://zoomsl.sergeland.ru Sergey Zaragulov skype: deeserge icq: 287295769 sergeland@mail.ru/
 
   (function ($, global) {
-      "use strict";
+    "use strict";
 
-      $.fn.imagezoomsl = function (options) {
-        options = options || {};
-        return this.each(function () {
-          //return jQuery obj
-          if (!$(this).is("img")) return true;
-          var that = this;
-          setTimeout(function () {
-            $(new Image())
-              .on("load", function () {
-                sergelandimagezoomer.init($(that), options);
-              })
-              .attr("src", $(that).attr("src"));
-          }, 30);
-        });
-      };
+    $.fn.imagezoomsl = function (options) {
+      options = options || {};
+      return this.each(function () {
+        //return jQuery obj
+        if (!$(this).is("img")) return true;
+        var that = this;
+        setTimeout(function () {
+          $(new Image())
+            .on("load", function () {
+              sergelandimagezoomer.init($(that), options);
+            })
+            .attr("src", $(that).attr("src"));
+        }, 30);
+      });
+    };
 
-      var sergelandimagezoomer = {};
-      $.extend(sergelandimagezoomer, {
-        dsetting: {
-          //default settings
+    var sergelandimagezoomer = {};
+    $.extend(sergelandimagezoomer, {
+      dsetting: {
+        //default settings
 
-          // загрузка big картинки
-          loadinggif: "", // картинка показываемая при загрузке big изображения
-          loadopacity: 0.1, // прозрачность фона перекрытия tmb картинки при загрузке	big изображения
-          loadbackground: "#878787", // цвет фона перекрытия tmb картинки при загрузке	 big изображения
+        // загрузка big картинки
+        loadinggif: "", // картинка показываемая при загрузке big изображения
+        loadopacity: 0.1, // прозрачность фона перекрытия tmb картинки при загрузке	big изображения
+        loadbackground: "#878787", // цвет фона перекрытия tmb картинки при загрузке	 big изображения
 
-          // лупа (cursorshade)
-          cursorshade: true, // показать контейнер лупы
-          magnifycursor: "crosshair", // вид курсора мыши над tmb в формате CSS
-          cursorshadecolor: "#fff", // цвет контейнера лупы в формате CSS
-          cursorshadeopacity: 0.3, // прозрачность контейнера лупы
-          cursorshadeborder: "1px solid black", // внешний бордюра контейнера лупы в формате CSS
-          zindex: "", // z-index контейнера лупы
-          stepzoom: 0.5, // шаг зуммирования при прокрутке колеса мыши
-          zoomrange: [2, 2], // диапазон зуммирования
-          zoomstart: 2, // стартовая установка зуммирования
-          disablewheel: true, // отключить прокрутку документа колесом мыши когда курсор над картинкой tmb в случае если не задан диапазон зуммирования
+        // лупа (cursorshade)
+        cursorshade: true, // показать контейнер лупы
+        magnifycursor: "crosshair", // вид курсора мыши над tmb в формате CSS
+        cursorshadecolor: "#fff", // цвет контейнера лупы в формате CSS
+        cursorshadeopacity: 0.3, // прозрачность контейнера лупы
+        cursorshadeborder: "1px solid black", // внешний бордюра контейнера лупы в формате CSS
+        zindex: "", // z-index контейнера лупы
+        stepzoom: 0.5, // шаг зуммирования при прокрутке колеса мыши
+        zoomrange: [2, 2], // диапазон зуммирования
+        zoomstart: 2, // стартовая установка зуммирования
+        disablewheel: true, // отключить прокрутку документа колесом мыши когда курсор над картинкой tmb в случае если не задан диапазон зуммирования
 
-          // подсказка (statusdiv)
-          showstatus: true, // показывать при наведении на tmb help контейнер
-          showstatustime: 2000, // время показа help контейнера
-          statusdivborder: "1px solid black",
-          statusdivbackground: "#C0C0C0",
-          statusdivpadding: "4px",
-          statusdivfont: "bold 13px Arial",
-          statusdivopacity: 0.8,
+        // подсказка (statusdiv)
+        showstatus: true, // показывать при наведении на tmb help контейнер
+        showstatustime: 2000, // время показа help контейнера
+        statusdivborder: "1px solid black",
+        statusdivbackground: "#C0C0C0",
+        statusdivpadding: "4px",
+        statusdivfont: "bold 13px Arial",
+        statusdivopacity: 0.8,
 
-          // контейнер big картинки (magnifier)
-          magnifierpos: "right", // сторона отображения контейнера left/right
-          magnifiersize: [0, 0], // размер контейнера
-          magnifiereffectanimate: "showIn", // эффект появления/скрытия fadeIn/showIn/slideIn
-          innerzoom: false, // показать контейнер внутри tmb
-          innerzoommagnifier: false, // показать контейнер как лупу
-          descarea: false, // показать контейнер в произвольной области, область descarea должна иметь width и height
-          leftoffset: 15, // отступ слева от tmb картинки
-          rightoffset: 15, // отступ справа от tmb картинки
-          switchsides: true, // учитывать край экрана
-          magnifierborder: "1px solid black", // внешний бордюр
+        // контейнер big картинки (magnifier)
+        magnifierpos: "right", // сторона отображения контейнера left/right
+        magnifiersize: [0, 0], // размер контейнера
+        magnifiereffectanimate: "showIn", // эффект появления/скрытия fadeIn/showIn/slideIn
+        innerzoom: false, // показать контейнер внутри tmb
+        innerzoommagnifier: false, // показать контейнер как лупу
+        descarea: false, // показать контейнер в произвольной области, область descarea должна иметь width и height
+        leftoffset: 15, // отступ слева от tmb картинки
+        rightoffset: 15, // отступ справа от tmb картинки
+        switchsides: true, // учитывать край экрана
+        magnifierborder: "1px solid black", // внешний бордюр
 
-          // контейнер текста снизу к картинке
-          textdnbackground: "#fff",
-          textdnpadding: "10px",
-          textdnfont: "13px/20px cursive",
+        // контейнер текста снизу к картинке
+        textdnbackground: "#fff",
+        textdnpadding: "10px",
+        textdnfont: "13px/20px cursive",
 
-          // коэффициенты скорости анимации
-          scrollspeedanimate: 5 /*4*/, // прокрутки big картинки
-          zoomspeedanimate: 7, // зуммирования (плавность)
-          loopspeedanimate: 2.5 /*2.45342*/, // перемещения области лупы и big контейнера в режиме лупы
-          magnifierspeedanimate: 350, // показа big контейнера
+        // коэффициенты скорости анимации
+        scrollspeedanimate: 5 /*4*/, // прокрутки big картинки
+        zoomspeedanimate: 7, // зуммирования (плавность)
+        loopspeedanimate: 2.5 /*2.45342*/, // перемещения области лупы и big контейнера в режиме лупы
+        magnifierspeedanimate: 350, // показа big контейнера
 
-          // внешний вид
-          classmagnifier: "magnifier",
-          classcursorshade: "cursorshade",
-          classstatusdiv: "statusdiv",
-          classtextdn: "textdn",
-          classtracker: "tracker",
-        },
+        // внешний вид
+        classmagnifier: "magnifier",
+        classcursorshade: "cursorshade",
+        classstatusdiv: "statusdiv",
+        classtextdn: "textdn",
+        classtracker: "tracker",
+      },
 
-        isie: (function () {
-          var nAgt = navigator.userAgent;
-          if (nAgt.indexOf("MSIE") != -1) return true;
-          else return false;
-        })(),
+      isie: (function () {
+        var nAgt = navigator.userAgent;
+        if (nAgt.indexOf("MSIE") != -1) return true;
+        else return false;
+      })(),
 
       highestzindex: function ($img) {
         var z = 0,
@@ -1204,7 +1179,7 @@ officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consect
               clearTimeout(self.cld.controlTimer);
               clearTimeout(self.cld.controlTimer2);
               $img.css({
-              visibility:"visible",
+                visibility: "visible",
               });
               $textdn.hide();
               $tracker.hide().css({
@@ -1299,4 +1274,5 @@ officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consect
     });
   })(jQuery, window);
 </script>
+</html>
 

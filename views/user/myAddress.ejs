@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,18 +9,12 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-image: url('/images/banner-bg.png');
+            background-image: url('/images/banner-bg.png');  
             background-size: cover;
             margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start; /* This will align content to the top */
+            justify-content: center;
+            align-items: center;    
             height: 100vh;
-        }
-
-        .header {
-            /* Your header styles here */
         }
 
         .container {
@@ -56,12 +51,14 @@
         .btn {
             margin: 5px;
         }
-    </style>
+    </style>    
 </head>
-
-<body>
 <%- include("../partials/header.ejs") %>
 
+<body>
+ 
+
+   
 <div class="container mt-5">
     <h1>Addresses</h1>
 
@@ -69,24 +66,56 @@
         <a href="/addAddress" class="btn btn-success">Add New Address</a>
     </div>
 
-    <!-- Add a div with a specific class for the address container -->
     <div class="address-container">
-        <!-- Loop through the addresses and display them -->
-        <% address.forEach((address) => { %>
-            <div class="address-card">
-                <strong>Name:</strong><%= address.name %><br>
-                <strong>Street:</strong> <%= address.street %><br>
-                <strong>City:</strong> <%= address.city %><br>
-                <strong>State:</strong> <%= address.state %><br>
-                <strong>Pin Code:</strong> <%= address.zip %><br>
-                <div class="button-container">
-                    <a href="/editAddress"><button class="btn btn-primary edit-address" data-id="">
-                        <i class="fas fa-edit"></i> Edit Address
-                    </button></a>
+        <% if (address.length > 0) { %>
+            <% address.forEach((address) => { %>
+                <div class="address-card">
+                    <strong>Name:</strong> <%= address.userName %><br>
+                    <strong>Street:</strong> <%= address.street %><br>
+                    <strong>City:</strong> <%= address.city %><br>
+                    <strong>State:</strong> <%= address.state %><br>
+                    <strong>Pin Code:</strong> <%= address.zip %><br>
+                    <div class="button-container">
+                        <button class="btn btn-primary edit-address"  data-id="<%= address._id %>">
+                            <i class="fas fa-edit"></i> Edit Address
+                        </button>
+                    </div>
                 </div>
-            </div>
-        <% }); %>
+            <% }); %>
+        <% } else { %>
+            <h2>No Address Found</h2>
+        <% } %>
     </div>
+    
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const editButtons = document.querySelectorAll(".edit-address");
+        const selectButtons = document.querySelectorAll(".select-address");
+
+        editButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                const addressId = this.dataset.id;
+                window.location.href = `/editaddress/${addressId}`;
+            });
+        });
+
+        selectButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                const addressId = this.dataset.id;
+                const name = this.dataset.name;
+                const street = this.dataset.street;
+                const city = this.dataset.city;
+                const state = this.dataset.state;
+                const zip = this.dataset.zip;
+                const productId = button.getAttribute("data-productId");
+                window.location.href = `/orderconfirm/${addressId}/${productId}`;
+            });
+        });
+    });
+</script>
+
 </body>
+
 </html>

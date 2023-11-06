@@ -2,64 +2,82 @@ const mongoose = require("mongoose")
 const products = require("../models/product")
 
 const orderSchema = new mongoose.Schema({
-    userid:{
-        type:String,
-    
-    }, productid:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:products
-   },
-
-    productsDetails:[{
-             
-       name: {
-          type:String,
-        
-        },
-        quantity:{
-            type:Number,
-        
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'userData',
+        required: true
+      },
+      paymentMethod: {
+        type: String,
+        enum: ['wallet', 'netBanking', 'cashOnDelivery'],  
+        required: true
+      },
+      addressId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Address',
+        required: true
+      },
+      products: [
+        {
+          productId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'products',
+            required: true
+          },
+          quantity: {
+            type: Number,
             default:1
-        },
-        price:{
-            type:Number,
-        
+          }
         }
- }],
-
-   payment:{
-    type:String,
-
-   }
-   ,
-    date:{
-        type:Date,
+      ],
+      totalPrice: {
+        type: Number,
+        required: true
+      },
+      orderDate: {
+        type: Date,
+        default: Date.now
+      },
+      status: {
+        type: String,
+        enum: ['Pending', 'Delivered', 'Cancelled','Shipped'],
+        default:'Pending'  
+       },
+       
+       isReturned:{
+        type:Boolean,
+        default:false
+       },
     
-    },
-    fname:{
-         type:String,
-        
-    },
-    lname:{
-        type:String,
+       acceptReturn:{
+        type:Boolean,
+        default:false
+        },
     
-    },
-    
-    country:{
-        type:String,
-    
-    },
-    city:{
-          type:String,
-        
-    } ,
-    status:{
-        type:String,
-    
-    }
+        rejectReturn:{
+        type:Boolean,
+        default:false
+        },
+        grantTotal:{
+          type: Number,
+          
+        },
+        couponDiscount:{
+          type: Number,
+          
+        }
+       
+          
+    });
 
    
-})
+
 
 const orders = new mongoose.model("orders",orderSchema)
 module.exports= orders
+
+
+
+
+
+

@@ -1,104 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>products</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<%- include("../partials/layouts.ejs") %>
 
-    <style>
-        body{
-           background-color: blanchedalmond;
-        }
-        table{
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
+<%- include("../partials/adminHeader.ejs") %>
+        <!-- Content Start -->
+        <div class="content">
+            <!-- Navbar Start -->
+            <%- include("../partials/adminNavbar.ejs") %>
+            <!-- Navbar ends -->
+
+            <!-- Blank Start -->
+            <div id="products" style="display: flex;justify-content: center;">
+              <div class="row justify-content-center">
+                <% product.forEach(product => { %>
+                  <div class="col-lg-3 col-md-6 col-sm-6 mx-2 my-2">
+                    <div class="card shadow-2-strong" style="width: 16rem;">
+              
+                      <a href="/singleproduct/<%= product._id %>">
+                        <img src="/uploads/<%= product.image %>" alt="<%= product.name %>" class="card-img-top" style="max-height: 200px;"> <!-- Adjust the image size -->
+                      </a>
+                      <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">Price: <%= product.price %> $</h5>
+                        <p class="card-text"><%= product.description %></p>
+                        <div class="card-footer d-flex align-items-end pt-3 px-0 pb-0 mt-auto" id="mon">
+                          <form action="/admin/editproducts/<%= product.id %>" method="get">
+                            <input type="hidden" name="productId" value="<%= product._id %>">
+                            <button type="submit" class="btn btn-primary shadow me-1">Edit</button>
+                          </form>
+                          <form action="/admin/delete/<%= product.id %>" method="get">
+                            <input type="hidden" name="productId" value="<%= product._id %>">
+                            <button type="submit" class="btn btn-primary shadow-0 me-1">Delete</button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                <% }); %>
+              </div>
+            </div>
+            <%- include("../partials/adminfooter.ejs") %>
+             </div>
             
-        }
-        h1{
-            background-color: rgb(92, 106, 96);
-            display: flex;
-            justify-content: center;
-            color: white;
-        }
-        .tab{
-            display: flex;
-            justify-content: center;
-        }
-         td {
-      padding: 12px 15px;
-      text-align: center;
-    }
-        td a {
-      display: inline-block;
-      text-decoration: none;
-      padding: 5px 10px;
-      background-color: #007bff;
-      color: #fff;
-      border-radius: 5px;
-      transition: background-color 0.3s;
-    }
-    
-    td a:hover{
-        background-color: rgb(242, 136, 7);
-    }
-    #delete{
-        margin-top: 10px;
-    }
-    
-    </style>
-</head>
-<body>
-    <!-- products.ejs -->
+            <!-- Blank End -->
 
-
-<body>
-    <%- include("../partials/adminHeader.ejs") %>
-    <h1>Products</h1>
-     <div>
-        <a href="/admin/add"> <button class="btn btn-primary">Add Products</button></a>
-     </div>
-
-   <div id="tab">
-    <table>
-        <thead>
-            <tr>
-                <th>product_image</th>
-                <th>Aditional images</th>
-                <th>Product Name</th>
-                <th>Category</th>
-                <th>Description</th>
-                <th>Status</th>
-                 <th>Price</th>
-                 <th>Quantity</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% product.forEach(product => { %>
-                <tr id="trrow">
-                    <td><img src="/uploads/<%=product.image %> " width="50px" height="50px" alt="<%= product.name %>"></td>
-                    <td>
-                        <% product.additionalimages.forEach(function(image) { %>
-                          <img src="/uploads/<%= image %>" width="20px" height="20px" alt="<%= product.name %>">
-                        <% }); %>
-                      </td>
-                    <td><%= product.name %></td>
-                    <td><%= product.category %></td>
-                    <td><%= product.description%></td>
-                    <td><%= product.status %></td>
-                    <td> <%=product.price %> </td>
-                    <td> <%=product.quantity %> </td>
-                   <td>
-                    <a href="/admin/editproducts/<%= product.id %>">Edit</a><br>
-                    <a href="/admin/delete/<%= product.id %>" id="delete">Delete</a>
-                </td>
-                </tr>
-            <% }); %>
-        </tbody>
-    </table>
-</div>
-</body>
-</html>
-
+           

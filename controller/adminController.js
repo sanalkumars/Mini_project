@@ -3,6 +3,8 @@ const userData =require("../models/userLogin")
 const category = require("../models/category")
 const orders = require("../models/order")
 const multer= require("multer")
+const coupon = require("../models/coupon")
+// const orders = require("../models/order")
 
 const upload = multer({dest:"/public/uploads"})
 
@@ -13,7 +15,7 @@ const Login= (req,res)=>{
      
     if(req.session.admin)
     {
-        res.redirect("admin/dashboard")
+        res.redirect("/admin/dashboard")
     }
     else{
         const msg="hai"
@@ -23,34 +25,56 @@ const Login= (req,res)=>{
     
 }
 
-const LoginPost = (req,res)=>{
+const LoginPost = async(req,res)=>{
     const name='admin'
     const password ='admin'
+
    
     if(name===req.body.username && password===req.body.password)
     {
         req.session.admin=req.body.username
         const msg =req.body.username
        
-        res.redirect("/admin/dashboard")
+        try {
+            const order = await orders.find().populate('products.productId').populate("userId")
+            
+            // Check if any order has been returned
+            const hasReturnedOrder = order.some(order => order.isReturned);
+    
+            if (!orders) {
+                throw new Error('No orders found');
+            }
+    
+            res.render('admin/dashboard', { order, hasReturnedOrder });
+        } catch (error) {
+            console.error("error");
+            res.status(500).send('Internal Server Error');
+       }
     }
     else{
         console.log("wrong details");
-        res.render("admin/login",{msg:"invalid user name and password"})
+        res.render("admin/signin",{msg:"invalid user name and password"})
 
     }
 }
 
 
+const adminHome =async(req,res)=>{
+    try {
+        const order = await orders.find().populate('products.productId').populate("userId")
+        
+        // Check if any order has been returned
+        const hasReturnedOrder = order.some(order => order.isReturned);
 
+        if (!orders) {
+            throw new Error('No orders found');
+        }
 
-
-const adminHome =(req,res)=>{
-    if(req.session.admin){
-        res.render("admin/dashboard")
-    }else{
-        res.redirect("/")
-    }
+        res.render('admin/dashboard', { order, hasReturnedOrder });
+    } catch (error) {
+        console.error("error");
+        res.status(500).send('Internal Server Error');
+   }
     
 }
 
@@ -116,7 +140,7 @@ const getProducts = async(req,res)=>{
 
 
 
-// method :2
+
 const addProducts = async (req, res) => {
    
         
@@ -289,6 +313,8 @@ const unblockUser=async (req,res)=>{
         res.status(500).json({ error: 'Internal Server Error' });
     }
 }
+
+// function to get stored categories
 const getCategory = async(req,res)=>{
    try{
 
@@ -306,62 +332,173 @@ const getCategory = async(req,res)=>{
 }
 // function to add new category and also to check wheather it exist already or not
 
-const addCategory= async(req,res)=>{
-
-    const newcata = req.body.category
-    try
-     {
-            const existsCata = await category.find({category:newcata})
-                 if(existsCata)
-                 {  
-                    const categories= await category.find()
-                    const msg = "Sorry this category already exists"
-                    res.render("admin/category",{msg,categories})
-            
-                 }else{
-                     
-                    const cata = req.body.category
-                    const newcategory = new category({
-                        category:cata
-                    })
-                    await newcategory.save()
-                    const categories=await category.find()
-                    res.redirect('/admin/category')
-
-    } 
-
-          
-}
-    catch (error)
-     {
-       
-     res.status(500).send("internal server error")
+const addCategory = async (req, res) => {
+    const newcata = req.body.category;
+    console.log(newcata);
+    
+    try {
+        const existsCata = await category.find({ category: newcata });
+        console.log(existsCata);
         
+        if (existsCata.length === 0) {
+            console.log("Category doesn't exist. Creating a new one.");
+            const cata = req.body.category;
+            const newcategory = new category({
+                category: cata
+            });
+            await newcategory.save();
+            res.redirect('/admin/category');
+        } else {
+            const categories = await category.find();
+            const msg = "Sorry, this category already exists";
+            res.render("admin/category", { msg, categories });
+        }
+    } catch (error) {
+        res.status(500).send("Internal server error");
     }
 }
+
+
+ 
+const deletecategory=async(req,res)=>{
+    const cateID = req.params.id
+    try{
+        await category.findByIdAndUpdate(cateID,{status:"unavailable"})
+        res.redirect("/admin/category")
+    }catch(error)
+    {
+      console.log(error);
+      res.render("admin/404",{error})
+    }
+}
+
+
 
 
 // function for getting user orders
 const getUserOrder = async (req, res) => {
-    const userId = req.params.id // Assuming this is the user's ID passed as a route parameter
-    console.log("userid is",userId);
     try {
-        console.log("hai");
-        // Use Mongoose to find orders for the specific user
-        const order = await orders.find().populate('productid');
-          console.log(order.userid);
-        // Logging the user's orders (you can process them as needed)
-        console.log('User Orders:', order);
-        res.render("admin/orderManage",{order})
+        const order = await orders.find().populate('products.productId').populate("userId")
+        
+        // Check if any order has been returned
+        const hasReturnedOrder = order.some(order => order.isReturned);
 
-        // Render a view or send a response with the user's order details
-        // res.render('userOrderView', { orders: userOrders });
-       
+        if (!orders) {
+            throw new Error('No orders found');
+        }
+
+        res.render('admin/orderManage', { order, hasReturnedOrder });
     } catch (error) {
-        console.error(error);
-        res.status(500).send('Internal server error');
+        console.error("error");
+        res.status(500).send('Internal Server Error');
+   }
+};
+
+const updateUserOrder = async(req,res)=>{
+try{
+    const orderId = req.params.orderId;
+    const newStatus = req.params.newStatus;
+    
+
+    const updatedOrder = await orders.findByIdAndUpdate(
+        orderId,
+        { status: newStatus },
+        { new: true } // Set to true to return the updated order
+    );
+
+    if (updatedOrder) {
+       
+        // Order status updated successfully
+        res.json({ success: true });
+    } else {
+        // Order not found or status update failed
+        res.json({ success: false });
+    }
+} catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false });
+}
+  
+}
+
+
+
+
+
+const getCoupon =async(req,res)=>{
+    
+    try{ const coupons= await coupon.find()
+        console.log(coupons);
+    
+    
+        res.render('admin/Coupons',{coupons})}
+        catch(error)
+        {
+            console.log(error);
+            res.json("internal server error")
+        }
+}
+
+
+const getaddCoupon =async (req,res)=>{
+
+       res.render("admin/addCoupon")
+   
+}
+
+const addCoupon = async (req, res) => {
+    try {
+        console.log("inside coupon controller");
+        
+        const { couponName, couponValue, maxValue, minValue, expiryDate } = req.body;
+        console.log(couponName);
+        console.log(maxValue);
+        console.log(minValue);
+        console.log(expiryDate);
+        // Creating  a new coupon document
+        const newCoupon = new coupon({
+            couponName,
+            couponValue,
+            maxValue,
+            minValue,
+            expiryDate,
+        });
+         
+        console.log(newCoupon);
+        // Saving  the new coupon to the database
+        await newCoupon.save();
+        console.log("hai");
+        // Redirect to a success page or send a success response
+        res.redirect('/admin/coupons'); 
+    } catch (error) {
+        // Handle errors - You can redirect to an error page or send an error response
+        res.status(500).send('Internal Server Error'); // Replace with your error handling logic
     }
 };
+
+
+const viewdetails = async (req, res) => {
+    try {
+      const orderId = req.params.orderId; // Get orderId from URL parameters
+      
+      // Find the order by its ID
+      const order = await orders.findById(orderId).populate('products.productId').populate('addressId');
+      console.log(order);
+      if (!order) {
+        return res.status(404).send('Order not found'); // Handle case where order is not found
+      }
+  
+      // Render the EJS template and pass the order data
+      res.render('admin/viewdetails', { order });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+  }
+  };
+
+
+
+
 
 
 
@@ -395,5 +532,11 @@ module.exports =
     addCategory,
     logout,
     getUserOrder,
+    updateUserOrder,
+    getCoupon,
+    getaddCoupon,
+    addCoupon,
+    viewdetails,
+    deletecategory,
     
 }

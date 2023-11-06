@@ -1,200 +1,94 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>user details</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+     
+            <%- include("../partials/adminHeader.ejs") %>
 
-    <style>
-        body{
-            padding: 0px;
-            font-family: sans-serif;
-            background-image: url("/images/cta-bg.jpg");
-            filter: brightness(.9);
-            font-weight: 700;
-        }
-        table{
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            background-color: rgb(203, 146, 55);
-        }
-        h1{
-            margin-top:10px ;
-            height: 50px;
-            display: flex;
-            justify-content: center;
-            color: rgb(247, 244, 244);
-        }
-        .tab{
-            display: flex;
-            justify-content: center;
-        }
 
-        th{
-            text-align: center;
-            font-weight: 800;
-           
-        }
-
-         td {
-      padding: 12px 15px;
-      text-align: center;
-    }
-        td a {
-      display: inline-block;
-      text-decoration: none;
-      padding: 5px 10px;
-      background-color: #007bff;
-      color: #fff;
-      border-radius: 5px;
-      transition: background-color 0.3s;
-    }
+            <!-- Content Start -->
+            <div class="content">
+                <%- include("../partials/adminNavbar.ejs") %>
     
-    td a:hover{
-        background-color: rgb(242, 136, 7);
-    }
-    nav {
-            background-color: #7a7272;
-            color: #fff;
-            text-align: center;
-        }
-        .nav-container {
-            display: flex;
-            justify-content: space-evenly;
-            align-items: center;
-            padding: 10px 0;
-            height:  5rem;
-        }
-
-        .nav-item {
-            flex: 1;
-            text-align: center;
-        }
-
-        .nav-item a {
-            color: #fff;
-            text-decoration: none;
-            margin: 0 10px;
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        /* Button hover effect */
-        .nav-item a:hover {
-            background-color: #7f7b7b;
-            color: rgb(54, 77, 221);
-        }
-        #search input[type="text"] {
-         
-            margin-left: 15px;
-             width: 250px; 
-             height: 40px; 
-             border: #a97676;
-  }
-       
-        #search button {
-         width: 80px;
-         height: 38px; 
-         border-radius: 5px;
-  }
-
+                <!-- Navbar End -->
     
-    </style>
-</head>
-<body>
-    <%- include("../partials/adminHeader.ejs") %>
-    <!-- users.ejs -->
-    <!-- <nav>
-        <div class="nav-container">
-            <div class="nav-item"><a href="/admin/users">Users</a></div>
-            <div class="nav-item"><a href="/admin/products">Products</a></div>
-            <div class="nav-item"><a href="/admin/addproducts">AddProducts</a></div>
-            <div class="nav-item"><a href="/admin/category">Category</a></div>
-            <div class="nav-item"><a href="/admin/logout">Logout</a></div>
-        </div>
-    </nav> -->
-
-    <h1>User Details</h1>
-  <div id="search">
-    <form action="/admin/search" method="GET">
-        <input type="text"  id="search" name="search" placeholder="Search..." required>
-        <button type="submit" class="btn btn-primary">Search</button>
-    </form>
-</div>
-    <h4><%=locals.msg%></h4> <h4><%=locals.searchQuery%></h4>
-
-   <div id="tab">
-    <table>
-        <thead>
-            <tr>
-                <th>user_id</th>
-                <th>Name</th>
-                <th>Email</th>
-                 <th>Actions</th>
+    
+                <!-- Table Start -->
+                <div class="container-fluid pt-4 px-4">
+                    <div class="row g-4">
+                        
+                        
+                        
+                       
+                        
+                        <div class="col-12">
+                            <div class="bg-secondary rounded h-100 p-4">
+                                <h6 class="mb-4">Responsive Table</h6>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>user_id</th>
+                                                <th>Name</th>
+                                                <th>Email</th>
+                                                 <th>Actions</th>
+                                                
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% users.forEach(users => { %>
+                                                <tr id="trrow">
+                                                    <td><%=users._id %></td>
+                                                    <td><%= users.name %></td>
+                                                    <td><%= users.email %></td>
+                                                    <td>
+                                                    <button class="btn btn-primary" id="toggleButton_<%= users._id %>"
+                                                        data-user-id="<%= users._id %>"
+                                                        data-user-blocked="<%= users.isBlocked %>" >
+                                                    <%= users.isBlocked ? 'Unblock' : 'Block' %>
+                                                </button>
+                                                </td>
+                                                
+                                
+                                                </tr>
+                                            <% }); %>
+                                           
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <script>
+                    const buttons = document.querySelectorAll("button");
                 
-            </tr>
-        </thead>
-        <tbody>
-            <% users.forEach(users => { %>
-                <tr id="trrow">
-                    <td><%=users._id %></td>
-                    <td><%= users.name %></td>
-                    <td><%= users.email %></td>
-                    <td>
-                    <button class="btn btn-primary" id="toggleButton_<%= users._id %>"
-                        data-user-id="<%= users._id %>"
-                        data-user-blocked="<%= users.isBlocked %>" >
-                    <%= users.isBlocked ? 'Unblock' : 'Block' %>
-                </button>
-                </td>
+                    buttons.forEach(button => {
+                        button.addEventListener("click", () => {
+                            const userId = button.getAttribute("data-user-id");
+                            const userBlocked = button.getAttribute("data-user-blocked") === "true";
                 
-
-                </tr>
-            <% }); %>
-        </tbody>
-    </table>
-</div>
-
-
-
-<script>
-    const buttons = document.querySelectorAll("button");
-
-    buttons.forEach(button => {
-        button.addEventListener("click", () => {
-            const userId = button.getAttribute("data-user-id");
-            const userBlocked = button.getAttribute("data-user-blocked") === "true";
-
-            // Send an AJAX request to your server based on the updated button status.
-            const url = userBlocked ? `/admin/unblock/${userId}` : `/admin/block/${userId}`;
-
-            fetch(url, {
-                method: "GET",
-            })
-            .then(response => {
-                if (response.status === 200) {
-                    // Toggle the button text and data attribute immediately upon success.
-                    button.setAttribute("data-user-blocked", !userBlocked);
-                    button.textContent = userBlocked ? 'Unblock' : 'Block';
-                } else {
-                    // Handle errors or display a message if the request fails.
-                    console.error("Request failed.");
-                }
-            })
-            .catch(error => {
-                console.error(error);
-            });
-        });
-    });
-</script>
-
-
-
-
-</body>
-
-</html>
-
+                            // Send an AJAX request to your server based on the updated button status.
+                            const url = userBlocked ? `/admin/unblock/${userId}` : `/admin/block/${userId}`;
+                
+                            fetch(url, {
+                                method: "GET",
+                            })
+                            .then(response => {
+                                if (response.status === 200) {
+                                    // Toggle the button text and data attribute immediately upon success.
+                                    button.setAttribute("data-user-blocked", !userBlocked);
+                                    button.textContent = userBlocked ? 'Unblock' : 'Block';
+                                } else {
+                                    // Handle errors or display a message if the request fails.
+                                    console.error("Request failed.");
+                                }
+                            })
+                            .catch(error => {
+                                console.error(error);
+                            });
+                        });
+                    });
+                </script>
+                
+                <!-- Table End -->
+    
+                <%- include("../partials/adminfooter.ejs") %>
+    
+                

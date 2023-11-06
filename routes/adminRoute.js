@@ -11,8 +11,8 @@ const upload=multer({dest:"public/uploads"})
 
  router.get("/",adminController.Login)
 
- router.get("/home",adminController.adminHome)
  router.get("/dashboard",adminController.adminHome)
+//  router.get("/dashboard",adminController.adminHome)
 
  router.get("/users",adminController.getUsersDetails)
 //route for searching user
@@ -51,10 +51,23 @@ router.get("/unblock/:id",adminController.unblockUser)
 // route for getting categories
 router.get("/category",adminController.getCategory)
 
+router.get("/deletecategory/:id",adminController.deletecategory)
 //route for admin logout
 router.get("/logout",adminController.logout)
 router.post("/addcategory",adminController.addCategory)
 
 // route for getting user order
 router.get("/orderManagement",adminController.getUserOrder)
+router.post("/updateOrderStatus/:orderId/:newStatus",adminController.updateUserOrder)
+// router.get("/editUserOrder/",adminController.geteditOrderForm)
+// router.post("/editUserOrder",adminController.editUserOrder)
+
+
+// route for  adding coupen 
+router.get("/coupons", adminController.getCoupon);
+router.get("/addCoupons",adminController.getaddCoupon)
+router.post("/addCoupons",adminController.addCoupon)
+
+router.get("/viewdetails/:orderId", adminController.viewdetails);
+
 module.exports = router

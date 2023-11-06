@@ -15,9 +15,10 @@ router.post("/login",userController.loginPost)
 //route for forgotpassword
 router.get("/getforgotpassword",userController.getforgotPass)
 router.post("/forgotpassword",userController.forgotPass)
-router.get("/updatepassword",userController.getchangePass)
-router.post("/changepassword",userController.updatePassword)
-
+// router.get("/updatepassword",userController.getchangePass)
+// router.post("/changepassword",userController.updatePassword)
+router.get("/changepassword",userController.changepassword)
+router.post("/changepasswordpost",userController.changepasswordpost)
 
 router.get("/signup",userController.signup)
 router.post("/signup",userController.signupPost)
@@ -49,9 +50,12 @@ router.post("/quantityUpdate/:itemId",userController.updateQuantity)
 router.get("/orderconfirm",userController.getCheckOut)
 router.post("/orderconfirm/:id",userController.confirmOrder)
 
+// route for order confirmation for cart items
+router.post("/processOrder",userController.processOrder)
+
 
 //route for getting order
-router.get("/myorder",userController.getMyOrder)
+router.get("/myorders",userController.getMyOrder)
 router.get("/cancelorder/:id",userController.cancelOrder)
 
 // payment method route
@@ -67,11 +71,14 @@ router.get("/myaddress",userController.getAddress)
 // routes for showing address & new address
 router.get("/addAddress",userController.showAddress)
 router.post("/addAddress",userController.addAddress)
-router.post("/profile/updateAddress",userController.updateAddress)
+router.post("/updateAddress/:id",userController.updateAddress)
 
-//route for editing existing function
-router.get("/editAddress",userController.editAddress)
+//route for editing existing address
+router.get("/editAddress/:id",userController.editAddress)
 
+// route for applying coupon
+router.post("/applyCoupon", userController.applyCoupon)
 
+router.get('/orderdetails/:orderId', userController.orderdetails);
 
 module.exports= router;

@@ -13,46 +13,42 @@
     </style>
 
 </head>
-<body style="background-color: blanchedalmond;">
+<body style="background-color: rgb(237, 236, 235);">
     <%- include("../partials/header.ejs") %>
     <div class="container">
-        <h1 class="my-4">My Orders</h1>
+        <h1 class="my-4" style="text-align: center;">My Orders</h1>
         <div class="tablecontainer">
             <table class="table table-bordered">
                 <thead class="thead-dark">
                     <tr>
                         <th>Order ID</th>
-                        <th>Product Name</th>
-                        <th>Quantity</th>
-                        <th>Price</th>
                         <th>Payment Method</th>
-                        <th>Date</th>
-                        <th>Status</th>
-                        <th>Cancel Order</th>
+                       <th>Total Price</th>
+                       <th>Order Date</th>
+                       <th>Status</th>
+                       <th>Cancel Order</th>
                     
                         <!-- Add other table headings as needed -->
                     </tr>
                 </thead>
                 <tbody>
-                    <% orders.forEach(order => { %>
+                    <% order.forEach(order => { %>
                         <tr>
                             <td><%= order._id %></td>
-                            <td><%= order.productid.name %></td>
-                            <td><%= order.productsDetails[0].quantity %></td>
-                            <td>$<%= order.productsDetails[0].price %></td>
-                            <td><%= order.payment %></td>
-                            <td><%= new Date(order.date).toLocaleString() %></td>
+                             
+                            <td><%= order.paymentMethod %></td>
+                            <td><%= order.totalPrice %></td>
+                            <td><%= new Date(order.orderDate).toLocaleDateString() %></td>
                             <td><%= order.status %></td>
                             <td>
-                                <% if (order.status !== 'cancelled') { %>
-                                    <a href="/cancelorder/<%=order._id%>">
-                                        <button type="submit" class="btn btn-danger">Cancel</button>
-                                    </a>
-                                <% } %>
-                            </td>
-                            <!-- Add other order details as needed -->
+                              <% if (order.status !== 'Cancelled') { %>
+                                  <a href="/cancelorder/<%=order._id%>">
+                                      <button type="submit" class="btn btn-danger">Cancel</button>
+                                  </a>
+                              <% } %>
+                          </td>
                         </tr>
-                    <% }); %>
+                    <% }); %> 
                 </tbody>
             </table>
         </div>

@@ -1,109 +1,143 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel</title>
-    <style>
-        /* General styling */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
 
-        /* Header styles */
-        header {
-            background-color: #65c3f5;
-            color: #fff;
-            text-align: center;
-            padding: 20px 0;
-        }
 
-        header h1 {
-            margin: 0;
-        }
-
-        /* Navigation styles */
-        nav {
-            background-color: #444;
-            color: #fff;
-            text-align: center;
-        }
-
-        /* Navigation container and item styles */
-        .nav-container {
-            display: flex;
-            justify-content: space-evenly;
-            padding: 10px 0;
-        }
-
-        .nav-item {
-            flex: 1;
-            text-align: center;
-        }
-
-        .nav-item a {
-            color: #fff;
-            text-decoration: none;
-            margin: 0 10px;
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        /* Button hover effect */
-        .nav-item a:hover {
-            background-color: #555;
-            color: red;
-        }
-
-        /* Main content container */
-        main {
-            padding: 20px;
-        }
-
-        /* Sample content styles */
-        .content {
-            background-color: #f9f9f9;
-            padding: 20px;
-            border-radius: 5px;
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <h1>Admin Panel</h1>
-    </header>
-    <nav>
-        <div class="nav-container">
-            
-            <div class="nav-item"><a href="/admin/users">Users</a></div>
-            <div class="nav-item"><a href="/admin/products">Products</a></div>
-            <div class="nav-item"><a href="/admin/addproducts">AddProducts</a></div>
-            <div class="nav-item"><a href="/admin/category">Category</a></div>
-            <div class="nav-item"><a href="/admin/orderManagement">Order Management</a></div>
-            <div class="nav-item"><a href="/admin/logout">Logout</a></div>
-        </div>
-    </nav>
-    <main>
+<%- include("../partials/adminHeader.ejs") %>
+        <!-- Content Start -->
         <div class="content">
-            <!-- Your admin panel content goes here -->
-            <h2>Welcome to  Admin Panel</h2>
-            <p>This is my page for  my admin  </p>
-        </div>
-        
-    </main>
+            <%- include("../partials/adminNavbar.ejs") %>
 
 
+            <!-- Sale & Revenue Start -->
+            <div class="container-fluid pt-4 px-4">
+                <div class="row g-4">
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
+                            <i class="fa fa-chart-line fa-3x text-primary"></i>
+                            <div class="ms-3">
+                                <p class="mb-2">Today Sale</p>
+                                <h6 class="mb-0">$1234</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
+                            <i class="fa fa-chart-bar fa-3x text-primary"></i>
+                            <div class="ms-3">
+                                <p class="mb-2">Total Sale</p>
+                                <h6 class="mb-0">$1234</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
+                            <i class="fa fa-chart-area fa-3x text-primary"></i>
+                            <div class="ms-3">
+                                <p class="mb-2">Today Revenue</p>
+                                <h6 class="mb-0">$1234</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
+                            <i class="fa fa-chart-pie fa-3x text-primary"></i>
+                            <div class="ms-3">
+                                <p class="mb-2">Total Revenue</p>
+                                <h6 class="mb-0">$1234</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Sale & Revenue End -->
 
 
-    <footer>
-        
-    </footer>
-</body>
-</html>
+            <!-- Sales Chart Start -->
+            <div class="container-fluid pt-4 px-4">
+                <div class="row g-4">
+                    <div class="col-sm-12 col-xl-6">
+                        <div class="bg-secondary text-center rounded p-4">
+                            <div class="d-flex align-items-center justify-content-between mb-4">
+                                <h6 class="mb-0">Worldwide Sales</h6>
+                                <a href="">Show All</a>
+                            </div>
+                            <canvas id="worldwide-sales"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-xl-6">
+                        <div class="bg-secondary text-center rounded p-4">
+                            <div class="d-flex align-items-center justify-content-between mb-4">
+                                <h6 class="mb-0">Sales & Revenue</h6>
+                                <a href="">Show All</a>
+                            </div>
+                            <canvas id="salse-revenue"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Sales Chart End -->
 
 
+            <!-- Recent Sales Start -->
+            <div class="container-fluid pt-4 px-4">
+                <div class="bg-secondary text-center rounded p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <h6 class="mb-0" style="text-align: center;"> Recent Orders</h6>
+                        <a href="">Show All</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table text-start align-middle table-bordered table-hover mb-0">
+                            <thead>
+                                <tr class="text-white">
+                                    <th scope="col">User</th>
+                                    <th scope="col">Order Id</th>
+                                    <th scope="col">payment Method</th>
+                                    <th scope="col">Amount</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% order.slice(0, 4).forEach(order => { %>
+                                    <tr>
+                                        <td><%= order.userId.name %></td>
+                                        <td><%= order._id %></td>
+                                        <td><%= order.paymentMethod %></td>
+                                        <td><%= order.totalPrice %></td>
+                                        
+                                            <td>
+                                                <form class="status-form d-flex align-items-center">
+                                                    <input type="hidden" name="orderId" value="<%= order._id %>">
+                                                    <select name="status" class="form-select action-dropdown" data-order-id="<%= order._id %>">
+                                                        <option value="Pending" <%= order.status === 'Pending' ? 'selected' : '' %>>Pending</option>
+                                                        <option value="Delivered" <%= order.status === 'Delivered' ? 'selected' : '' %>>Delivered</option>
+                                                        <option value="Cancelled" <%= order.status === 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
+                                                        <option value="Shipped" <%= order.status === 'Shipped' ? 'selected' : '' %>>Shipped</option>
+                                                    </select>
+                                                </form>
+                                            </td>
+                                            
+                                        
+                                        <td>
+                                            <!-- <button type="button" class="btn btn-primary view-details-btn" data-bs-toggle="modal" data-bs-target="#productDetailsModal" data-products='<%= JSON.stringify(order.products) %>'>
+                                                View Details
+                                            </button> -->
+                                            <a href="/admin/viewdetails/<%= order._id %>"><button type="button" class="btn btn-primary view-details-btn" data-bs-toggle="modal" data-bs-target="#productDetailsModal" data-products='<%= JSON.stringify(order.products) %>'>
+                                                View Details
+                                             </button></a>
+                                        </td>
+                                        
+                                    </tr>
+                                <% }); %>
+                               
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- Recent Sales End -->
 
 
+            <%- include("../partials/adminfooter.ejs") %>
 
+
+           
