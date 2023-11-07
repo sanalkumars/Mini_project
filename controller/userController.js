@@ -65,11 +65,11 @@ const signup= (req,res)=>{
   
 }
 // bcrypt function
-const passwordcrypt= function(password)
-{
-  const bcrptPass = bcrypt.hash(password,8)
-  return bcrptPass
+const passwordcrypt = async function (password) {
+  const bcrptPass = await bcrypt.hash(password, 8);
+  return bcrptPass;
 }
+
 
 // function for generating otp
 const generateOTP=()=>{
@@ -257,48 +257,102 @@ const signupPost = async (req, res) => {
 
 
 
-const loginPost = async(req,res)=>{
- console.log("madara");
-     try{
-      console.log("hai");
-        const {email} = req.body
-        console.log("hello ");
+// const loginPost = async(req,res)=>{
+//  console.log("madara");
+//      try{
+//       console.log("hai");
+//         const {email} = req.body
+//         console.log("hello ");
         
-        const check = await userData.findOne({email:req.body.email})
+//         const check = await userData.findOne({email:req.body.email})
         
-        const result = await bcrypt.compare(req.body.password,check.password);
-         
-        if(check.email=== req.body.email && result===true)
-        {
-          const otp = generateOTP()
-          console.log("generated otp for forgot password is :",otp);
-          
-            let msg = req.body.email 
-            const isBlocked = check.isBlocked
-            if(isBlocked){
-                res.send("cannot login your are blocked by the admin!!!")
-            } 
-            else{
-              
-              req.session.user = req.body.email;
-              req.session.otp = otp ;// storing otp in the session
-              console.log(session.otp);
-              req.session.requestedOTP = true;
-            // sending otp to the mail of the user
-             await sendOTPByEmail(email,otp);
+//         const result = await bcrypt.compare(req.body.password,check.password);
+//         if(check){
 
-              res.render("user/otp",{msg :"please enter the otp sent to your email for verification"});
-        }
+//         if(check.email=== req.body.email && result===true)
+//         {
+//           const otp = generateOTP()
+//           console.log("generated otp for forgot password is :",otp);
+          
+//             let msg = req.body.email 
+//             const isBlocked = check.isBlocked
+//             if(isBlocked){
+//                 res.send("cannot login your are blocked by the admin!!!")
+//             } 
+//             else{
+//               await sendOTPByEmail(email,otp);
+//               req.session.user = req.body.email;
+//               req.session.otp = otp ;// storing otp in the session
+//               console.log(session.otp);
+//               req.session.requestedOTP = true;
+//             // sending otp to the mail of the user
             
-        }
-        else{
-            res.render("user/login",{error:"wrong deatils"})
-        }
-     }
-     catch{
-          res.send("! wronge detail... ")
-     }
-}
+
+//               res.render("user/otp",{msg :"please enter the otp sent to your email for verification"});
+//         }
+            
+//         }
+//         else{
+//             res.render("user/login",{error:"wrong deatils"})
+//         }
+
+//       } 
+//       else{
+//         res.json("user not found")
+//       }
+//      }
+//      catch{
+//           res.send("! wronge detail... ")
+//      }
+// }
+const loginPost = async(req,res)=>{
+  console.log("madara");
+      try{
+       console.log("hai");
+         const {email} = req.body
+         console.log("hello ");
+         
+         const check = await userData.findOne({email:req.body.email})
+         
+         const result = await bcrypt.compare(req.body.password,check.password);
+          
+         if(check.email=== req.body.email && result===true)
+         {
+           const otp = generateOTP()
+           console.log("generated otp for forgot password is :",otp);
+           
+             let msg = req.body.email 
+             const isBlocked = check.isBlocked
+             if(isBlocked){
+                 res.send("cannot login your are blocked by the admin!!!")
+             } 
+             else{
+               
+               req.session.user = req.body.email;
+               req.session.otp = otp ;// storing otp in the session
+               console.log(req.session.otp);
+               req.session.requestedOTP = true;
+             // sending otp to the mail of the user
+              await sendOTPByEmail(email,otp);
+ 
+               res.render("user/otp",{msg :"please enter the otp sent to your email for verification"});
+         }
+             
+         }
+         else{
+             res.render("user/login",{error:"wrong deatils"})
+         }
+ 
+ 
+      }
+      catch{
+           res.send("! wronge detail... ")
+      }
+ }
+
+
+
+
 // function for getting the forgot password ejs
 const getforgotPass = (req,res)=>{
    res.render("user/forgotpass")

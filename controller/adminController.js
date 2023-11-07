@@ -36,16 +36,16 @@ const LoginPost = async(req,res)=>{
         const msg =req.body.username
        
         try {
-            const order = await orders.find().populate('products.productId').populate("userId")
-            
+            const order = await orders.find().populate('products.productId').populate('userId')
+            console.log(order);
             // Check if any order has been returned
-            const hasReturnedOrder = order.some(order => order.isReturned);
+            // const hasReturnedOrder = order.some(order => order.isReturned);
     
             if (!orders) {
                 throw new Error('No orders found');
             }
     
-            res.render('admin/dashboard', { order, hasReturnedOrder });
+            res.render('admin/dashboard', { order });
         } catch (error) {
             console.error("error");
             res.status(500).send('Internal Server Error');
@@ -63,14 +63,13 @@ const adminHome =async(req,res)=>{
     try {
         const order = await orders.find().populate('products.productId').populate("userId")
         
-        // Check if any order has been returned
-        const hasReturnedOrder = order.some(order => order.isReturned);
+        
 
         if (!orders) {
             throw new Error('No orders found');
         }
 
-        res.render('admin/dashboard', { order, hasReturnedOrder });
+        res.render('admin/dashboard', { order });
     } catch (error) {
         console.error("error");
         res.status(500).send('Internal Server Error');
