@@ -172,55 +172,67 @@
 </section>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-$(document).ready(function() {
-  $(".increaseQuantity").on("click", function() {
-    const itemInput = $(this).closest(".input-group").find(".form-control");
-    const currentQuantity = parseInt(itemInput.val());
-    const newQuantity = currentQuantity + 1;
-    updateQuantity(itemInput, newQuantity);
-  });
-
-  $(".decreaseQuantity").on("click", function() {
-    const itemInput = $(this).closest(".input-group").find(".form-control");
-    const currentQuantity = parseInt(itemInput.val());
-
-    // Check if the current quantity is greater than 1 before decreasing
-    if (currentQuantity > 1) {
-      const newQuantity = currentQuantity - 1;
+  $(document).ready(function() {
+    $(".increaseQuantity").on("click", function() {
+      const itemInput = $(this).closest(".input-group").find(".form-control");
+      const currentQuantity = parseInt(itemInput.val());
+      const newQuantity = currentQuantity + 1;
       updateQuantity(itemInput, newQuantity);
-    }
-  });
+    });
 
-  function updateQuantity(itemInput, newQuantity) {
-    const currentQuantity = parseInt(itemInput.val());
-    const itemId = itemInput.data("item-id");
+    $(".decreaseQuantity").on("click", function() {
+      const itemInput = $(this).closest(".input-group").find(".form-control");
+      const currentQuantity = parseInt(itemInput.val());
 
-    $.ajax({
-      type: "POST",
-      url: "/quantityUpdate/" + itemId,
-      data: { quantity: newQuantity },
-      success: function(response) {
-        if (response.success) {
-          itemInput.val(response.newQuantity);
-
-          // Update the total price in the summary section
-          const totalPriceElement = $("#totalPriceValue");
-          totalPriceElement.text("$" + response.newTotalPrice.toFixed(2)); // Format the price
-
-          // Update the total price in the second location (if needed)
-          const totalPriceElement2 = $("#totalPriceValue2"); // Assuming you have a second element with ID "totalPriceValue2"
-          totalPriceElement2.text("$" + response.newTotalPrice.toFixed(2)); // Format the price
-        } else {
-          // Handle error
-        }
-      },
-      error: function() {
-        // Handle error
+      // Check if the current quantity is greater than 1 before decreasing
+      if (currentQuantity > 1) {
+        const newQuantity = currentQuantity - 1;
+        updateQuantity(itemInput, newQuantity);
       }
     });
-  }
-});
+
+    function updateQuantity(itemInput, newQuantity) {
+      const currentQuantity = parseInt(itemInput.val());
+      const itemId = itemInput.data("item-id");
+
+      $.ajax({
+        type: "POST",
+        url: "/quantityUpdate/" + itemId,
+        data: { quantity: newQuantity },
+        success: function(response) {
+          if (response.success) {
+            itemInput.val(response.newQuantity);
+
+            // Update the total price in the summary section
+            updateTotalPrice(response.newTotalPrice);
+          } else {
+            handleUpdateError();
+          }
+        },
+        error: function() {
+          handleUpdateError();
+        }
+      });
+    }
+
+    function updateTotalPrice(newTotalPrice) {
+      const formattedPrice = "$" + newTotalPrice.toFixed(2);
+
+      const totalPriceElement = $("#totalPriceValue");
+      totalPriceElement.text(formattedPrice);
+
+      // Update the total price in the second location (if needed)
+      const totalPriceElement2 = $("#totalPriceValue2"); // Assuming you have a second element with ID "totalPriceValue2"
+      totalPriceElement2.text(formattedPrice);
+    }
+
+    function handleUpdateError() {
+      // Handle error here (e.g., show an error message to the user)
+      console.error("Quantity update failed");
+    }
+  });
 </script>
+
   
 <!-- Recommended -->
 

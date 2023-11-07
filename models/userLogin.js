@@ -28,6 +28,10 @@ const loginSchema = new mongoose.Schema({
         type:Boolean,
         dafault:false
     },
+    wallet: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Wallet'
+    }
    
 
 })

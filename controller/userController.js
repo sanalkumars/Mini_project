@@ -2,7 +2,7 @@ const { render } = require("ejs")
 const  userData = require("../models/userLogin")
 const products =require("../models/product")
 const  nodemailer = require('nodemailer')
-const randomstring= require("randomstring")
+
 const otpGenerator = require('otp-generator');
 const otpSchema = require("../models/otp")
 const bcrypt = require("bcrypt")
@@ -12,6 +12,10 @@ const orders = require("../models/order")
 const Address = require("../models/address")
 const coupon =require("../models/coupon")
 const session = require("express-session")
+
+const  Wallet = require('../models/wallet')
+const Feedback = require('../models/feedbackModel')
+const Reference = require('../models/Reference')
 
 
 const userHome =async (req,res)=>{
@@ -111,75 +115,159 @@ const generateOTP=()=>{
 
 // signup post for user
 
-const signupPost = async (req,res)=>{
+// const signupPost = async (req,res)=>{
      
-      let email= req.body.email
-      const userfound = await userData.findOne({email}) 
-    if(!userfound){
+//       let email= req.body.email
+//       const userfound = await userData.findOne({email}) 
+//     if(!userfound){
+//       const pass = req.body.password
+//       const bcryptedPass = await passwordcrypt(pass)
+//       req.body.password= bcryptedPass
+//     console.log(req.body.password);
+
+//      const data={
+//         name:req.body.name,
+//         email:req.body.email,
+//         password:req.body.password
+//      };
+
+//      await userData.create(data)
+
+//      try{
+//       const {email} = req.body
+//       const check = await userData.findOne({email:req.body.email})
+//       console.log("user found");
+//       if(check){
+
+//       if(check.password===req.body.password){
+//         const otp = generateOTP();
+//         console.log("generated otp",otp);
+//         if(check.isBlocked)
+//         {
+//           res.json("your blocked by the Admin")
+//         }
+//         console.log(1);
+//           req.session.user = req.body.email
+//           req.session.otp = otp // store otp in session
+//           req.session.requestedOTP = true;
+//           console.log(2);
+//           // sending otp to the user email
+//           await sendOTPByEmail(email,otp);
+//           res.render("user/otp",{msg:"otp have been send to your email"});
+//       } else{
+//         res.render("user/login",{error:"wrong password!!!"});
+//       } 
+//     }else{
+//           res.render("user/login",{error:"error in finding user!!!"});
+//       }
+//     }
+//      catch(error)
+//      {
+//      console.log(error);
+//      res.json("error in processing your request!!!")
+//      }
+//     }
+//    else {
+//            const msg ="Already have an Account for this email Go to Login"
+//            res.render("user/signup",{msg})
+//   }
+// }
+// function for generating random reference code 
+function generateRandomReferenceCode(length) {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let result = '';
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    result += characters[randomIndex];
+  }
+
+  return result;
+}
+
+
+const signupPost = async (req, res) => {
+  let email = req.body.email;
+  const userFound = await userData.findOne({ email });
+  console.log(userFound);
+  if (!userFound) {
+
       const pass = req.body.password
       const bcryptedPass = await passwordcrypt(pass)
       req.body.password= bcryptedPass
-    console.log(req.body.password);
 
-     const data={
-        name:req.body.name,
-        email:req.body.email,
-        password:req.body.password
-     };
+    const data = {
+      name: req.body.name,
+      email: req.body.email,
+      password: req.body.password,
+    };
+    await userData.create(data);
 
-     await userData.create(data)
+    try {
+      const { email } = req.body;
+      const check = await userData.findOne({ email: req.body.email });
+      if (check) {
+        const referenceCode = generateRandomReferenceCode(8);
+        await Reference.create({
+          userId: check._id,
+          referenceCode: referenceCode,
+        });
 
-     try{
-      const {email} = req.body
-      const check = await userData.findOne({email:req.body.email})
-      console.log("user found");
-      if(check){
+        // Create a wallet for the user with default balance of 0
+        const newWallet = new Wallet();
+        await newWallet.save();
+        check.wallet = newWallet;
+        await check.save();
 
-      if(check.password===req.body.password){
-        const otp = generateOTP();
-        console.log("generated otp",otp);
-        if(check.isBlocked)
-        {
-          res.json("your blocked by the Admin")
-        }
-        console.log(1);
-          req.session.user = req.body.email
-          req.session.otp = otp // store otp in session
+        if (check.password == req.body.password) {
+          const otp = generateOTP();
+          console.log(otp);
+          if (check.isblocked) {
+            res.render("user/login", { error: "you are blocked by admin !!!" });
+          }
+          req.session.user = req.body.email;
+          req.session.otp = otp;
           req.session.requestedOTP = true;
-          console.log(2);
-          // sending otp to the user email
-          await sendOTPByEmail(email,otp);
-          res.render("user/otp",{msg:"otp have been send to your email"});
-      } else{
-        res.render("user/login",{error:"wrong password!!!"});
-      } 
-    }else{
-          res.render("user/login",{error:"error in finding user!!!"});
+          await sendOTPByEmail(email, otp);
+          res.render("user/otp", {
+            msg: "Please enter the OTP sent to your email",
+          });
+        } else {
+          res.render("user/login", { error: "Wrong Password !!!" });
+        }
+      } else {
+        res.render("user/login", { error1: "User not found !!!" });
       }
+    } catch (error) {
+      console.error(error);
+      res.send("An error occurred while processing your request.");
     }
-     catch(error)
-     {
-     console.log(error);
-     res.json("error in processing your request!!!")
-     }
-    }
-   else {
-           const msg ="Already have an Account for this email Go to Login"
-           res.render("user/signup",{msg})
+  } else {
+    const msg = "Email is already Registered";
+    res.render("user/signup", {msg});
   }
-}
+};
+
+
+
+
+
+
+
+
+
 
 const loginPost = async(req,res)=>{
  console.log("madara");
      try{
       console.log("hai");
         const {email} = req.body
-        console.log(req.body);
-        console.log(email);
+        console.log("hello ");
+        
         const check = await userData.findOne({email:req.body.email})
-        console.log("bye");
-        const result = await bcrypt.compare(req.body.password,check.password)
-         console.log(result);
+        
+        const result = await bcrypt.compare(req.body.password,check.password);
+         
         if(check.email=== req.body.email && result===true)
         {
           const otp = generateOTP()
@@ -571,13 +659,14 @@ const addtocart = async (req, res) => {
 };
 
 //function for quantity  updation
-
 const updateQuantity = async (req, res) => {
   try {
     const itemId = req.params.itemId;
     const newQuantity = req.body.quantity;
 
     const cartItem = await cartProduct.findById(itemId).populate('productId');
+
+     console.log("cartitem is",cartItem);
      
     if (!cartItem) {
       return res.status(404).json({ message: 'Cart item not found' });
@@ -585,26 +674,20 @@ const updateQuantity = async (req, res) => {
 
     // Calculate the new total price for the cart item
     const itemPrice = cartItem.productId.price;
+    
     cartItem.quantity = newQuantity;
     cartItem.totalPrice = itemPrice * newQuantity;
+    
+    const newTotalPrice = cartItem.totalPrice; // Get the updated total price
+    
     await cartItem.save();
 
-    // Recalculate the total price for the entire cart
-    const cart = await cartProduct.find({ userId: cartItem.userId }).populate('productId');
-    let totalCartPrice = 0;
-
-    for (const cartItem of cart) {
-      totalCartPrice += cartItem.totalPrice;
-    }
-   const newTotalPrice =totalCartPrice
-    res.json({ success: true, newQuantity, newTotalPrice});
+    res.json({ success: true, newQuantity, newTotalPrice });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
-
-
 
 
 
@@ -674,57 +757,51 @@ const updateQuantity = async (req, res) => {
 
  }
 
-const confirmOrder = async(req,res)=>{
-    console.log("hellooo order confirmed");
-   if(req.session.user)
-   {
-    try{
-       const productid = req.params.id
-       const product = await products.findOne({_id:productid})
-       console.log(product);
-        console.log(productid);
+// const confirmOrder = async(req,res)=>{
+//     console.log("hellooo order confirmed");
+//    if(req.session.user)
+//    {
+//     try{
+//        const productid = req.params.id
+//        const product = await products.findOne({_id:productid})
+//        console.log(product);
+//         console.log(productid);
 
-       const orderData = {
-        fname : req.body.fname,
-        lname:req.body.lname,
-        country:req.body.selection,
-        city:req.body.city,
-        payment:req.body.payment,
-        status: "pending",
-        userid:req.session.user,
-        productid: productid,
-        productsDetails: [
-          {
+//        const orderData = {
+//         fname : req.body.fname,
+//         lname:req.body.lname,
+//         country:req.body.selection,
+//         city:req.body.city,
+//         payment:req.body.payment,
+//         status: "pending",
+//         userid:req.session.user,
+//         productid: productid,
+//         productsDetails: [
+//           {
             
-            name: product.name, 
-            quantity:1, 
-            price: product.price, 
-            },
+//             name: product.name, 
+//             quantity:1, 
+//             price: product.price, 
+//             },
             
-          ],
+//           ],
+//         date: Date.now(),
+//        }
+//        console.log(" this is my oredr details",orderData);
+//        const newOrder = new orders(orderData); 
 
-
-        date: Date.now(),
+//        // Adding the new order to the collection
+//        await newOrder.save();
+//        res.render("user/orderSucess")
        
-        
-       }
-       console.log(" this is my oredr details",orderData);
-       const newOrder = new orders(orderData); 
+//     }catch(error)
+//     {
+//       console.log(error);
+//       res.send("internal server error")
 
-       // Adding the new order to the collection
-       await newOrder.save();
-       
-   
-       res.render("user/orderSucess")
-       
-    }catch(error)
-    {
-      console.log(error);
-      res.send("internal server error")
-
-    }
-   }
-}
+//     }
+//    }
+// }
 
 // function for storing cart order in the database 
 const processOrder = async (req, res) => {
@@ -766,6 +843,70 @@ const processOrder = async (req, res) => {
     res.status(500).json({ success: false, message: 'An error occurred while processing the order'});
 }
 };
+
+// const processOrder = async (req, res) => {
+//     try {
+//         console.log("inside the processOrder function");
+//         const user = await userData.findOne({ email: req.session.user });
+//         const userId = user._id;
+
+//         const { address, paymentMethod, totalPrice, grantTotal, couponDiscount } = req.body;
+
+        
+
+//         const cartItems = await cartProduct.find({ userId: user._id }).populate('productId');
+
+//         const products = cartItems.map((item) => ({
+//             productId: item.productId,
+//             quantity: item.quantity,
+//         }));
+//         console.log("product id for map is:",productId);
+
+//         const order = new orders({
+//             userId,
+//             paymentMethod,
+//             addressId: address,
+//             products,
+//             totalPrice,
+//             grantTotal,
+//             couponDiscount
+//         });
+
+//         await order.save();
+
+//         // Reduce the quantity of products in the products collection
+//         for (const productInfo of products) {
+//           const productId = productInfo.productId;
+//           const quantity = productInfo.quantity;
+
+//           console.log("the product id is :",productId);
+//           console.log("product id is",productId._id );
+//           // Find the product and update the quantity
+//           const product = await products.findById(productId);
+    
+//           if (!product) {
+//             throw new Error(`product with ID ${productId} not found`);
+//           }
+    
+//           // Update the quantity of the product
+//           product.quantity -= quantity;
+//           await product.save();
+//         }
+
+//         await cartProduct.deleteMany({ userId: user._id });
+
+//         res.json({ success: true, redirectUrl: '/ordersuccess' });
+//     } catch (error) {
+//         console.error('Error:', error);
+//         res.status(500).json({ success: false, message: 'An error occurred while processing the order' });
+//     }
+// };
+
+
+
+
+
+
 
 // function for applying coupon
 const applyCoupon = async(req,res)=>{
@@ -820,32 +961,148 @@ const getMyOrder = async (req, res) => {
 
 // function for cancel order
 
-const cancelOrder = async(req,res)=>{
+// const cancelOrder = async(req,res)=>{
    
-  const orderId = req.params.id
-  console.log("id of the order to cancel",orderId);
+//   const orderId = req.params.id
+//   console.log("id of the order to cancel",orderId);
    
-  try{
-    const order = await orders.findById(orderId)
-    console.log("order to be cancelled",order);
-    if (!order) {
+//   try{
+//     const order = await orders.findById(orderId)
+//     console.log("order to be cancelled",order);
+//     if (!order) {
       
-      console.log("Order not found");
-      return res.status(404).send("Order not found");
-    }
-    else{
-      order.status = "Cancelled"
-      await order.save()
-      res.redirect("/profile")
+//       console.log("Order not found");
+//       return res.status(404).send("Order not found");
+//     }
+//     else{
+//       order.status = "Cancelled"
+//       await order.save()
+//       res.redirect("/profile")
+//     }
+
+//   } catch(err)
+//   {
+//      console.log(err);
+//     res.send("internal server error")
+//   }
+// }
+
+const cancelOrder = async (req, res) => {
+  const orderId = req.params.id;
+  console.log("id of the order to cancel", orderId);
+
+  try {
+    const order = await orders.findById(orderId);
+
+    if (!order) {
+      throw new Error('Order not found');
     }
 
-  } catch(err)
-  {
-     console.log(err);
-    res.send("internal server error")
+    // Loop through the products in the order
+    for (const productInfo of order.products) {
+      const productId = productInfo.productId;
+      const quantity = productInfo.quantity;
+
+      // Find the product and update the quantity
+      const product = await products.findById(productId);
+
+      if (!product) {
+        throw new Error(`product with ID ${productId} not found`);
+      }
+
+      // Update the quantity of the product
+      product.quantity += quantity;
+      await product.save();
+    }
+
+    // Update order status to 'Canceled'
+    order.status = 'Cancelled';
+    await order.save();
+
+    const user = await userData.findOne({ email: req.session.user }).populate('wallet');
+
+    if (user) {
+      const totalPrice = order.totalPrice;
+
+      if (user.wallet) {
+        if (order.paymentMethod !== 'cashOnDelivery') {
+          user.wallet.balance += totalPrice;
+        }
+        await user.wallet.save();
+      } else {
+        const newWallet = new Wallet({ balance: totalPrice });
+        await newWallet.save();
+        user.wallet = newWallet;
+      }
+
+      await user.save();
+    }
+
+    res.redirect("/myorders");
+  } catch (err) {
+    console.log(err);
+    res.send("internal server error");
   }
 }
 
+
+// const cancelOrder = async (req, res) => {
+//   const orderId = req.params.id;
+//   console.log("id of the order to cancel", orderId);
+
+//   try {
+//     const order = await Order.findById(orderId);
+
+//     if (!order) {
+//       throw new Error('Order not found');
+//     }
+
+//     // Loop through the products in the order
+//     for (const productInfo of order.products) {
+//       const productId = productInfo.productId;
+//       const quantity = productInfo.quantity;
+
+//       // Find the product and update the quantity
+//       const product = await Product.findById(productId);
+
+//       if (!product) {
+//         throw new Error(Product with ID ${productId} not found);
+//       }
+
+//       // Update the quantity of the product
+//       product.quantity += quantity;
+//       await product.save();
+//     }
+
+//     // Update order status to 'Canceled'
+//     order.status = 'Canceled';
+//     await order.save();
+
+//     const user = await collection.findOne({ email: req.session.user }).populate('wallet');
+
+//     if (user) {
+//       const totalPrice = order.totalPrice;
+
+//       if (user.wallet) {
+//         if (order.paymentMethod !== 'cashOnDelivery') {
+//           user.wallet.balance += totalPrice;
+//         }
+//         await user.wallet.save();
+//       } else {
+//         const newWallet = new Wallet({ balance: totalPrice });
+//         await newWallet.save();
+//         user.wallet = newWallet;
+//       }
+
+//       await user.save();
+//     }
+
+//     res.redirect("/myorders");
+//   } catch (err) {
+//     console.log(err);
+//     res.send("internal server error");
+//   }
+// }
 
 
 
@@ -878,10 +1135,16 @@ const getProfile = async(req,res)=>{
       console.log(user);
       const address=await Address.find({userId: user._id})
 
-    const userId = user._id;  
+   const userId = user._id;  
    const order = await orders.find({ userId }).populate('products.productId');
 
-    res.render('user/userprofile',{user,address,order})  
+   const returnedOrders = await orders.find({ userId: user._id, isReturned:true});
+
+   const userWallet = await Wallet.findById(user.wallet);
+
+   const reference = await Reference.findOne({ userId: user._id});
+
+    res.render('user/userprofile',{user,address,order,returnedOrders,reference,userWallet})  
     
    } catch (error) {
         console.error(error);
@@ -1064,7 +1327,7 @@ module.exports= {
     removecartItem,
     updateQuantity,
     getCheckOut,
-    confirmOrder,
+    // confirmOrder,
     paymentMethod,
     orderSucess,
     getProfile,

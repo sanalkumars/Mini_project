@@ -41,12 +41,13 @@
                             <td><%= new Date(order.orderDate).toLocaleDateString() %></td>
                             <td><%= order.status %></td>
                             <td>
-                              <% if (order.status !== 'Cancelled') { %>
-                                  <a href="/cancelorder/<%=order._id%>">
-                                      <button type="submit" class="btn btn-danger">Cancel</button>
+                                <% if (order.status === 'Pending' || order.status === 'Shipped') { %>
+                                  <a href="/cancelorder/<%= order._id %>">
+                                    <button type="submit" class="btn btn-danger">Cancel</button>
                                   </a>
-                              <% } %>
-                          </td>
+                                <% } %>
+                              </td>
+                              
                         </tr>
                     <% }); %> 
                 </tbody>

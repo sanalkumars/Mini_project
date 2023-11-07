@@ -48,7 +48,7 @@ router.post("/quantityUpdate/:itemId",userController.updateQuantity)
 
 // route for order confirmation adding single order
 router.get("/orderconfirm",userController.getCheckOut)
-router.post("/orderconfirm/:id",userController.confirmOrder)
+// router.post("/orderconfirm/:id",userController.confirmOrder)
 
 // route for order confirmation for cart items
 router.post("/processOrder",userController.processOrder)
