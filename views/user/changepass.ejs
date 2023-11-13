@@ -93,5 +93,40 @@
         </form>
     </div>
 
+
+
+    <script>
+        document.querySelector('form').addEventListener('submit', function (event) {
+          // Clear previous error messages
+          document.querySelectorAll('.error').forEach(errorElement => errorElement.textContent = '');
+      
+          // Validate current password
+          const currentPasswordInput = document.getElementById('currentPassword');
+          if (!currentPasswordInput.value.trim()) {
+            document.getElementById('currentPasswordError').textContent = 'Current Password is required';
+            event.preventDefault();
+          }
+      
+          // Validate new password
+          const newPasswordInput = document.getElementById('newPassword');
+          if (!newPasswordInput.value.trim()) {
+            document.getElementById('newPasswordError').textContent = 'New Password is required';
+            event.preventDefault();
+          }
+      
+          // Validate confirm password
+          const confirmPasswordInput = document.getElementById('confirmPassword');
+          if (!confirmPasswordInput.value.trim()) {
+            document.getElementById('confirmPasswordError').textContent = 'Confirm Password is required';
+            event.preventDefault();
+          } else if (newPasswordInput.value !== confirmPasswordInput.value) {
+            document.getElementById('confirmPasswordError').textContent = 'Passwords do not match';
+            event.preventDefault();
+          }
+        });
+      </script>
+      
+
+
 </body>
 </html>

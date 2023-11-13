@@ -5,6 +5,8 @@
         background-color: lightblue;
     }
 </style>
+<link rel="stylesheet" href="/cropperjs/cropper.css">
+    <script src="/cropperjs/cropper.js"></script>
 <body>
     <div class="container-fluid position-relative d-flex p-0">
         <!-- Sidebar Start -->
@@ -25,7 +27,9 @@
                 <div class="d-flex justify-content-center mt-5 " style="min-height: 100vh;">
                     <div>
                         
-                        <form action="/admin/editproducts/<%= product.id %>" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        <form id="productForm" action="/admin/editproducts/<%= product.id %>" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                            
+                            <input type="hidden" id="croppedImageData" name="croppedImageData" value="">
                             <!-- Add your form content here -->
                             <div class="form-group">
                                 <label for="name">Product Name:</label>
@@ -54,24 +58,41 @@
                             <div class="form-group">
                                 <label for="image">Product Image:</label>
                                 <input type="file" id="image" name="image" accept="image/*" class="form-control-file">
+                                
+
+
+                                <div class="img-container">
+                                    <img id="imagex" src="/uploads/<%= product.image%>" style="max-height: 100px;">
+                                </div>
+
+                                <button id="btn-crop">crop</button>
+                                            <div class="cropped-container">
+                                                <img src="" id="output">
+                                           </div>
+                                 <br><br>
+
+
+                                <button type="button" class="btn btn-danger" onclick="confirmDeleteImage(this)">Delete Image</button>
                             </div>
-                            <div class="form-group">
+                            
+                            <div class="additional-images">
                                 <label for="additionalimages">Additional Images:</label>
-                                <input type="file" id="additionalimages" name="additionalimages" accept="image/*" multiple class="form-control-file" required>
+                                <input type="file" id="additionalimages" name="additionalimages" accept="image/*" multiple required><br>
+                                <% for (let i = 0; i < product.additionalimages.length; i++) { %>
+                                    <div>
+                                        <img width="70" height="70" class="rounded-2 mr-2" style="max-height: 100px;" src="/uploads/<%= product.additionalimages[i] %>" alt="<%= product.name %>">
+                                        <button type="button" class="btn btn-danger" onclick="confirmDeleteImage(this)">Delete Image</button>
+                                    </div>
+                                <% } %>
                             </div>
-                          
+                            <br>
                             <button type="submit" class="btn btn-primary">Update Product</button>
                         </form>
                     </div>
                 </div>
-         
-
                
             </div>
         
-            
-
-
             <!-- Footer Start -->
             <%- include("../partials/adminfooter.ejs") %>
             <!-- Footer End -->
@@ -82,5 +103,211 @@
         <!-- Back to Top -->
         <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
     </div>
+  <script>
+    function confirmDeleteImage(button) {
+        // Confirm deletion with a dialog
+        if (confirm("Are you sure you want to delete this image?")) {
+            deleteImage(button);
+        }
+    }
 
-    
+    function deleteImage(button) {
+        // Get the parent div of the image
+        var parentDiv = button.parentNode;
+
+        // Find the image within the parent div
+        var image = parentDiv.querySelector('img');
+
+        // Hide the image
+        image.style.display = 'none';
+
+        // Hide the button
+        button.style.display = 'none';
+
+        // You can also clear the file input value if needed
+        var fileInput = parentDiv.querySelector('input[type="file"]');
+        fileInput.value = '';
+    }
+</script>
+<script>
+    let croppedImageData; // Variable to store the cropped image data
+    let cropper; // Variable to store the Cropper instance
+
+    // Function to handle the change event of the file input
+    function handleImageChange(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                // Set the source of the image and initialize the Cropper
+                document.getElementById('imagex').src = e.target.result;
+
+                // Initialize Cropper with aspectRatio
+                cropper = new Cropper(document.getElementById('imagex'), {
+                    aspectRatio: 1,
+                });
+
+                // Display the image in the img-container
+                document.querySelector('.img-container').style.display = 'block';
+                document.querySelector(".cropped-container").style.display = 'none'; // Hide the cropped container
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    document.getElementById('image').addEventListener('change', function () {
+        // Call the handleImageChange function when the file input changes
+        handleImageChange(this);
+    });
+
+    document.querySelector('#btn-crop').addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent the default form submission behavior
+
+        // Check if Cropper instance exists
+        if (cropper) {
+            // Get the cropped canvas and store the cropped image data
+            croppedImageData = cropper.getCroppedCanvas().toDataURL("image/png");
+
+            // Create a new image element for the cropped image
+            const croppedImage = new Image();
+            croppedImage.src = croppedImageData;
+            croppedImage.style.maxWidth = "100px"; // Set the maximum width
+            croppedImage.style.maxHeight = "100px"; // Set the maximum height
+
+            // Update the img-container with the cropped image
+            document.querySelector('.img-container').innerHTML = ''; // Clear existing content
+            document.querySelector('.img-container').appendChild(croppedImage);
+            document.querySelector('.img-container').style.display = 'block';
+            document.querySelector(".cropped-container").style.display = 'none'; // Hide the cropped container
+        }
+    });
+
+    document.getElementById('btn-update-product').addEventListener('click', function (e) {
+        // Prevent the default form submission behavior
+        e.preventDefault();
+
+        // Check if Cropper instance exists
+        if (cropper) {
+            // Decide whether to use the original image or the cropped image data
+            const imageDataToSend = croppedImageData || document.getElementById('imagex').src;
+
+            // Use imageDataToSend for further processing or submission
+            // Example: Submit imageDataToSend to the backend for storage
+
+            // Simulate form submission (adjust this based on your needs)
+            alert('Product Updated Successfully!\nImageData: ' + imageDataToSend);
+        }
+    });
+</script>
+
+<!-- ... your existing HTML code ... -->
+<!-- <script>
+    function confirmDeleteImage(button) {
+        if (confirm("Are you sure you want to delete this image?")) {
+            deleteImage(button);
+        }
+    }
+
+    function deleteImage(button) {
+        var parentDiv = button.parentNode;
+        var image = parentDiv.querySelector('img');
+        image.style.display = 'none';
+        button.style.display = 'none';
+        var fileInput = parentDiv.querySelector('input[type="file"]');
+        fileInput.value = '';
+    }
+
+    let croppedImageData;
+    let cropper;
+
+    function handleImageChange(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                document.getElementById('imagex').src = e.target.result;
+                cropper = new Cropper(document.getElementById('imagex'), {
+                    aspectRatio: 1,
+                });
+                document.querySelector('.img-container').style.display = 'block';
+                document.querySelector(".cropped-container").style.display = 'none';
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    document.getElementById('image').addEventListener('change', function () {
+        handleImageChange(this);
+    });
+
+    document.querySelector('#btn-crop').addEventListener('click', function (e) {
+        e.preventDefault();
+
+        if (cropper) {
+            croppedImageData = cropper.getCroppedCanvas().toDataURL("image/png");
+            const croppedImage = new Image();
+            croppedImage.src = croppedImageData;
+            croppedImage.style.maxWidth = "100px";
+            croppedImage.style.maxHeight = "100px";
+            document.querySelector('.img-container').innerHTML = '';
+            document.querySelector('.img-container').appendChild(croppedImage);
+            document.querySelector('.img-container').style.display = 'block';
+            document.querySelector(".cropped-container").style.display = 'none';
+        }
+    });
+
+    document.getElementById('btn-update-product').addEventListener('click', async function (e) {
+        e.preventDefault();
+
+        if (cropper) {
+            croppedImageData = cropper.getCroppedCanvas().toDataURL("image/png");
+            document.querySelector('.img-container').innerHTML = '';
+            const croppedImage = new Image();
+            croppedImage.src = croppedImageData;
+            croppedImage.style.maxWidth = "100px";
+            croppedImage.style.maxHeight = "100px";
+            document.querySelector('.img-container').appendChild(croppedImage);
+            document.querySelector('.img-container').style.display = 'block';
+            document.querySelector(".cropped-container").style.display = 'none';
+
+            try {
+                const formData = new FormData(document.querySelector('#productForm'));
+                formData.append("image", )
+                const response = await fetch("/admin/editproducts/<%= product.id %>", {
+                    method: "POST",
+                    body: formData
+                    // headers: {
+                    //     'Content-Type': 'application/json', // Set content type to JSON
+                    // },
+                    // body: JSON.stringify({
+                    //     name: document.getElementById('name').value,
+                    //     category: document.getElementById('category').value,
+                    //     description: document.getElementById('description').value,
+                    //     status: document.getElementById('status').value,
+                    //     price: document.getElementById('price').value,
+                    //     // Add other fields as needed
+                    //     croppedImageData: croppedImageData,
+                    // }),
+                });
+
+                if (response.ok) {
+                    alert('Product Updated Successfully!');
+                    // Redirect or perform other actions as needed
+                } else {
+                    alert('Failed to update product. Please try again.');
+                }
+            } catch (error) {
+                console.error(error);
+                alert('An error occurred while updating the product.');
+            }
+        }
+    });
+</script>
+
+ -->
+
+
+
+

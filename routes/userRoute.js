@@ -3,6 +3,7 @@ const express= require('express')
 const router = express.Router()
 
 const userController = require('../controller/userController')
+const userauthentication = require('../middleware/userAuthentication')
 
 
 // route for user
@@ -57,14 +58,14 @@ router.post("/processOrder",userController.processOrder)
 //route for getting order
 router.get("/myorders",userController.getMyOrder)
 router.get("/cancelorder/:id",userController.cancelOrder)
-
++
 // payment method route
 router.get("/paymentmethod",userController.paymentMethod)
-router.get('/ordersucess',userController.orderSucess)
+router.get('/ordersuccess',userController.orderSucess)
 
-
+router.post('/saveOrder',userController.saveOrder)
 // route for user profile
-router.get("/profile",userController.getProfile)
+router.get("/profile",userauthentication.isBlock,userauthentication.userauthentication,userController.getProfile)
 
 //  address routes
 router.get("/myaddress",userController.getAddress)

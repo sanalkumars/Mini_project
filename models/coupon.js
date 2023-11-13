@@ -1,9 +1,7 @@
 const mongoose =require('mongoose');
 
 const couponSchema = new mongoose.Schema({
-     userId:[{
-        type:String
-     }],
+
      couponName:{
         type:String,
         require:true,
@@ -24,7 +22,11 @@ const couponSchema = new mongoose.Schema({
      minValue:{
         type:Number,
         require:true
-     }
+     },
+     appliedUsers: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'userData'  
+   }]
 });
 
 const couponModel  = mongoose.model('coupon',couponSchema);

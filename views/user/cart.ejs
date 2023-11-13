@@ -34,10 +34,10 @@
               <div class="col-lg-5">
                 <div class="me-lg-5">
                   <div class="d-flex">
-                    <img src="/uploads/<%= cartItem.productId.image%>" class="card-image" alt="<%= cartItem.productId.name %>" class="border rounded me-3" style="width: 96px; height: 96px;" />
+                    <img src="/uploads/<%= cartItem.image%>" class="card-image" alt="<%= cartItem.productId.name %>" class="border rounded me-3" style="width: 96px; height: 96px;" />
                     <div class="">
-                      <h4 class="product-name"><%= cartItem.productId.name %></h4>
-                      <p class="text-muted"><%= cartItem.productId.description %></p>
+                      <h4 class="product-name"><%= cartItem.name %></h4>
+                      <p class="text-muted"><%= cartItem.description %></p>
                     </div>
                   </div>
                 </div>    
@@ -74,7 +74,7 @@
             <% }); %>
           <% } else { %>
             <div class="empty-cart">
-              <img src="/images/empty-cart.png" alt="Empty Cart">
+              
               <p>Your cart is empty.</p>
             </div>
           <% } %>
@@ -121,6 +121,8 @@
             <div class="mt-3">
               <a href="/orderconfirm" class="btn btn-success w-100 shadow-0 mb-2"> Make Purchase </a>
               <a href="/products" class="btn btn-danger w-100 border mt-2"> Back to shop </a>
+             
+                
             </div>
           </div>
         </div>
@@ -171,30 +173,31 @@
   </div>
 </section>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
+<!-- <script>
   $(document).ready(function() {
+    console.log("Document ready function is running.");
     $(".increaseQuantity").on("click", function() {
       const itemInput = $(this).closest(".input-group").find(".form-control");
       const currentQuantity = parseInt(itemInput.val());
       const newQuantity = currentQuantity + 1;
       updateQuantity(itemInput, newQuantity);
     });
-
+  
     $(".decreaseQuantity").on("click", function() {
       const itemInput = $(this).closest(".input-group").find(".form-control");
       const currentQuantity = parseInt(itemInput.val());
-
+  
       // Check if the current quantity is greater than 1 before decreasing
       if (currentQuantity > 1) {
         const newQuantity = currentQuantity - 1;
         updateQuantity(itemInput, newQuantity);
       }
     });
-
+  
     function updateQuantity(itemInput, newQuantity) {
       const currentQuantity = parseInt(itemInput.val());
       const itemId = itemInput.data("item-id");
-
+  
       $.ajax({
         type: "POST",
         url: "/quantityUpdate/" + itemId,
@@ -202,7 +205,7 @@
         success: function(response) {
           if (response.success) {
             itemInput.val(response.newQuantity);
-
+  
             // Update the total price in the summary section
             updateTotalPrice(response.newTotalPrice);
           } else {
@@ -214,26 +217,111 @@
         }
       });
     }
-
+  
     function updateTotalPrice(newTotalPrice) {
       const formattedPrice = "$" + newTotalPrice.toFixed(2);
-
+  
       const totalPriceElement = $("#totalPriceValue");
       totalPriceElement.text(formattedPrice);
-
+  
       // Update the total price in the second location (if needed)
-      const totalPriceElement2 = $("#totalPriceValue2"); // Assuming you have a second element with ID "totalPriceValue2"
+      const totalPriceElement2 = $("#totalPriceValue2");
       totalPriceElement2.text(formattedPrice);
     }
-
+  
     function handleUpdateError() {
       // Handle error here (e.g., show an error message to the user)
       console.error("Quantity update failed");
     }
   });
-</script>
+  </script> -->
 
   
+  <script>
+    $(document).ready(function() {
+      $(".increaseQuantity").on("click", function() {
+        const itemInput = $(this).closest(".input-group").find(".form-control");
+        const currentQuantity = parseInt(itemInput.val());
+        const newQuantity = currentQuantity + 1;
+        updateQuantity(itemInput, newQuantity);
+      });
+    
+      $(".decreaseQuantity").on("click", function() {
+        const itemInput = $(this).closest(".input-group").find(".form-control");
+        const currentQuantity = parseInt(itemInput.val());
+    
+        // Check if the current quantity is greater than 1 before decreasing
+        if (currentQuantity > 1) {
+          const newQuantity = currentQuantity - 1;
+          updateQuantity(itemInput, newQuantity);
+        }
+      });
+    
+      function updateQuantity(itemInput, newQuantity) {
+        const currentQuantity = parseInt(itemInput.val());
+        const itemId = itemInput.data("item-id");
+    
+        $.ajax({
+          type: "POST",
+          url: "/quantityUpdate/" + itemId,
+          data: { quantity: newQuantity },
+          success: function(response) {
+            if (response.success) {
+              itemInput.val(response.newQuantity);
+    
+              // Update the total price in the summary section
+              const totalPriceElement = $("#totalPriceValue");
+              totalPriceElement.text("$" + response.newTotalPrice.toFixed(2)); // Format the price
+    
+              // Update the total price in the second location (if needed)
+              const totalPriceElement2 = $("#totalPriceValue2"); // Assuming you have a second element with ID "totalPriceValue2"
+              totalPriceElement2.text("$" + response.newTotalPrice.toFixed(2)); // Format the price
+            } else {
+              // Handle error
+            }
+          },
+          error: function(err) {
+            if(err.status===400)
+            { 
+               alert("product out of quantity")
+            }
+          }
+        });
+      }
+    });
+    </script>
+
+<script>
+  const urlParams = new URLSearchParams(window.location.search);
+  const alertParam = urlParams.get('alert');
+
+  if (alertParam === 'emptyCart') {
+    const alertDiv = document.createElement('div');
+    alertDiv.style.position = 'fixed';
+    alertDiv.style.top = '10%';
+    alertDiv.style.left = '50%';
+    alertDiv.style.transform = 'translate(-50%, -50%)';
+    alertDiv.style.backgroundColor = '#fff';
+    alertDiv.style.border = '1px solid #ccc';
+    alertDiv.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.1)';
+    alertDiv.style.padding = '20px';
+    alertDiv.style.maxWidth = '300px';
+    alertDiv.style.textAlign = 'center';
+    alertDiv.style.borderRadius = '8px';
+    alertDiv.style.border = '1px solid #ccc';
+
+    alertDiv.innerHTML = `
+      <div style="font-size: 20px; margin-bottom: 10px; color: red;">Attention</div>
+      <div>Add items to Cart to Purchase !</div>
+    `;
+
+    document.body.appendChild(alertDiv);
+
+    setTimeout(() => {
+      alertDiv.remove();
+    }, 1500);
+}
+</script>
 <!-- Recommended -->
 
 <!--footer session-->

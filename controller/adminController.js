@@ -4,6 +4,8 @@ const category = require("../models/category")
 const orders = require("../models/order")
 const multer= require("multer")
 const coupon = require("../models/coupon")
+const Cropper = require('cropperjs');
+
 // const orders = require("../models/order")
 
 const upload = multer({dest:"/public/uploads"})
@@ -76,6 +78,166 @@ const adminHome =async(req,res)=>{
    }
     
 }
+
+const chart = async (req, res) => {
+  console.log("hai");
+  if (req.session.admin) {
+    try {
+      // Aggregate data for the daily chart
+      const dayChart = await orders.aggregate([
+        {
+          $group: {
+            _id: { $dateToString: { format: "%Y-%m-%d", date: "$orderDate" } },
+            count: { $sum: 1 }
+          }
+        },
+        {
+          $sort: { _id: 1 } // Sort by date in ascending order
+        },
+        {
+          $limit: 30 // Limit to the last 30 days
+        }
+      ]);
+
+      // Aggregate data for the monthly chart
+      const monthChart = await orders.aggregate([
+        {
+          $group: {
+            _id: { $dateToString: { format: "%Y-%m", date: "$orderDate" } },
+            count: { $sum: 1 }
+          }
+        },
+        {
+          $sort: { _id: 1 } // Sort by month in ascending order
+        }
+      ]);
+
+      // Aggregate data for the yearly chart
+      const yearChart = await orders.aggregate([
+        {
+          $group: {
+            _id: { $dateToString: { format: "%Y", date: "$orderDate" } },
+            count: { $sum: 1 }
+          }
+        },
+        {
+          $sort: { _id: 1 } // Sort by year in ascending order
+        }
+      ]);
+
+      // Aggregate data for the payment method chart
+      const paymentMethodChart = await orders.aggregate([
+        {
+          $group: {
+            _id: "$paymentMethod",
+            count: { $sum: 1 }
+          }
+        }
+      ]);
+
+      // Aggregate data for today's orders
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const todaysOrder = await orders.countDocuments({
+        orderDate: { $gte: today }
+      });
+
+      // Aggregate data for total orders
+      const totalOrder = await orders.countDocuments();
+
+      // Aggregate data for average order count in the current year
+      const avgOrder = await orders.aggregate([
+        {
+          $match: {
+            orderDate: { $gte: new Date(`${new Date().getFullYear()}-01-01`) }
+          }
+        },
+        {
+          $group: {
+            _id: null,
+            avgOrder: { $avg: 1 }
+          }
+        }
+      ]);
+
+      // Aggregate data for average revenue
+      const totalRevenue = await orders.aggregate([
+        {
+          $group: {
+            _id: null,
+            totalRevenue: { $sum: "$grandTotal" },
+            count: { $sum: 1 } // Debugging: count the documents
+          }
+        }
+      ]);
+      
+      console.log("totalRevenue aggregation result:", totalRevenue);
+      
+      console.log("todaysOrder is:", todaysOrder);
+      console.log("totalOrder is:", totalOrder);
+      console.log("avgOrder is:", avgOrder);
+      console.log("totalRevenue is:", totalRevenue);
+      
+
+      console.log(dayChart);
+      console.log(monthChart);
+      console.log(yearChart);
+      console.log(paymentMethodChart);
+      console.log("todaysOrder is:", todaysOrder);
+      console.log("totalOrder is:", totalOrder);
+      console.log("avgOrder is:", avgOrder);
+      console.log("totalRevenue is:", totalRevenue);
+
+      const datesDay = dayChart.map(item => item._id);
+      const orderCountsDay = dayChart.map(item => item.count);
+      let dayData = { dates: datesDay, orderCounts: orderCountsDay };
+
+      const datesMonth = monthChart.map(item => item._id);
+      const orderCountsMonth = monthChart.map(item => item.count);
+      let monthData = { dates: datesMonth, orderCounts: orderCountsMonth };
+
+      const datesYear = yearChart.map(item => item._id);
+      const orderCountsYear = yearChart.map(item => item.count);
+      let yearData = { dates: datesYear, orderCounts: orderCountsYear };
+
+      const paymentMethodLabels = paymentMethodChart.map(item => item._id);
+      const orderCountsByPaymentMethod = paymentMethodChart.map(item => item.count);
+      let paymentMethodData = { labels: paymentMethodLabels, orderCounts: orderCountsByPaymentMethod };
+
+      // Send data as JSON response
+     res.json({
+        dayData,
+        monthData,
+        yearData,
+        paymentMethodData,
+        todaysOrder,
+        totalOrder,
+        avgOrder: avgOrder.length > 0 ? avgOrder[0].avgOrder : 0,
+        totalRevenue: totalRevenue.length > 0 ? totalRevenue[0].totalRevenue : 0
+      });
+
+      console.log("dayData is:", dayData);
+      console.log("monthData is:", monthData);
+      console.log("yearData is:", yearData);
+      console.log("paymentMethodData is:", paymentMethodData);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  } else {
+    res.status(403).json({ error: 'Unauthorized' });
+  }
+};
+
+
+
+
+
+
+
+
+
+
 
 
 const getUsersDetails = async (req,res)=>{
@@ -189,6 +351,7 @@ const deleteProduct =async (req,res)=>{
     res.status(500).send('internal server error')
    }
 }
+
 // function to get editproduct form
 const getEditProduct =async (req,res)=>{
     // add session later
@@ -216,22 +379,23 @@ const getEditProduct =async (req,res)=>{
 
 
 
+
 const updateProduct = async (req, res) => {
     try {
         const productId = req.params.id;
-        const { name, category, description,status, price,quantity } = req.body;
+        const { name, category, description, status, price, quantity } = req.body;
         let image;
-        const additionalimages= req.files.additionalimages? req.files.additionalimages.map(file=>file.filename):[]
 
         // Check if a new image file was uploaded
-        if (req.file) {
-            image = req.file.filename;
+        if (req.files.image && req.files.image.length > 0) {
+            image = req.files.image[0].filename;
         } else {
             // If no new image was uploaded, keep the existing image
             const productToUpdate = await products.findById(productId);
             image = productToUpdate.image;
-
         }
+
+        const additionalimages = req.files.additionalimages ? req.files.additionalimages.map(file => file.filename) : [];
 
         // Find the product by ID and update its fields
         const updatedProduct = await products.findByIdAndUpdate(
@@ -259,6 +423,49 @@ const updateProduct = async (req, res) => {
         res.status(500).send('Internal server error');
     }
 };
+// const updateProduct = async (req, res) => {
+//     try {
+//         const productId = req.params.id;
+//         const { name, category, description, status, price, quantity, croppedImageData } = req.body;
+//          console.log("cropped image is :",croppedImageData);
+//          console.log("request body is :",req.body);
+//         // No need to handle file uploads here
+        
+//         const additionalimages = req.files.additionalimages ? req.files.additionalimages.map(file => file.filename) : [];
+
+//         const updatedProduct = await products.findByIdAndUpdate(
+//             productId,
+//             {
+//                 name,
+//                 category,
+//                 description,
+//                 status,
+//                 price,
+//                 quantity,
+//                 // Store the cropped image data directly
+//                 image: croppedImageData,
+//                 additionalimages,
+//             },
+//             { new: true }
+//         );
+
+//         if (!updatedProduct) {
+//             return res.status(404).send('Product not found');
+//         }
+
+//         res.redirect('/admin/products');
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).send('Internal server error');
+//     }
+// };
+
+
+
+
+
+
+
 
 
 
@@ -279,7 +486,7 @@ const blockUser= async(req,res)=>{
             user.isBlocked=true
             await user.save()
             //res.status(500).json({ error: 'cannot login in' });
-            res.render("admin/dashboard")  
+            res.render("admin/users")  
         }
     }
     catch(err)
@@ -483,6 +690,7 @@ const viewdetails = async (req, res) => {
       // Find the order by its ID
       const order = await orders.findById(orderId).populate('products.productId').populate('addressId');
       console.log(order);
+      
       if (!order) {
         return res.status(404).send('Order not found'); // Handle case where order is not found
       }
@@ -495,6 +703,17 @@ const viewdetails = async (req, res) => {
   }
   };
 
+// function for getting charts or sails reports
+const getChart=async(req,res)=>{
+
+try{
+    res.render('admin/chart')
+}
+   catch(error){
+    console.log(error);
+    res.send("internal server error")
+   }
+}
 
 
 
@@ -537,5 +756,6 @@ module.exports =
     addCoupon,
     viewdetails,
     deletecategory,
-    
+    getChart,
+    chart,
 }

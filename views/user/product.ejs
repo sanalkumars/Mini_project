@@ -195,7 +195,7 @@
 
 
 
-<script>
+<!-- <script>
  
   document.addEventListener("DOMContentLoaded", function () {
         const productImages = document.querySelectorAll(".product-images");
@@ -215,6 +215,27 @@
         });
    });
 
+</script> -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+      const productImages = document.querySelectorAll(".product-images");
+
+      productImages.forEach((imagesContainer) => {
+          const additionalImages = imagesContainer.querySelectorAll(".additional-images img");
+          const mainImage = imagesContainer.querySelector(".main-image img");
+
+          let mainImageSrc = mainImage.src; // Store the initial source of the main image
+
+          additionalImages.forEach((image) => {
+              image.addEventListener("click", function () {
+                  const clickedImageSrc = this.src;
+                  this.src = mainImageSrc; // Set the clicked image source to the initial main image source
+                  mainImage.src = clickedImageSrc; // Set the main image source to the clicked image source
+                  mainImageSrc = clickedImageSrc; // Update the main image source for future swaps
+              });
+          });
+      });
+  });
 </script>
 
 

@@ -116,6 +116,7 @@ footer > p > a {
                 <label>Login:</label>
                 <input class="field_class" name="email" type="email" placeholder="Enter the username" autofocus>
                 <div id="emailError" class="error"></div>
+                <p><%=locals.error1 %></p>
                 <label>Password:</label>
                 <input id="pass" class="field_class" name="password" type="password" placeholder="Enter the password">
                 <div id="passwordError" class="error"></div>               
@@ -132,6 +133,35 @@ footer > p > a {
     <footer>
         <p><a href="#">Join Us Now</a></p>
     </footer>
+
+    <!-- <script>
+        document.getElementById('login_form').addEventListener('submit', function (event) {
+          // Clear previous error messages
+          document.getElementById('emailError').textContent = '';
+          document.getElementById('passwordError').textContent = '';
+      
+          // Validate email
+          const emailInput = document.getElementsByName('email')[0];
+          if (!emailInput.value.trim()) {
+            document.getElementById('emailError').textContent = 'Email is required';
+            event.preventDefault();
+          }
+      
+          // Validate password
+          const passwordInput = document.getElementsByName('password')[0];
+          if (!passwordInput.value.trim()) {
+            document.getElementById('passwordError').textContent = 'Password is required';
+            event.preventDefault();
+          }
+        });
+      </script> -->
+      
+
+
+
+
+
+
 
     <script>
         const form = document.getElementById("login_form");
