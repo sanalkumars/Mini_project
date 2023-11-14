@@ -32,24 +32,36 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <% order.forEach(order => { %>
-                        <tr>
-                            <td><%= order._id %></td>
-                             
-                            <td><%= order.paymentMethod %></td>
-                            <td><%= order.totalPrice %></td>
-                            <td><%= new Date(order.orderDate).toLocaleDateString() %></td>
-                            <td><%= order.status %></td>
-                            <td>
-                                <% if (order.status === 'Pending' || order.status === 'Shipped') { %>
-                                  <a href="/cancelorder/<%= order._id %>">
-                                    <button type="submit" class="btn btn-danger">Cancel</button>
-                                  </a>
-                                <% } %>
-                              </td>
-                              
-                        </tr>
-                    <% }); %> 
+                    <!-- Inside the loop where you generate rows for each order -->
+<% order.forEach(order => { %>
+    <tr>
+        <td><%= order._id %></td>
+        <td><%= order.paymentMethod %></td>
+        <td><%= order.totalPrice %></td>
+        <td><%= new Date(order.orderDate).toLocaleDateString() %></td>
+        <td><%= order.status %></td>
+        <td>
+            <% if (order.status === 'Pending' || order.status === 'Shipped') { %>
+                <form action="/cancelorder/<%= order._id %>" method="post">
+                    <textarea name="cancelReason" rows="3" cols="30" placeholder="Enter cancel reason"></textarea>
+                    <button type="submit" class="btn btn-danger">Cancel</button>
+                </form>
+            <% } else if (order.acceptReturn) { %>
+                <span>Order is returned</span>
+            <% } else if (order.rejectReturn) { %>
+                <span>This order can't be returned</span>
+            <% } else if (order.isReturned) { %>
+                <span>Order return request sent</span>
+            <% } else if (order.status === 'Delivered') { %>
+                <a href="/returnOrder/<%=order._id%>">
+                    <button type="submit" class="btn btn-info">Return</button>
+                </a>
+            <% } else if (order.status === 'Canceled') { %>
+                <span>Order Canceled</span>
+            <% } %>
+        </td>
+   </tr>
+<%});%>
                 </tbody>
             </table>
         </div>

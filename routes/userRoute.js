@@ -57,8 +57,8 @@ router.post("/processOrder",userController.processOrder)
 
 //route for getting order
 router.get("/myorders",userController.getMyOrder)
-router.get("/cancelorder/:id",userController.cancelOrder)
-+
+router.post('/cancelorder/:id', userController.cancelOrder);
+
 // payment method route
 router.get("/paymentmethod",userController.paymentMethod)
 router.get('/ordersuccess',userController.orderSucess)
@@ -81,5 +81,8 @@ router.get("/editAddress/:id",userController.editAddress)
 router.post("/applyCoupon", userController.applyCoupon)
 
 router.get('/orderdetails/:orderId', userController.orderdetails);
+//route for invoice download
+router.get('/downloadInvoice/:orderId',userController.downloadInvoice)
+
 
 module.exports= router;

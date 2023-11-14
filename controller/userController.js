@@ -865,6 +865,15 @@ const updateQuantity = async (req, res) => {
 
     // Update the quantity of the cart item
     const itemPrice = product.price;
+    let priceChange;
+    let diff = newQuantity - cartItem.quantity;
+    if (newQuantity > cartItem.quantity) {
+      // increment
+      priceChange = diff * itemPrice; // this to add to the final result
+    } else {
+      // decrement
+      priceChange = -(diff * itemPrice);
+    }
     cartItem.quantity = newQuantity;
     cartItem.totalPrice = itemPrice * newQuantity;
     const newTotalPrice = cartItem.totalPrice;
@@ -872,7 +881,7 @@ const updateQuantity = async (req, res) => {
     // Save the updated cart item
     await cartItem.save();
     req.session.totalPrice = newTotalPrice;
-    res.json({ success: true, newQuantity, newTotalPrice });
+    res.json({ success: true, newQuantity, newTotalPrice, priceChange });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: 'Internal server error' });
@@ -968,7 +977,7 @@ const processOrder = async (req, res) => {
       userId,
       paymentMethod,
       addressId: address,
-      productdata,
+      products:productdata ,
       totalPrice,
       grantTotal,
       couponDiscount,
@@ -1143,63 +1152,7 @@ const orderSucess = (req, res) => {
 
 }
 
-// const processOrder = async (req, res) => {
-//     try {
-//         console.log("inside the processOrder function");
-//         const user = await userData.findOne({ email: req.session.user });
-//         const userId = user._id;
 
-//         const { address, paymentMethod, totalPrice, grantTotal, couponDiscount } = req.body;
-
-
-
-//         const cartItems = await cartProduct.find({ userId: user._id }).populate('productId');
-
-//         const products = cartItems.map((item) => ({
-//             productId: item.productId,
-//             quantity: item.quantity,
-//         }));
-//         console.log("product id for map is:",productId);
-
-//         const order = new orders({
-//             userId,
-//             paymentMethod,
-//             addressId: address,
-//             products,
-//             totalPrice,
-//             grantTotal,
-//             couponDiscount
-//         });
-
-//         await order.save();
-
-//         // Reduce the quantity of products in the products collection
-//         for (const productInfo of products) {
-//           const productId = productInfo.productId;
-//           const quantity = productInfo.quantity;
-
-//           console.log("the product id is :",productId);
-//           console.log("product id is",productId._id );
-//           // Find the product and update the quantity
-//           const product = await products.findById(productId);
-
-//           if (!product) {
-//             throw new Error(`product with ID ${productId} not found`);
-//           }
-
-//           // Update the quantity of the product
-//           product.quantity -= quantity;
-//           await product.save();
-//         }
-
-//         await cartProduct.deleteMany({ userId: user._id });
-
-//         res.json({ success: true, redirectUrl: '/ordersuccess' });
-//     } catch (error) {
-//         console.error('Error:', error);
-//         res.status(500).json({ success: false, message: 'An error occurred while processing the order' });
-//     }
-// };
 
 
 
@@ -1312,6 +1265,16 @@ const cancelOrder = async (req, res) => {
       throw new Error('Order not found');
     }
 
+    if (req.method === 'POST') {
+      const cancelReason = req.body.cancelReason;
+      // Validate and handle cancel reason as needed
+
+      // Update order with cancel reason
+      order.cancelReason = cancelReason;
+  }
+
+
+
     // Loop through the products in the order
     for (const productInfo of order.products) {
       const productId = productInfo.productId;
@@ -1355,68 +1318,12 @@ const cancelOrder = async (req, res) => {
     res.redirect("/myorders");
   } catch (err) {
     console.log(err);
-    res.send("internal server error");
+    res.render('user/error')
   }
 }
 
 
-// const cancelOrder = async (req, res) => {
-//   const orderId = req.params.id;
-//   console.log("id of the order to cancel", orderId);
 
-//   try {
-//     const order = await Order.findById(orderId);
-
-//     if (!order) {
-//       throw new Error('Order not found');
-//     }
-
-//     // Loop through the products in the order
-//     for (const productInfo of order.products) {
-//       const productId = productInfo.productId;
-//       const quantity = productInfo.quantity;
-
-//       // Find the product and update the quantity
-//       const product = await Product.findById(productId);
-
-//       if (!product) {
-//         throw new Error(Product with ID ${productId} not found);
-//       }
-
-//       // Update the quantity of the product
-//       product.quantity += quantity;
-//       await product.save();
-//     }
-
-//     // Update order status to 'Canceled'
-//     order.status = 'Canceled';
-//     await order.save();
-
-//     const user = await collection.findOne({ email: req.session.user }).populate('wallet');
-
-//     if (user) {
-//       const totalPrice = order.totalPrice;
-
-//       if (user.wallet) {
-//         if (order.paymentMethod !== 'cashOnDelivery') {
-//           user.wallet.balance += totalPrice;
-//         }
-//         await user.wallet.save();
-//       } else {
-//         const newWallet = new Wallet({ balance: totalPrice });
-//         await newWallet.save();
-//         user.wallet = newWallet;
-//       }
-
-//       await user.save();
-//     }
-
-//     res.redirect("/myorders");
-//   } catch (err) {
-//     console.log(err);
-//     res.send("internal server error");
-//   }
-// }
 
 
 
@@ -1619,6 +1526,25 @@ const orderdetails = async (req, res) => {
 };
 
 
+const downloadInvoice=async (req, res) => {
+  try {
+    console.log("inside download invoice");
+    const orderId = req.params.orderId;
+    console.log("order is is:",orderId);
+    const order = await orders.findById(orderId).populate('userId').populate('addressId').populate('products.productId');
+     console.log("invoice order is :",order);
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+
+    res.json(order);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+
 
 module.exports = {
   userHome,
@@ -1659,4 +1585,5 @@ module.exports = {
   changepasswordpost,
   orderdetails,
   saveOrder,
+  downloadInvoice,
 }
