@@ -33,6 +33,8 @@ router.get("/signout",userController.signOut)
 
 // route for user to view products added by admin
 router.get("/products",userController.getProducts)
+router.get('/filteredProducts/:category', userController.getFilteredProducts);
+
 //route for gettingthe single product
 router.get("/singleproduct/:id",userController.getSingleProduct)
 
@@ -83,6 +85,9 @@ router.post("/applyCoupon", userController.applyCoupon)
 router.get('/orderdetails/:orderId', userController.orderdetails);
 //route for invoice download
 router.get('/downloadInvoice/:orderId',userController.downloadInvoice)
+
+router.get('/wallethistory',userController.wallethistory)
+router.post('/claimReference', userController.claimReferenceCode);
 
 
 module.exports= router;

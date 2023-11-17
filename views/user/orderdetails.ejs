@@ -1,4 +1,7 @@
 <%- include("../partials/header.ejs") -%>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" 
+integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
 <script src="https://unpkg.com/easyinvoice/dist/easyinvoice.min.js"></script>
 <div class="container mt-5">
   <div class="row">
@@ -9,7 +12,7 @@
 
   <!-- Order Details -->
   <div class="row mt-4">
-    <div class="col-6">
+    <div class="col-6" style="box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;">
       <h4>Order ID: <%= order._id %></h4>
       <p>Status: <%= order.status %></p>
       <p>Total Price: <%= order.totalPrice %></p>
@@ -20,15 +23,15 @@
     <div class="col-6">
       <h4>Shipping Address:</h4>
       <p><%= order.addressId.street %>, <%= order.addressId.city %>, <%= order.addressId.state %> - <%= order.addressId.zip %></p>
-      <button onclick="dwnlodInvoice()"> DownLoad Invoice</button>
+      <button class="btn btn-primary" onclick="dwnlodInvoice()"> DownLoad Invoice</button>
     </div>
   </div>
 
   <!-- Products -->
   <div class="row mt-4">
-    <div class="col-12">
+    <div class="col-12" style="box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;">
       <h4>Products</h4>
-      <div class="scrollable-div" style="max-height: 300px; overflow-y: auto;">
+      <div class="scrollable-div" style="max-height: 300px; overflow-y: auto; ">
         <ul class="list-group">
           <% order.products.forEach(product => { %>
             <li class="list-group-item">
@@ -55,112 +58,7 @@
 </div>
 
 
-<!-- <script>
-  // Create your invoice! Easy!
- function dwnlodInvoice(){
-  var data = {
-  // Customize enables you to provide your own templates
-  // Please review the documentation for instructions and examples
-  "customize": {
-      //  "template": fs.readFileSync('template.html', 'base64') // Must be base64 encoded html 
-  },
-  "images": {
-      // The logo on top of your invoice
-      "logo": "https://public.easyinvoice.cloud/img/logo_en_original.png",
-      // The invoice background
-      "background": "https://public.easyinvoice.cloud/img/watermark-draft.jpg"
-  },
-  // Your own data
-  "sender": {
-      "company": "BE-FIT",
-      "address": "BE-FIT InterNational Company",
-      "zip": "689129",
-      "city": "Kerala",
-      "country": "India"
-      //"custom1": "custom value 1",
-      //"custom2": "custom value 2",
-      //"custom3": "custom value 3"
-  },
-  // Your recipient
-  "client": {
-      "company": "Client Corp",
-      "address": "Clientstreet 456",
-      "zip": "4567 CD",
-      "city": "Clientcity",
-      "country": "Clientcountry"
-      // "custom1": "custom value 1",
-      // "custom2": "custom value 2",
-      // "custom3": "custom value 3"
-  },
-  "information": {
-      // Invoice number
-      "number": "2021.0001",
-      // Invoice data
-      "date": "12-12-2021",
-      // Invoice due date
-      "due-date": "31-12-2021"
-  },
-  // The products you would like to see on your invoice
-  // Total values are being calculated automatically
-  "products": [
-      {
-          "quantity": 2,
-          "description": "Product 1",
-          "tax-rate": 6,
-          "price": 33.87
-      },
-      {
-          "quantity": 4.1,
-          "description": "Product 2",
-          "tax-rate": 6,
-          "price": 12.34
-      },
-      {
-          "quantity": 4.5678,
-          "description": "Product 3",
-          "tax-rate": 21,
-          "price": 6324.453456
-      }
-  ],
-  // The message you would like to display on the bottom of your invoice
-  "bottom-notice": "Kindly pay your invoice within 15 days.",
-  // Settings to customize your invoice
-  "settings": {
-      "currency": "INR", // See documentation 'Locales and Currency' for more info. Leave empty for no currency.
-      "locale": "nl-NL", // Defaults to en-US, used for number formatting (See documentation 'Locales and Currency')        
-      "margin-top": 25, // Defaults to '25'
-      "margin-right": 25, // Defaults to '25'
-      "margin-left": 25, // Defaults to '25'
-      "margin-bottom": 25, // Defaults to '25'
-      "format": "A4", // Defaults to A4, options: A3, A4, A5, Legal, Letter, Tabloid
-      "height": "1000px", // allowed units: mm, cm, in, px
-      "width": "500px", // allowed units: mm, cm, in, px
-      "orientation": "landscape", // portrait or landscape, defaults to portrait
-  },
-  // Translate your invoice to your preferred language
-  "translate": {
-      "invoice": "FACTUUR",  // Default to 'INVOICE'
-      "number": "Nummer", // Defaults to 'Number'
-      "date": "Datum", // Default to 'Date'
-      "due-date": "Verloopdatum", // Defaults to 'Due Date'
-      "subtotal": "Subtotaal", // Defaults to 'Subtotal'
-      "products": "Producten", // Defaults to 'Products'
-      "quantity": "Aantal", // Default to 'Quantity'
-      "price": "Prijs", // Defaults to 'Price'
-      "product-total": "Totaal", // Defaults to 'Total'
-      "total": "Totaal", // Defaults to 'Total'
-      "vat": "btw" // Defaults to 'vat'
-  },
-};
 
-//Create your invoice! Easy!
-easyinvoice.createInvoice(data, async function (result) {
-  //The response will contain a base64 encoded PDF file
-  
- easyinvoice.download("invoice.pdf")
-});
- }
-</script> -->
 <script>
   function dwnlodInvoice() {
   // Get the order ID from your order object (replace 'YOUR_ORDER_ID' with the actual order ID)
@@ -201,6 +99,7 @@ easyinvoice.createInvoice(data, async function (result) {
        })(), // Due date is now 15 days after the order date
      },
         "products": orderData.products.map(product => ({
+          "product":product.image, 
           "quantity": product.quantity,
           "description": product.productId.name,
           "tax-rate": 6, // You may need to fetch tax information from your database
@@ -246,4 +145,7 @@ easyinvoice.createInvoice(data, async function (result) {
 }
 
 </script>
+
+
+
 <%- include("../partials/footer.ejs") -%>

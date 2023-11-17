@@ -1,231 +1,147 @@
 
-    <%- include("../partials/header.ejs") -%>
+<%- include("../partials/header.ejs") -%>
   
    
-  <!-- sidebar + content -->
-  <section class="">
-    <div class="container">
-      <div class="row">
-        <!-- sidebar -->
-        <div class="col-lg-3">
-          <!-- Toggle button -->
-          <button
-                  class="btn btn-outline-secondary mb-3 w-100 d-lg-none"
-                  type="button"
-                  data-mdb-toggle="collapse"
-                  data-mdb-target="#navbarSupportedContent"
-                  aria-controls="navbarSupportedContent"
-                  aria-expanded="false"
-                  aria-label="Toggle navigation"
-                  >
-            <span>Show filter</span>
-          </button>
-          <form action="/search" method="GET">
-            <div class="search-container">
-                <input type="text" name="searchQuery" placeholder="Search products" id="searchInput">
-                <button type="submit" id="searchButton">Search</button>
-            </div>
-         </form>
-          <!-- Collapsible wrapper -->
-          <div class="collapse card d-lg-block mb-5" id="navbarSupportedContent">
-            <div class="accordion" id="accordionPanelsStayOpenExample">
-
-             
-              <div class="accordion-item">
-                <h2 class="accordion-header" id="headingThree">
-                  <button
-                          class="accordion-button text-dark bg-light"
-                          type="button"
-                          data-mdb-toggle="collapse"
-                          data-mdb-target="#panelsStayOpen-collapseThree"
-                          aria-expanded="false"
-                          aria-controls="panelsStayOpen-collapseThree"
-                          >
-                    Price
-                  </button>
-                </h2>
-                <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse show" aria-labelledby="headingThree">
-                  <div class="accordion-body">
-                    <div class="range">
-                      <input type="range" class="form-range" id="customRange1" />
-                    </div>
-                    <div class="row mb-3">
-                      <div class="col-6">
-                        <p class="mb-0">
-                          Min
-                        </p>
-                        <div class="form-outline">
-                          <input type="number" id="typeNumber" class="form-control" />
-                          <label class="form-label" for="typeNumber">$0</label>
-                        </div>
-                      </div>
-                      <div class="col-6">
-                        <p class="mb-0">
-                          Max
-                        </p>
-                        <div class="form-outline">
-                          <input type="number" id="typeNumber" class="form-control" />
-                          <label class="form-label" for="typeNumber">$1,0000</label>
-                        </div>
-                      </div>
-                    </div>
-                    <button type="button" class="btn btn-white w-100 border border-secondary">apply</button>
-                  </div>
-                </div>
-              </div>
-         
-              <!--  <div class="accordion-item">
-                <h2 class="accordion-header" id="headingThree">
-                  <button
-                          class="accordion-button text-dark bg-light"
-                          type="button"
-                          data-mdb-toggle="collapse"
-                          data-mdb-target="#panelsStayOpen-collapseFive"
-                          aria-expanded="false"
-                          aria-controls="panelsStayOpen-collapseFive"
-                          >
-                    Ratings
-                  </button>
-                </h2>
-               <div id="panelsStayOpen-collapseFive" class="accordion-collapse collapse show" aria-labelledby="headingThree">
-                  <div class="accordion-body">
-                    <!-- Default checkbox 
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked />
-                      <label class="form-check-label" for="flexCheckDefault">
-                        <i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i>
-                        <i class="fas fa-star text-warning"></i>
-                      </label>
-                    </div>
-                    <!-- Default checkbox 
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked />
-                      <label class="form-check-label" for="flexCheckDefault">
-                        <i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i>
-                        <i class="fas fa-star text-secondary"></i>
-                      </label>
-                    </div>
-                    <!-- Default checkbox 
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked />
-                      <label class="form-check-label" for="flexCheckDefault">
-                        <i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-secondary"></i>
-                        <i class="fas fa-star text-secondary"></i>
-                      </label>
-                    </div>
-                    <!-- Default checkbox 
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked />
-                      <label class="form-check-label" for="flexCheckDefault">
-                        <i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-secondary"></i><i class="fas fa-star text-secondary"></i>
-                        <i class="fas fa-star text-secondary"></i>
-                      </label>
-                    </div>
-                  </div>
-                </div> 
-              </div>-->
-            </div>
+<!-- sidebar + content -->
+<section class="">
+  <div class="container">
+    <div class="row">
+      <!-- sidebar -->
+      <div class="col-lg-3">
+        <!-- Toggle button -->
+        <button
+                class="btn btn-outline-secondary mb-3 w-100 d-lg-none"
+                type="button"
+                data-mdb-toggle="collapse"
+                data-mdb-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+                >
+          <span>Show filter</span>
+        </button>
+        <form action="/search" method="GET">
+          <div class="search-container">
+              <input type="text" name="searchQuery" placeholder="Search products" id="searchInput">
+              <button type="submit" id="searchButton">Search</button>
           </div>
+       </form>
+        <!-- Collapsible wrapper -->
+        <div class="mt-3">
+          <label for="categoryDropdown" class="form-label" style="color: blue;">Filter by Category:</label>
+          <select id="categoryDropdown" class="form-select" onchange="filterProducts()">
+            <option value="all" selected>Show All Categories</option>
+            <% categories.forEach(category => { %>
+              <option value="<%= category.category %>"><%= category.category %></option>
+            <% }); %>
+          </select>
         </div>
-        <!-- sidebar -->
-        <!-- content -->
-        <div class="col-lg-9">
-          <header class="d-sm-flex align-items-center border-bottom mb-4 pb-3">
-            <strong class="d-block py-2">32 Items found </strong>
-            <div class="ms-auto">
-              <select class="form-select d-inline-block w-auto border pt-1">
-                <option value="0">Best match</option>
-                <option value="1">Recommended</option>
-                <option value="2">High rated</option>
-                <option value="3">Randomly</option>
-              </select>
-              <div class="btn-group shadow-0 border">
-                <a href="#" class="btn btn-light" title="List view">
-                  <i class="fa fa-bars fa-lg"></i>
-                </a>
-                <a href="#" class="btn btn-light active" title="Grid view">
-                  <i class="fa fa-th fa-lg"></i>
-                </a>
-              </div>
-            </div>
-          </header>
-  
-          <div class="row">
-           
-            
-       
-          
-           
-        <% product.forEach(product=>{ %>
-          <div class="col-lg-4 col-md-6 col-sm-6 d-flex">
-            <div class="card w-100 my-2 shadow-2-strong">
-             <a href=" /singleproduct/<%= product._id %>"> <img src="/uploads/<%= product.image %>" alt="<%= product.name %>" class="card-img-top" /> </a> 
-              <div class="card-body d-flex flex-column">
-                <h5 class="card-title">Price: <%= product.price %> $</h5>
-                <p class="card-text"> <%= product.description %></p>
 
-                <div class="card-footer d-flex align-items-end pt-3 px-0 pb-0 mt-auto" id="mon">
+        <label for="priceRangeDropdown" class="form-label" style="color: blue;">Sort by Price Range:</label>
+        <select id="priceRangeDropdown" class="form-select" onchange="sortProducts()">
+          <option value="all" selected>Show All Price Ranges</option>
+          <option value="500">500 and Below</option>
+          <option value="1000">500-1000</option>
+          <option value="2000">1000-2000</option>
+          <option value="above">2000 and Above</option>
+        </select>
 
-                  <form action="/cart" method="post">
-                    <input type="hidden" name="productId" value="<%= product._id %>">
-                    <button type="submit" class=" btn btn-primary shadow- me-1">Add to Cart <i class="fa-solid fa-cart-shopping"></i></button>
-                  </form>
-                  <form action="/singleproduct/<%= product._id %>" method="get">
-                    <input type="hidden" name="productId" value="<%= product._id %>">
-                    <button type="submit" class=" btn btn-primary shadow-0 me-1">View Details</button>
-                  </form>
-               
-                </div>
 
-              </div>
-            </div>
-          </div>
-            <% });%>
-            
-            
-            
-          </div>
-  
-          <hr />
-  
-          <!-- Pagination -->
-          <nav aria-label="Page navigation example" class="d-flex justify-content-center mt-3">
-            <ul class="pagination">
-              <% if ( pageCount > 1) { %>
-                <% if (currentPage > 1) { %>
-                  <li class="page-item">
-                    <a class="page-link" href="?page=<%= currentPage - 1 %>" aria-label="Previous">
-                      <span aria-hidden="true">&laquo;</span>
-                    </a>
-                  </li>
-                <% } %>
-                <% for (let i = 1; i <= pageCount; i++) { %>
-                  <li class="page-item <%= currentPage === i ? 'active' : '' %>
-                  ">
-                    <a class="page-link" href="?page=<%= i %>"><%= i %></a>
-                  </li>
-                <% } %>
-                <% if (currentPage < pageCount) { %>
-                  <li class="page-item">
-                    <a class="page-link" href="?page=<%= currentPage + 1 %>" aria-label="Next">
-                      <span aria-hidden="true">&raquo;</span>
-                    </a>
-                  </li>
-                <% } %>
-              <% } %>
-            </ul>
-          </nav>
-          <!-- Pagination -->
-        </div>
       </div>
-    </div>            
-  </section>
-  <!-- sidebar + content -->
-  
-  <!-- Footer -->
-  <%- include("../partials/footer.ejs") -%>
+    
+      <div class="col-lg-9">
+        <header class="d-sm-flex align-items-center border-bottom mb-4 pb-3">
+          <strong class="d-block py-2">32 Items found </strong>
+          <div class="ms-auto">
+            <select class="form-select d-inline-block w-auto border pt-1">
+              <option value="0">Best match</option>
+              <option value="1">Recommended</option>
+              <option value="2">High rated</option>
+              <option value="3">Randomly</option>
+            </select>
+            
+          </div>
+        </header>
 
-  <!-- Footer -->
-  <!-- jQuery (required for Bootstrap JavaScript plugins) -->
+        <div class="row">
+
+      <% product.forEach(product=>{ %>
+        <div class="col-lg-4 col-md-6 col-sm-6 d-flex">
+          <div class="card w-100 my-2 shadow-2-strong">
+           <a href=" /singleproduct/<%= product._id %>"> <img src="/uploads/<%= product.image %>" alt="<%= product.name %>" class="card-img-top" /> </a> 
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title">Price: <%= product.price %> ₹</h5>
+              <p class="card-text"> <%= product.description %></p>
+
+              <div class="card-footer d-flex align-items-end pt-3 px-0 pb-0 mt-auto" id="mon">
+
+                <form action="/cart" method="post">
+                  <input type="hidden" name="productId" value="<%= product._id %>">
+                  <button type="submit" class=" btn btn-primary shadow- me-1">Add to Cart <i class="fa-solid fa-cart-shopping"></i></button>
+                </form>
+                <form action="/singleproduct/<%= product._id %>" method="get">
+                  <input type="hidden" name="productId" value="<%= product._id %>">
+                  <button type="submit" class=" btn btn-primary shadow-0 me-1">View Details</button>
+                </form>
+             
+              </div>
+
+            </div>
+          </div>
+        </div>
+          <% });%>
+     
+        </div>
+
+        <hr />
+
+        <!-- Pagination -->
+        <nav aria-label="Page navigation example" class="d-flex justify-content-center mt-3">
+          <ul class="pagination">
+            <% if ( pageCount > 1) { %>
+              <% if (currentPage > 1) { %>
+                <li class="page-item">
+                  <a class="page-link" href="?page=<%= currentPage - 1 %>" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                  </a>
+                </li>
+              <% } %>
+              <% for (let i = 1; i <= pageCount; i++) { %>
+                <li class="page-item <%= currentPage === i ? 'active' : '' %>
+                ">
+                  <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                </li>
+              <% } %>
+              <% if (currentPage < pageCount) { %>
+                <li class="page-item">
+                  <a class="page-link" href="?page=<%= currentPage + 1 %>" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                  </a>
+                </li>
+              <% } %>
+            <% } %>
+          </ul>
+        </nav>
+        <!-- Pagination -->
+      </div>
+    </div>
+  </div>            
+</section>
+<!-- sidebar + content -->
+<script>
+  function sortProducts() {
+    var selectedCategory = document.getElementById("categoryDropdown").value;
+    var selectedPriceRange = document.getElementById("priceRangeDropdown").value;
+
+    // You can modify the URL structure based on your server-side routing
+    window.location.href = "/filteredProducts/" + selectedCategory + "?priceRange=" + selectedPriceRange;
+  }
+</script>
+
+<!-- Footer -->
+<%- include("../partials/footer.ejs") -%>
+
+<!-- Footer -->
+<!-- jQuery (required for Bootstrap JavaScript plugins) -->
 
 

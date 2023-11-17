@@ -2,7 +2,7 @@ const { render } = require("ejs")
 const userData = require("../models/userLogin")
 const products = require("../models/product")
 const nodemailer = require('nodemailer')
-
+const category = require('../models/category')
 const otpGenerator = require('otp-generator');
 const otpSchema = require("../models/otp")
 const bcrypt = require("bcrypt")
@@ -12,7 +12,7 @@ const orders = require("../models/order")
 const Address = require("../models/address")
 const coupon = require("../models/coupon")
 const session = require("express-session")
-
+const mongoose= require('mongoose')
 const Wallet = require('../models/wallet')
 const Feedback = require('../models/feedbackModel')
 const Reference = require('../models/Reference')
@@ -517,20 +517,54 @@ const signOut = (req, res) => {
 
 // function to display the products to user
 
+// const getProducts = async (req, res) => {
+
+//   if (req.session.user) {
+//     try {
+//       const productsPerPage = 9; // Number of products to display per page
+//       const currentPage = parseInt(req.query.page) || 1;
+
+//       // Retrieve all products
+//       const allProducts = await products.find({ status: 'active' });
+
+//       // Calculate the startIndex and endIndex for the current page
+//       const startIndex = (currentPage - 1) * productsPerPage;
+//       const endIndex = startIndex + productsPerPage;
+
+//       // Extract the products for the current page
+//       const currentProducts = allProducts.slice(startIndex, endIndex);
+
+//       // Calculate the total number of pages
+//       const pageCount = Math.ceil(allProducts.length / productsPerPage);
+
+//       res.render("user/productss", {
+//         product: currentProducts,
+//         currentPage,
+//         pageCount,
+//       });
+//     } catch (err) {
+//       console.log("Sorry for the error");
+//       res.status(500).send('Internal Server Error');
+//     }
+//   } else {
+//     res.redirect("/login");
+//   }
+// }
 const getProducts = async (req, res) => {
 
   if (req.session.user) {
     try {
+      console.log("hai");
       const productsPerPage = 9; // Number of products to display per page
       const currentPage = parseInt(req.query.page) || 1;
-
+      console.log("bye");
       // Retrieve all products
       const allProducts = await products.find({ status: 'active' });
-
+      const categories = await category.find();
       // Calculate the startIndex and endIndex for the current page
       const startIndex = (currentPage - 1) * productsPerPage;
       const endIndex = startIndex + productsPerPage;
-
+      console.log("my");
       // Extract the products for the current page
       const currentProducts = allProducts.slice(startIndex, endIndex);
 
@@ -541,6 +575,7 @@ const getProducts = async (req, res) => {
         product: currentProducts,
         currentPage,
         pageCount,
+        categories
       });
     } catch (err) {
       console.log("Sorry for the error");
@@ -550,41 +585,78 @@ const getProducts = async (req, res) => {
     res.redirect("/login");
   }
 }
+const getFilteredProducts = async (req, res) => {
+  try {
+    const selectedCategory = req.params.category;
+    const selectedPriceRange = req.query.priceRange;
 
+    console.log("Selected category is:", selectedCategory);
+    console.log("Selected price range is:", selectedPriceRange);
 
-// ... (other imports and code)
+    const productsPerPage = 9; // Number of products to display per page
+    const currentPage = parseInt(req.query.page) || 1;
 
-// const getProducts = async (req, res) => {
-//   if (req.session.user) {
-//     try {
-//       const page = parseInt(req.query.page) || 1; // Get the page from the query parameter or default to page 1
-//       const perPage = 6; // Number of products per page
-//       const startIndex = (page - 1) * perPage;
+    let query = { status: 'active' };
 
-//       // Fetch a subset of active products based on pagination
-//       const productsList = await products.find({ status: 'active' })
-//         .skip(startIndex)
-//         .limit(perPage);
+    // Add category filter to query if not 'all'
+    if (selectedCategory !== 'all') {
+      query.category = selectedCategory;
+    }
 
-//       const totalProducts = await products.countDocuments({ status: 'active' });
-//       const totalPages = Math.ceil(totalProducts / perPage);
+    // Fetch products based on the category filter
+    let filteredProducts = await products.find(query);
 
-//       res.render('user/productss', { products: productsList, currentPage: page, totalPages });
-//     } catch (err) {
-//       console.error("Error:", err);
-//       res.status(500).send('Internal Server Error');
-//     }
-//   } else {
-//     res.redirect("/login");
-//   }
-// }
+    // Filter and sort products by price range if specified
+    if (selectedPriceRange) {
+      filteredProducts = filterAndSortProducts(filteredProducts, selectedPriceRange);
+    } else {
+      // If no price range is selected, sort products by default (e.g., by ID or another criterion)
+      filteredProducts.sort((a, b) => a._id - b._id);
+    }
 
-// ... (other controller functions)
+    const startIndex = (currentPage - 1) * productsPerPage;
+    const endIndex = startIndex + productsPerPage;
 
+    // Extract the products for the current page
+    const currentProducts = filteredProducts.slice(startIndex, endIndex);
 
+    // Calculate the total number of pages
+    const pageCount = Math.ceil(filteredProducts.length / productsPerPage);
+    const allCategories = await category.find();
 
+    res.render("user/productss", {
+      product: currentProducts,
+      categories: allCategories,
+      selectedCategory,
+      selectedPriceRange,
+      pageCount,
+      currentPage
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Internal Server Error');
+  }
+};
 
+// Helper function to filter and sort products by price range
+const filterAndSortProducts = (products, selectedPriceRange) => {
+  return products.filter(product => {
+    const price = product.price;
 
+    if (selectedPriceRange === '500') {
+      return price <= 500;
+    } else if (selectedPriceRange === '1000') {
+      return price > 500 && price <= 1000;
+    } else if (selectedPriceRange === '2000') {
+      return price > 1000 && price <= 2000;
+    } else if (selectedPriceRange === 'above') {
+      return price > 2000;
+    }
+
+    return true; // Default: no filtering
+  })
+  .sort((a, b) => a.price - b.price);
+};
 
 
 const searchProduct = async (req, res) => {
@@ -596,7 +668,7 @@ const searchProduct = async (req, res) => {
     const msg = "Search results are:";
     const productsPerPage = 9; // Number of products to display per page
     const currentPage = parseInt(req.query.page) || 1;
-
+    const categories= await category.find()
     // Retrieve products based on the search query
     const matchedProducts = await products.find({
       name: { $regex: searchQuery, $options: 'i' },
@@ -608,11 +680,11 @@ const searchProduct = async (req, res) => {
 
     // Extract the products for the current page
     const currentProducts = matchedProducts.slice(startIndex, endIndex);
-
+    const selectedPriceRange=''
     // Calculate the total number of pages
     const pageCount = Math.ceil(matchedProducts.length / productsPerPage);
 
-    res.render('user/productss', { product: currentProducts, msg, currentPage, pageCount });
+    res.render('user/productss', { product: currentProducts, msg, currentPage, pageCount,categories,selectedPriceRange });
   } catch (err) {
     res.status(500).send('Internal server error');
   }
@@ -1544,6 +1616,127 @@ const downloadInvoice=async (req, res) => {
   }
 };
 
+const wallethistory = async (req, res) => {
+  if (req.session.user) {
+    try {
+      const userEmail = req.session.user;
+
+      // Fetch the user ID based on the email
+      const user = await userData.findOne({ email: userEmail }).populate('wallet');
+      if (!user) {
+        return res.render('user/error');
+      }
+
+      const wallet = user.wallet;
+
+      // Fetch wallet transactions using aggregation
+      const walletData = await Wallet.aggregate([
+        {
+          $match: { _id: new mongoose.Types.ObjectId(wallet._id) }
+        },
+        {
+          $unwind: '$transactions'
+        },
+        {
+          $sort: { 'transactions.date': -1 } // Sort by date in descending order
+        },
+        {
+          $limit: 10 // Limit to the most recently made ten transactions
+        },
+        {
+          $project: {
+            date: '$transactions.date',
+            amount: '$transactions.amount',
+            type: {
+              $cond: {
+                if: { $gt: ['$transactions.amount', 0] },
+                then: 'Credit',
+                else: 'Debit'
+              }
+            }
+          }
+        }
+      ]);
+
+      const transactions = walletData.map(transaction => ({
+        date: transaction.date,
+        amount: transaction.amount,
+        type: transaction.type
+      }));
+
+      res.render('user/walletHistory', { transactions });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+    }
+  } else {
+    res.redirect('/login');
+  }
+};
+
+
+const claimReferenceCode = async (req, res) => {
+  try {
+    const { referenceCode } = req.body;
+    const reference = await Reference.findOne({ referenceCode });
+
+    if (!reference) {
+      return res.status(400).json({ message: "Invalid reference code" });
+    }
+
+    const user = await userData
+      .findOne({ email: req.session.user })
+      .populate("wallet");
+
+    if (!user) {
+      return res.status(500).json({ message: "Internal Server Error" });
+    }
+
+    // Check if the reference code has already been used by the current user
+    if (reference.usedBy.includes(user._id)) {
+      return res.status(400).json({ message: "Reference code already used" });
+    }
+
+    // Mark the reference code as used by the current user
+    reference.usedBy.push(user._id);
+    await reference.save();
+
+    // Increase wallet balances
+    if (user.wallet) {
+      user.wallet.balance += 100; // Increase user's wallet by 100 rupees
+      await user.wallet.save();
+    } else {
+      const newWallet = new Wallet({ balance: 100 });
+      await newWallet.save();
+      user.wallet = newWallet;
+    }
+
+    // Increase session user's wallet balance
+    const referenceuser = await userData
+      .findById(reference.userId)
+      .populate("wallet");
+
+    if (referenceuser.wallet) {
+      referenceuser.wallet.balance += 100; // Increase user's wallet by 100 rupees
+      await referenceuser.wallet.save();
+    } else {
+      const newWallet = new Wallet({ balance: 100 });
+      await newWallet.save();
+      referenceuser.wallet = newWallet;
+    }
+
+    await user.save();
+
+    return res
+      .status(200)
+      .json({ message: "Reference code claimed successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+
 
 
 module.exports = {
@@ -1586,4 +1779,8 @@ module.exports = {
   orderdetails,
   saveOrder,
   downloadInvoice,
+  getFilteredProducts,
+  wallethistory, 
+  claimReferenceCode,
+  
 }
