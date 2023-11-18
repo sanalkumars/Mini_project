@@ -14,7 +14,7 @@
               <i class="fa fa-chart-line fa-3x text-primary"></i>
               <div class="ms-3">
                 <p class="mb-2">todaysOrder</p>
-                <h6 class="mb-0">$1234</h6>
+                <h6 class="mb-0">1234</h6>
               </div>
             </div>
           </div>
@@ -23,7 +23,7 @@
               <i class="fa fa-chart-bar fa-3x text-primary"></i>
               <div class="ms-3">
                 <p class="mb-2">totalOrder</p>
-                <h6 class="mb-0">$1234</h6>
+                <h6 class="mb-0">1234</h6>
               </div>
             </div>
           </div>
@@ -32,7 +32,7 @@
               <i class="fa fa-chart-area fa-3x text-primary"></i>
               <div class="ms-3">
                 <p class="mb-2">avgOrder</p>
-                <h6 class="mb-0">$1234</h6>
+                <h6 class="mb-0">1234</h6>
               </div>
             </div>
           </div>
@@ -41,7 +41,7 @@
               <i class="fa fa-chart-pie fa-3x text-primary"></i>
               <div class="ms-3">
                 <p class="mb-2">totalRevenue</p>
-                <h6 class="mb-0">$1234</h6>
+                <h6 class="mb-0">1234</h6>
               </div>
             </div>
           </div>
@@ -236,10 +236,10 @@
               }
             });
     
-            document.getElementById('todaysOrderDiv').querySelector('h6').innerText = `$${data.todaysOrder}`;
-            document.getElementById('totalOrderDiv').querySelector('h6').innerText = `$${data.totalOrder}`;
-            document.getElementById('avgOrderDiv').querySelector('h6').innerText = `$${data.avgOrder}`;
-            document.getElementById('totalRevenueDiv').querySelector('h6').innerText =`$${data.totalRevenue}`;
+            document.getElementById('todaysOrderDiv').querySelector('h6').innerText = `${data.todaysOrder}`;
+            document.getElementById('totalOrderDiv').querySelector('h6').innerText = `${data.totalOrder}`;
+            document.getElementById('avgOrderDiv').querySelector('h6').innerText = `${data.avgOrder}`;
+            document.getElementById('totalRevenueDiv').querySelector('h6').innerText =`${data.totalRevenue}`;
           })
           .catch(error => console.error('Error fetching chart data:', error));
       </script>

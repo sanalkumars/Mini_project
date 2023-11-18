@@ -30,7 +30,7 @@
                                   <img src="/uploads/<%= banner.image %>" alt="<%= banner.name %> Image" width="200">
                                   <p><%= banner.description %></p>
                                   <form action="/admin/deleteBanner/<%= banner._id %>" method="post">
-                                    <button type="submit">Delete</button>
+                                    <button class="btn btn-primary" type="submit">Delete</button>
                                   </form>
                                 </li>
                               <% }); %>
@@ -39,7 +39,7 @@
                             <!-- Display a message and "Add New Banner" button if no data -->
                             <h1>No Banners</h1>
                           <% } %>
-                          <a href="/admin/addBanner"><button>Add New Banner</button></a>
+                          <a href="/admin/addBanner"><button class="btn btn-primary">Add New Banner</button></a>
                           
                       </div>
                   </div>

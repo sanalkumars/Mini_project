@@ -120,65 +120,7 @@ const sendOTPByEmail = async (email, otp) => {
 
 
 
-// signup post for user
 
-// const signupPost = async (req,res)=>{
-
-//       let email= req.body.email
-//       const userfound = await userData.findOne({email}) 
-//     if(!userfound){
-//       const pass = req.body.password
-//       const bcryptedPass = await passwordcrypt(pass)
-//       req.body.password= bcryptedPass
-//     console.log(req.body.password);
-
-//      const data={
-//         name:req.body.name,
-//         email:req.body.email,
-//         password:req.body.password
-//      };
-
-//      await userData.create(data)
-
-//      try{
-//       const {email} = req.body
-//       const check = await userData.findOne({email:req.body.email})
-//       console.log("user found");
-//       if(check){
-
-//       if(check.password===req.body.password){
-//         const otp = generateOTP();
-//         console.log("generated otp",otp);
-//         if(check.isBlocked)
-//         {
-//           res.json("your blocked by the Admin")
-//         }
-//         console.log(1);
-//           req.session.user = req.body.email
-//           req.session.otp = otp // store otp in session
-//           req.session.requestedOTP = true;
-//           console.log(2);
-//           // sending otp to the user email
-//           await sendOTPByEmail(email,otp);
-//           res.render("user/otp",{msg:"otp have been send to your email"});
-//       } else{
-//         res.render("user/login",{error:"wrong password!!!"});
-//       } 
-//     }else{
-//           res.render("user/login",{error:"error in finding user!!!"});
-//       }
-//     }
-//      catch(error)
-//      {
-//      console.log(error);
-//      res.json("error in processing your request!!!")
-//      }
-//     }
-//    else {
-//            const msg ="Already have an Account for this email Go to Login"
-//            res.render("user/signup",{msg})
-//   }
-// }
 // function for generating random reference code 
 function generateRandomReferenceCode(length) {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -256,62 +198,6 @@ const signupPost = async (req, res) => {
 };
 
 
-
-
-
-
-
-
-
-
-// const loginPost = async(req,res)=>{
-//  console.log("madara");
-//      try{
-//       console.log("hai");
-//         const {email} = req.body
-//         console.log("hello ");
-
-//         const check = await userData.findOne({email:req.body.email})
-
-//         const result = await bcrypt.compare(req.body.password,check.password);
-//         if(check){
-
-//         if(check.email=== req.body.email && result===true)
-//         {
-//           const otp = generateOTP()
-//           console.log("generated otp for forgot password is :",otp);
-
-//             let msg = req.body.email 
-//             const isBlocked = check.isBlocked
-//             if(isBlocked){
-//                 res.send("cannot login your are blocked by the admin!!!")
-//             } 
-//             else{
-//               await sendOTPByEmail(email,otp);
-//               req.session.user = req.body.email;
-//               req.session.otp = otp ;// storing otp in the session
-//               console.log(session.otp);
-//               req.session.requestedOTP = true;
-//             // sending otp to the mail of the user
-
-
-//               res.render("user/otp",{msg :"please enter the otp sent to your email for verification"});
-//         }
-
-//         }
-//         else{
-//             res.render("user/login",{error:"wrong deatils"})
-//         }
-
-//       } 
-//       else{
-//         res.json("user not found")
-//       }
-//      }
-//      catch{
-//           res.send("! wronge detail... ")
-//      }
-// }
 const loginPost = async (req, res) => {
   try {
     const { email } = req.body;

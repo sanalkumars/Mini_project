@@ -32,8 +32,8 @@ const Login = (req, res) => {
 }
 
 const LoginPost = async (req, res) => {
-  const name = 'admin'
-  const password = 'admin'
+  const name = process.env.ADMIN_NAME
+  const password = process.env.ADMIN_PASSWORD
 
 
   if (name === req.body.username && password === req.body.password) {

@@ -2,7 +2,7 @@ const userData = require("../models/userLogin")
 
 const userauthentication = async (req, res, next) => {
     if (req.session.user) {
-       
+       console.log("inside userauthencation!!");
 
         next()
     } else {
@@ -26,7 +26,7 @@ const isBlock =async(req,res,next)=>
              next();
         }
     }catch(error){
-       res.send("internal server error ")
+       res.render("user/error")
     }
     
 }
