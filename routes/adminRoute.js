@@ -76,4 +76,18 @@ router.get("/viewdetails/:orderId", adminController.viewdetails);
 router.get("/chart", adminController.getChart)
 router.get("/chartData", adminController.chart)
 
+//route for error
+router.get('/error',adminController.getError)
+
+// route for banner
+router.get('/banners', adminController.getbanner);
+router.get('/addBanner', adminController.addBanner);
+router.post('/addBanner', upload.single('image'), adminController.addBannerPost);
+router.post('/deleteBanner/:id', adminController.deleteBanner); // Add this line
+
+// route for category offer
+router.get('/sendCategoryOffer', adminController.sendCategoryOffer);
+router.post('/applyOffer', adminController.applyOffer);
+
+
 module.exports = router

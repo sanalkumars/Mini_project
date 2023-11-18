@@ -17,6 +17,7 @@ const Wallet = require('../models/wallet')
 const Feedback = require('../models/feedbackModel')
 const Reference = require('../models/Reference')
 const Razorpay = require('razorpay')
+const banner= require('../models/banner')
 
 const secret_Id = "rzp_test_sIqvavYe337CEG";
 const secret_Key = "k4HXNEDAk5RKFlmRVO6oKjZK";
@@ -27,15 +28,16 @@ const secret_Key = "k4HXNEDAk5RKFlmRVO6oKjZK";
 
 const userHome = async (req, res) => {
   const product = await products.find()
+  const banners = await banner.find()
 
   if (req.session.user) {
 
     user = true
-    res.render("user/index", { user, product })
+    res.render("user/index", { user, product,banners })
   }
   else {
     user = false
-    res.render("user/index", { user, product })
+    res.render("user/index", { user, product,banners })
   }
 }
 
@@ -1117,16 +1119,25 @@ const processOrder = async (req, res) => {
 
 
 
-    else if (paymentMethod === "wallet") {
-      console.log("hello inside wallet");
-
+    else if (paymentMethod === 'wallet') {
+      console.log('hello inside wallet');
+    
       if (order.grantTotal <= user.wallet.balance) {
-        await order.save();
-
+        await order.save()
+        const transactionAmount = -grantTotal; // Debit from the wallet
+        const transactionType = 'Debit';
+    
+        // Update the wallet balance
         user.wallet.balance -= grantTotal;
-
-
-        await user.wallet.save()
+    
+        // Add a new transaction to the 'transactions' array
+        user.wallet.transactions.push({
+          amount: transactionAmount,
+          type: transactionType,
+        });
+    
+        // Save the changes to the wallet
+        await user.wallet.save();
 
         const cartItems = await cartProduct.find({ userId: user._id }).populate('productId');
 
@@ -1343,9 +1354,7 @@ const cancelOrder = async (req, res) => {
 
       // Update order with cancel reason
       order.cancelReason = cancelReason;
-  }
-
-
+    }
 
     // Loop through the products in the order
     for (const productInfo of order.products) {
@@ -1364,7 +1373,7 @@ const cancelOrder = async (req, res) => {
       await product.save();
     }
 
-    // Update order status to 'Canceled'
+    // Update order status to 'Cancelled'
     order.status = 'Cancelled';
     await order.save();
 
@@ -1375,11 +1384,24 @@ const cancelOrder = async (req, res) => {
 
       if (user.wallet) {
         if (order.paymentMethod !== 'cashOnDelivery') {
+          // Add the refunded amount to the wallet transactions
+          user.wallet.transactions.push({
+            amount: totalPrice,
+            type: 'Credit',
+          });
+
+          // Update the wallet balance
           user.wallet.balance += totalPrice;
+          await user.wallet.save();
         }
-        await user.wallet.save();
       } else {
         const newWallet = new Wallet({ balance: totalPrice });
+        // Add the refunded amount to the wallet transactions
+        newWallet.transactions.push({
+          amount: totalPrice,
+          type: 'Credit',
+        });
+
         await newWallet.save();
         user.wallet = newWallet;
       }
@@ -1419,33 +1441,47 @@ const paymentMethod = (req, res) => {
 
 
 //function for user profile
+
 const getProfile = async (req, res) => {
   if (req.session.user) {
     try {
       const user = await userData.findOne({ email: req.session.user });
       console.log(user);
-      const address = await Address.find({ userId: user._id })
+      const address = await Address.find({ userId: user._id });
 
       const userId = user._id;
-      const order = await orders.find({ userId }).populate('products.productId');
 
+      
+      // Use aggregation to get the recent ten orders
+      const recentOrders = await orders.aggregate([
+        { $match: { userId } },
+        { $sort: { orderDate: -1 } }, // (most recent first)
+        { $limit: 10 },
+        { $lookup: { from: 'products', localField: 'products.productId', foreignField: '_id', as: 'products' } },
+      ]).exec();
+    
       const returnedOrders = await orders.find({ userId: user._id, isReturned: true });
 
       const userWallet = await Wallet.findById(user.wallet);
 
       const reference = await Reference.findOne({ userId: user._id });
 
-      res.render('user/userprofile', { user, address, order, returnedOrders, reference, userWallet })
+      res.render('user/userprofile', { user, address, order: recentOrders, returnedOrders, reference, userWallet });
 
     } catch (error) {
       console.error(error);
       res.status(500).send('Internal Server Error');
-
     }
   } else {
-    res.redirect("/login")
+    res.redirect("/login");
   }
-}
+};
+
+
+
+
+
+
 
 // get address function
 const getAddress = async (req, res) => {
@@ -1703,10 +1739,22 @@ const claimReferenceCode = async (req, res) => {
 
     // Increase wallet balances
     if (user.wallet) {
+      // Add the credited amount to the wallet transactions
+      user.wallet.transactions.push({
+        amount: 100,
+        type: 'Credit',
+      });
+
       user.wallet.balance += 100; // Increase user's wallet by 100 rupees
       await user.wallet.save();
     } else {
       const newWallet = new Wallet({ balance: 100 });
+      // Add the credited amount to the wallet transactions
+      newWallet.transactions.push({
+        amount: 100,
+        type: 'Credit',
+      });
+
       await newWallet.save();
       user.wallet = newWallet;
     }
@@ -1717,10 +1765,22 @@ const claimReferenceCode = async (req, res) => {
       .populate("wallet");
 
     if (referenceuser.wallet) {
+      // Add the credited amount to the wallet transactions
+      referenceuser.wallet.transactions.push({
+        amount: 100,
+        type: 'Credit',
+      });
+
       referenceuser.wallet.balance += 100; // Increase user's wallet by 100 rupees
       await referenceuser.wallet.save();
     } else {
       const newWallet = new Wallet({ balance: 100 });
+      // Add the credited amount to the wallet transactions
+      newWallet.transactions.push({
+        amount: 100,
+        type: 'Credit',
+      });
+
       await newWallet.save();
       referenceuser.wallet = newWallet;
     }
@@ -1735,8 +1795,6 @@ const claimReferenceCode = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
-
-
 
 
 module.exports = {
