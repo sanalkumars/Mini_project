@@ -53,10 +53,13 @@ router.get("/unblock/:id",adminauthenticaton.adminauthenticaton, adminController
 
 // route for getting categories
 router.get("/category",adminauthenticaton.adminauthenticaton, adminController.getCategory)
-
+router.get("/edit/:id",adminController.editCategory)
+router.post('/editcategorypost/:id', adminController.editCategoryPost);
 router.get("/deletecategory/:id",adminauthenticaton.adminauthenticaton, adminController.deletecategory)
+
 //route for admin logout
 router.get("/logout",adminauthenticaton.adminauthenticaton, adminController.logout)
+
 router.post("/addcategory",adminauthenticaton.adminauthenticaton, adminController.addCategory)
 
 // route for getting user order

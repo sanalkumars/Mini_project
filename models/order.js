@@ -2,6 +2,11 @@ const mongoose = require("mongoose")
 
 
 const orderSchema = new mongoose.Schema({
+  orderId: {
+    type: String,
+    unique: true,
+    required: true
+  },
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'userData',
@@ -34,6 +39,8 @@ const orderSchema = new mongoose.Schema({
         type: Number,
         required: true
       },
+          
+      
       orderDate: {
         type: Date,
         default: Date.now
@@ -65,9 +72,11 @@ const orderSchema = new mongoose.Schema({
         couponDiscount:{
           type: Number,
           
-        }, cancelReason: {
+        },
+        cancelReason: {
           type: String,
       },
+  
        
           
     });

@@ -52,16 +52,16 @@
                             <tr>
                                 <th>Category ID</th>
                                 <th>Category Name</th>
-                                <th>Status</th>
+                                
                                 <th>Action</th>
                             </tr>
                             <% categories.forEach(function(categoryItem) { %>
                                 <tr>
                                     <td><%= categoryItem._id %></td>
                                     <td><%= categoryItem.category %></td>
-                                    <td><%= categoryItem.status %></td>
+                                    
                                     <td>
-                                        <a href="/edit/<%= categoryItem._id %>">Edit</a>
+                                        <a href="/admin/edit/<%= categoryItem._id %>">Edit</a>
                                         <a href="/admin/deletecategory/<%= categoryItem._id %>">Delete</a>
                                     </td>
                                 </tr>

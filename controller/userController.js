@@ -91,14 +91,14 @@ const sendOTPByEmail = async (email, otp) => {
     port: 465,
     secure: true, //
     auth: {
-      user: process.env.EMAIL_ID,
-      pass: process.env.EMAIL_PASS,
+      user: process.env.EMAIL_ID1,
+      pass: process.env.EMAIL_PASS1,
     },
   });
 
 
   const mailOptions = {
-    from: process.env.EMAIL_ID, // me/admin
+    from: process.env.EMAIL_ID1, // me/admin
     to: email, // user email
     subject: 'OTP verification',//subject
     html: `<h2> OTP Verifictaion</h2>
@@ -910,6 +910,15 @@ const getCheckOut = async (req, res) => {
 };
 
 
+// function for generating oderId with prefix "ODR"
+function generateOrderId() {
+  const prefix = 'ODR_';
+  const randomNumbers = Math.floor(1000 + Math.random() * 9000); // Generate a random 4-digit number
+  const orderId = `${prefix}${randomNumbers}`;
+  return orderId;
+}
+
+
 let order;
 
 // function for storing cart order in the database 
@@ -933,7 +942,12 @@ const processOrder = async (req, res) => {
       quantity: item.quantity,
     }));
 
+    const orderId = generateOrderId()
+    console.log("the coustome orderId is :",orderId);
+
+
     order = new orders({
+      orderId,
       userId,
       paymentMethod,
       addressId: address,
@@ -950,7 +964,7 @@ const processOrder = async (req, res) => {
       });
 
       var options = {
-        amount: Math.round(totalPrice * 100), // amount in paise (smallest currency unit) put granttotal here instead of totalprice 
+        amount: Math.round(grantTotal * 100), // amount in paise (smallest currency unit) put granttotal here instead of totalprice 
         currency: "INR",
         receipt: "order_rcptid_11",
       };
@@ -1195,33 +1209,7 @@ const getMyOrder = async (req, res) => {
  
 };
 
-// function for cancel order
 
-// const cancelOrder = async(req,res)=>{
-
-//   const orderId = req.params.id
-//   console.log("id of the order to cancel",orderId);
-
-//   try{
-//     const order = await orders.findById(orderId)
-//     console.log("order to be cancelled",order);
-//     if (!order) {
-
-//       console.log("Order not found");
-//       return res.status(404).send("Order not found");
-//     }
-//     else{
-//       order.status = "Cancelled"
-//       await order.save()
-//       res.redirect("/profile")
-//     }
-
-//   } catch(err)
-//   {
-//      console.log(err);
-//     res.send("internal server error")
-//   }
-// }
 
 const cancelOrder = async (req, res) => {
   const orderId = req.params.id;
@@ -1301,27 +1289,6 @@ const cancelOrder = async (req, res) => {
     res.render('user/error')
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-const paymentMethod = (req, res) => {
-  if (req.session.user) {
-    res.render('user/paymentmethod')
-  }
-  else {
-    res.redirect('/login')
-  }
-}
-
-
 
 
 
@@ -1702,7 +1669,7 @@ module.exports = {
   updateQuantity,
   getCheckOut,
   // confirmOrder,
-  paymentMethod,
+  // paymentMethod,
   orderSucess,
   getProfile,
   updateAddress,

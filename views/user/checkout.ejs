@@ -21,12 +21,13 @@
               <div class="row">
 
               </div>
-              <div class="address-container d-flex flex-nowrap overflow-auto" style="white-space: nowrap;">
-                <% if (address.length> 0) { %>
-                  <% address.forEach(address=> { %>
+
+               <div class="address-container d-flex flex-nowrap overflow-auto" style="white-space: nowrap;">
+                <% if (address.length > 0) { %>
+                  <% address.forEach(address => { %>
                     <div class="address-card p-3 border rounded me-3" style="width: 250px; height: 200px;">
                       <strong>House Name:</strong>
-                      <%= address.houseName %><br>
+                      <%= address.userName %><br>
                         <strong>Street:</strong>
                         <%= address.street %><br>
                           <strong>City:</strong>
@@ -35,17 +36,11 @@
                             <%= address.state %><br>
                               <strong>Pin Code:</strong>
                               <%= address.zip %><br>
-                                <div class="button-container mt-3"
-                                  style="display: flex; align-items: center; justify-content: space-evenly;">
-                                  <button class="btn btn-primary edit-address" data-address-id="<%= address._id %>">
-                                    Select
-                                  </button>
-
-                                </div>
-                    </div>
-                    <% }); %>
-                      <% } else { %>
-                        <h2>No Address Found</h2>
+                              <input type="radio" class="select-address" name="selectedAddress" data-address-id="<%= address._id %>">
+                            </div>
+                          <% }); %>
+                        <% } else { %>
+                          <h6 style="color: red;">No Address Found*</h6>
                         <% } %>
               </div>
 
@@ -300,12 +295,12 @@
         });
       });
 
-      // Add event listener for each "Select" button
-      document.querySelectorAll('.edit-address').forEach(function (button) {
-        button.addEventListener('click', function () {
-          selectAddress(this.dataset.addressId);
-        });
-      });
+       // Add event listener for each "Select" button
+       document.querySelectorAll('.select-address').forEach(function (radio) {
+    radio.addEventListener('change', function () {
+      selectAddress(this.dataset.addressId);
+     });
+   });
 
       // Function to process the order
       document.getElementById('processOrder').addEventListener('click', function () {

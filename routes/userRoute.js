@@ -62,8 +62,7 @@ router.get("/myorders",userauthentication.isBlock,userauthentication.userauthent
 router.post('/cancelorder/:id',userauthentication.isBlock,userauthentication.userauthentication, userController.cancelOrder);
 
 // payment method route
-router.get("/paymentmethod",userController.paymentMethod)
-router.get('/ordersuccess',userController.orderSucess)
+router.get('/ordersuccess',userauthentication.isBlock,userauthentication.userauthentication,userController.orderSucess)
 
 router.post('/saveOrder',userauthentication.isBlock,userauthentication.userauthentication,userController.saveOrder)
 // route for user profile

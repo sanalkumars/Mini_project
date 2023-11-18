@@ -689,7 +689,7 @@ const viewdetails = async (req, res) => {
     console.log(order);
 
     if (!order) {
-      return res.status(404).send('Order not found'); // Handle case where order is not found
+      res.redirect('/admin/error') // Handle case where order is not found
     }
 
     // Render the EJS template and pass the order data
@@ -819,6 +819,46 @@ const applyOffer = async (req, res) => {
 };
 
 
+const editCategory = async (req, res) => {
+  const categoryId = req.params.id;
+  try {
+      const categoryData = await category.findById(categoryId);
+      if (!categoryData) {
+          return res.status(404).send('Category not found');
+      }
+      res.render('admin/edit_category', { categoryData });
+  } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+ }
+};
+
+const editCategoryPost = async (req, res) => {
+  const categoryId = req.params.id;
+  const newName = req.body.name;
+
+  try {
+      // Check if the category with the new name already exists (case-insensitive)
+      const existingCategory = await category.findOne({ category: { $regex: new RegExp('^' + newName + '$', 'i') } });
+
+      if (existingCategory && existingCategory._id.toString() !== categoryId) {
+          // If the category with the new name already exists (excluding the current category being edited)
+          return res.status(400).send('Category already exists');
+      }
+
+      const categoryData = await category.findByIdAndUpdate(categoryId, { category: newName }, { new: true });
+
+      if (!categoryData) {
+          return res.status(404).send('Category not found');
+      }
+
+      res.redirect('/admin/category');
+  } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+    }
+};
+
 
 
 
@@ -868,4 +908,6 @@ module.exports =
   deleteBanner,
   sendCategoryOffer,
   applyOffer,
+  editCategory,
+  editCategoryPost,
 }
