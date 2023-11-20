@@ -70,7 +70,7 @@
           <div class="card w-100 my-2 shadow-2-strong">
            <a href=" /singleproduct/<%= product._id %>"> <img src="/uploads/<%= product.image %>" alt="<%= product.name %>" class="card-img-top" /> </a> 
             <div class="card-body d-flex flex-column">
-              <h5 class="card-title">Price: <%= product.price %> ₹</h5>
+              <h5 class="card-title">Price: <%= product.price %> ₹</h5><del class="">₹<%= product.realPrice %></del>
               <p class="card-text"> <%= product.description %></p>
 
               <div class="card-footer d-flex align-items-end pt-3 px-0 pb-0 mt-auto" id="mon">

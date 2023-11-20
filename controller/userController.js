@@ -299,20 +299,43 @@ const resendOTP = async (req, res) => {
 
 
 // signout for the user 
-const signOut = (req, res) => {
-  req.session.destroy((err) => {
-    console.log('session destroyed')
-    if (err) {
-      res.send("error in destroying session!!!!")
-    }
-    else {
-      // user = false
-      // delete req.session.user
+// const signOut = (req, res) => {
+//   req.session.destroy((err) => {
+//     console.log('session destroyed')
+//     if (err) {
+//       res.send("error in destroying session!!!!")
+//     }
+//     else {
+//       // user = false
+//       // delete req.session.user
 
-      res.redirect('/')
+//       res.redirect('/')
+//     }
+//   })
+// }
+const signOut = (req, res) => {
+  // Clear the session
+  req.session.destroy((err) => {
+    console.log('session destroyed');
+    if (err) {
+      res.send("error in destroying session!!!!");
+    } else {
+      // Clear browser history and redirect to the home page
+      res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.header('Pragma', 'no-cache');
+      res.header('Expires', '-1');
+      res.header('Expires', '-1');
+      res.header('Cache-Control', 'no-cache');
+      res.header('Cache-Control', 'no-store');
+      res.header('Cache-Control', 'must-revalidate');
+      res.header('Cache-Control', 'post-check=0, pre-check=0');
+
+      // Redirect to the home page after logout
+      res.redirect('/');
     }
-  })
-}
+  });
+};
+
 
 
 

@@ -46,7 +46,7 @@ router.post("/changepasswordpost",userauthentication.isBlock,userauthentication.
 // route for user to view products added by admin/productController
 router.get("/products",productController.getProductss)
 router.get('/filteredProducts/:category',userauthentication.isBlock,userauthentication.userauthentication, productController.getFilteredProducts);
-router.get("/singleproduct/:id",userauthentication.isBlock,userauthentication.userauthentication,productController.getSingleProduct)
+router.get("/singleproduct/:id",productController.getSingleProduct)
 router.get("/productss",userauthentication.isBlock,userauthentication.userauthentication,productController.userproductss)
 router.get("/search",userauthentication.isBlock,userauthentication.userauthentication,productController.searchProduct)
 

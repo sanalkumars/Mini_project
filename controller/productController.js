@@ -142,12 +142,13 @@ const getEditProduct = async (req, res) => {
       }
   
       const additionalimages = req.files.additionalimages ? req.files.additionalimages.map(file => file.filename) : [];
-  
+      const realPrice = price;
       let updatedPrice = price; // Initialize updated price with the original price
   
       // Apply offer if it is greater than zero
       if (offer > 0) {
         const offerAmount = (offer / 100) * price; // Calculate offer amount
+        
         updatedPrice = Math.floor(price - offerAmount); // Calculate updated price after applying offer
       }
       // Find the product by ID and update its fields
@@ -161,7 +162,9 @@ const getEditProduct = async (req, res) => {
           price: updatedPrice,
           quantity,
           image,
-          additionalimages, offer
+          additionalimages,
+           offer,
+           realPrice:realPrice
         },
         { new: true } // Return the updated product
       );

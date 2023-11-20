@@ -53,9 +53,9 @@
             <% } else if (order.isReturned) { %>
                 <span>Order return request sent</span>
             <% } else if (order.status === 'Delivered') { %>
-                <a href="/returnOrder/<%=order._id%>">
+                <!-- <a href="/returnOrder/<%=order._id%>">
                     <button type="submit" class="btn btn-info">Return</button>
-                </a>
+                </a> -->
             <% } else if (order.status === 'Canceled') { %>
                 <span>Order Canceled</span>
             <% } %>

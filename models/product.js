@@ -43,6 +43,10 @@ const productSchema = new mongoose.Schema({
      {
        type:Number,
       },
+      realPrice:{
+        type:Number,
+        
+      },
 
     
 });

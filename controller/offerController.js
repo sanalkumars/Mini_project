@@ -61,7 +61,9 @@ const sendCategoryOffer = async (req, res) => {
       // Update the prices of the products
       for (const productss of product) {
         const updatedPrice = Math.floor(productss.price - (productss.price * (percentage / 100)));
+        const realPrice = productss.price
         productss.price = updatedPrice;
+        productss.realPrice=realPrice
         await productss.save();
       }
   

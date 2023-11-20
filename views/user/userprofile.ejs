@@ -21,7 +21,7 @@
           <div class="mb-4 d-flex flex-column">
             <h6>My Orders</h6>
             <a href="/myorders" class="text-decoration-none">My Orders</a>
-            <a href="#" class="text-decoration-none">My Return</a>
+            <!-- <a href="#" class="text-decoration-none">My Return</a> -->
             <a href="/wallethistory" class="text-decoration-none">Wallet History</a>
 
           </div>
@@ -69,7 +69,7 @@
                                 <td><%= order._id %></td>
                                  
                                 <td><%= order.paymentMethod %></td>
-                                <td><%= order.totalPrice %></td>
+                                <td><%= order.grantTotal %></td>
                                 <td><%= new Date(order.orderDate).toLocaleDateString() %></td>
                                 <td><%= order.status %></td>
                                 <td><button class="btn btn-success">
