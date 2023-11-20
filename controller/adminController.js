@@ -161,15 +161,26 @@ const unblockUser = async (req, res) => {
 
 
 
+// const logout = (req, res) => {
+
+//   req.session.destroy((err) => {
+//     if (err) {
+//       console.error(err);
+//     }
+//     res.render('admin/login');
+//   });
+// }
 const logout = (req, res) => {
 
-  req.session.destroy((err) => {
-    if (err) {
-      console.error(err);
-    }
+   
+  console.log('Admin Session Before Destroy:', req.session);
+    
+    req.session.admin=null;
+
     res.render('admin/login');
-  });
-}
+ 
+
+};
 
 
 module.exports =

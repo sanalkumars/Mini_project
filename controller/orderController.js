@@ -457,7 +457,9 @@ const saveOrder = async (req, res) => {
 
 
   await cartProduct.deleteMany({ userId: user._id });
-  res.redirect(' /ordersuccess');
+  res.json({
+    success : true
+  })
 
 }   
 

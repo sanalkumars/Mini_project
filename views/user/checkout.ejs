@@ -301,9 +301,8 @@
       selectAddress(this.dataset.addressId);
      });
    });
-
-      // Function to process the order
-      document.getElementById('processOrder').addEventListener('click', function () {
+// Function to process the order
+document.getElementById('processOrder').addEventListener('click', function () {
         if (selectedAddress && selectedPaymentMethod) {
           const totalPrice = '<%=totalPrice%>';
           const couponDiscount = parseFloat($('#couponDiscount').text());
@@ -335,19 +334,7 @@
                   image: "https://example.com/your_logo",
                   order_id: data.id,
                   handler: function (response) {
-                    $.ajax({
-                      type: 'POST',
-                      url: "/saveOrder",
-                      data: { order: response }
-                    })
-                      .done(function (data) {
-                        console.log("Order saved successfully", data);
-                        window.location.href = '/ordersuccess';
-                      })
-                      .fail(function (jqXHR, textStatus, errorThrown) {
-                        console.error("Error saving order:", textStatus, errorThrown);
-                        alert("Error saving order. Please contact support.");
-                      });
+                    success(response)
                   },
                   prefill: {
                     name: "Gaurav Kumar",
@@ -384,6 +371,42 @@
         }
       });
     });
+
+    function success(response) {
+      // Assuming 'response' is a JSON object containing order data
+
+      // Convert JavaScript object to JSON string
+      const jsonData = JSON.stringify({ order: response });
+
+      fetch("/saveOrder", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+          // Add other headers if needed
+        },
+        body: jsonData
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`Error saving order. Status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          if(data.success){
+            console.log("Order saved successfully", data);
+             window.location.href = '/ordersuccess';
+           }else{
+         console.log("hai");
+          }
+          
+        })
+        .catch(error => {
+          console.error("Error saving order:", error.message);
+          alert("Error saving order. Please contact support.");
+        });
+
+    }
   </script>
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
