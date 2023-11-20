@@ -53,7 +53,7 @@ const LoginPost = async (req, res) => {
       res.render('admin/dashboard', { order });
     } catch (error) {
       console.error("error");
-      res.status(500).send('Internal Server Error');
+      res.redirect("/admin/error")
     }
   }
   else {
@@ -77,7 +77,7 @@ const adminHome = async (req, res) => {
     res.render('admin/dashboard', { order });
   } catch (error) {
     console.error("error");
-    res.status(500).send('Internal Server Error');
+    res.redirect("/admin/error")
   }
 
 }
@@ -91,7 +91,7 @@ const getUsersDetails = async (req, res) => {
 
   } catch (err) {
     console.error(err);
-    res.status(500).send('Internal Server Error');
+    res.redirect("/admin/error")
   }
 }
 
@@ -106,7 +106,7 @@ const searchUser = async (req, res) => {
 
     res.render("admin/users", { users, msg, searchQuery })
   } catch (error) {
-    res.status(500).send("internal server error")
+    res.redirect("/admin/error")
   }
 }
 
@@ -131,7 +131,7 @@ const blockUser = async (req, res) => {
   }
   catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.redirect("/admin/error")
   }
 }
 
@@ -142,7 +142,7 @@ const unblockUser = async (req, res) => {
   try {
     const user = await userData.findById(userid)
     if (!user) {
-      res.status(404).json({ error: "user is not found" })
+      res.redirect("/admin/error")
 
     } else {
       user.isBlocked = false
@@ -155,7 +155,7 @@ const unblockUser = async (req, res) => {
     }
   }
   catch (err) {
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.redirect("/admin/error")
   }
 }
 

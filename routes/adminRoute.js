@@ -70,6 +70,7 @@ router.get("/viewdetails/:orderId",adminauthenticaton.adminauthenticaton, orderC
 router.get("/coupons",adminauthenticaton.adminauthenticaton, couponController.getCoupon);
 router.get("/addCoupons",adminauthenticaton.adminauthenticaton, couponController.getaddCoupon)
 router.post("/addCoupons",adminauthenticaton.adminauthenticaton, couponController.addCoupon)
+router.get("/deleteCoupon/:id",adminauthenticaton.adminauthenticaton,couponController.deleteCoupon)
 
 
 // route for chartController

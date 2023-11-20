@@ -177,111 +177,110 @@ const removecartItem = async (req, res) => {
   };
 
    //function for quantity  updation
+
+
 // const updateQuantity = async (req, res) => {
 //     try {
 //       const itemId = req.params.itemId;
-//       console.log("new item is :",itemId);
 //       const newQuantity = req.body.quantity;
-//       console.log("new quantity is :",newQuantity);
-
+  
+//       // Find the cart item by its ID
 //       const cartItem = await cartProduct.findById(itemId).populate('productId');
-//       console.log("cartitem is :",cartItem);
-
+  
 //       if (!cartItem) {
 //         return res.status(404).json({ message: 'Cart item not found' });
 //       }
-
-//       const itemPrice = cartItem.productId.price;
-
+  
+//       // Find the corresponding product in the product collection
+//       const product = cartItem.productId;
+//       const collectionProduct = await products.findById(product._id);
+  
+//       if (!collectionProduct) {
+//         return res.status(404).json({ message: 'Product not found' });
+//       }
+  
+//       const collectionProductQuantity = collectionProduct.quantity;
+  
+//       // Check if the requested quantity exceeds the available quantity
+//       if (newQuantity > collectionProductQuantity) {
+//         return res.status(400).json({ message: 'Out Of Stock' });
+//       }
+  
+//       // Update the quantity of the cart item
+//       const itemPrice = product.price;
+//       let priceChange;
+//       let diff = newQuantity - cartItem.quantity;
+//       if (newQuantity > cartItem.quantity) {
+//         // increment
+//         priceChange = diff * itemPrice; // this to add to the final result
+//       } else {
+//         // decrement
+//       priceChange = -Math.abs(diff * itemPrice);
+//       }
 //       cartItem.quantity = newQuantity;
 //       cartItem.totalPrice = itemPrice * newQuantity;
-//       console.log("new total is :",cartItem.totalPrice);
-
-
-//       // Calculate the new total price for the entire cart using aggregation
-//       const userId = cartItem.userId;
-
-//       const pipeline = [
-//         {
-//           $match: {
-//             userId: userId,
-//           },
-//         },
-//         {
-//           $group: {
-//             _id: null,
-//             total: { $sum: { $multiply: ["$productId.price", "$quantity"] } },
-//           },
-//         },
-//       ];
-
-//       const totalResult = await cartProduct.aggregate(pipeline);
-//        console.log("total result is :",totalResult);
-
-//       const newTotalPrice = totalResult[0] ? totalResult[0].total : 0;
-
-//        console.log("new total price is :",newTotalPrice);
-
-//        await cartItem.save();
-
-//       res.json({ success: true, newQuantity, newTotalPrice });
+//       const newTotalPrice = cartItem.totalPrice;
+//       console.log("newTotalPrice:", newTotalPrice);
+//       // Save the updated cart item
+//       await cartItem.save();
+//       req.session.totalPrice = newTotalPrice;
+//       res.json({ success: true, newQuantity, newTotalPrice, priceChange });
 //     } catch (error) {
 //       console.error(error);
 //       return res.status(500).json({ message: 'Internal server error' });
 //     }
 //   };
-
 const updateQuantity = async (req, res) => {
-    try {
-      const itemId = req.params.itemId;
-      const newQuantity = req.body.quantity;
-  
-      // Find the cart item by its ID
-      const cartItem = await cartProduct.findById(itemId).populate('productId');
-  
-      if (!cartItem) {
-        return res.status(404).json({ message: 'Cart item not found' });
-      }
-  
-      // Find the corresponding product in the product collection
-      const product = cartItem.productId;
-      const collectionProduct = await products.findById(product._id);
-  
-      if (!collectionProduct) {
-        return res.status(404).json({ message: 'Product not found' });
-      }
-  
-      const collectionProductQuantity = collectionProduct.quantity;
-  
-      // Check if the requested quantity exceeds the available quantity
-      if (newQuantity > collectionProductQuantity) {
-        return res.status(400).json({ message: 'Out Of Stock' });
-      }
-  
-      // Update the quantity of the cart item
-      const itemPrice = product.price;
-      let priceChange;
-      let diff = newQuantity - cartItem.quantity;
-      if (newQuantity > cartItem.quantity) {
-        // increment
-        priceChange = diff * itemPrice; // this to add to the final result
-      } else {
-        // decrement
-        priceChange = -(diff * itemPrice);
-      }
-      cartItem.quantity = newQuantity;
-      cartItem.totalPrice = itemPrice * newQuantity;
-      const newTotalPrice = cartItem.totalPrice;
-      console.log("newTotalPrice:", newTotalPrice);
-      // Save the updated cart item
-      await cartItem.save();
-      req.session.totalPrice = newTotalPrice;
-      res.json({ success: true, newQuantity, newTotalPrice, priceChange });
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ message: 'Internal server error' });
+  try {
+    const itemId = req.params.itemId;
+    const newQuantity = req.body.quantity;
+
+    // Find the cart item by its ID
+    const cartItem = await cartProduct.findById(itemId).populate('productId');
+
+    if (!cartItem) {
+      return res.status(404).json({ message: 'Cart item not found' });
     }
-  };
+
+    // Find the corresponding product in the product collection
+    const product = cartItem.productId;
+    const collectionProduct = await products.findById(product._id);
+
+    if (!collectionProduct) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    const collectionProductQuantity = collectionProduct.quantity;
+
+    // Check if the requested quantity exceeds the available quantity
+    if (newQuantity > collectionProductQuantity) {
+      return res.status(400).json({ message: 'Out Of Stock' });
+    }
+
+    // Update the quantity of the cart item
+    const itemPrice = product.price;
+    let priceChange;
+    let diff = newQuantity - cartItem.quantity;
+    if (newQuantity > cartItem.quantity) {
+      // increment
+      priceChange = diff * itemPrice; // this to add to the final result
+    } else {
+      // decrement
+      priceChange = -Math.abs(diff * itemPrice);
+    }
+    cartItem.quantity = newQuantity;
+    cartItem.totalPrice = itemPrice * newQuantity;
+    const newTotalPrice = cartItem.totalPrice;
+    console.log("newTotalPrice:", newTotalPrice);
+    // Save the updated cart item
+    await cartItem.save();
+    req.session.totalPrice = newTotalPrice;
+    res.json({ success: true, newQuantity, newTotalPrice, priceChange });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
   
 
 

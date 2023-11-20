@@ -124,10 +124,12 @@ const getEditProduct = async (req, res) => {
   }
 
 
+ 
+
   const updateProduct = async (req, res) => {
     try {
       const productId = req.params.id;
-      const { name, category, description, status, price, quantity } = req.body;
+      const { name, category, description, status, price, quantity, offer } = req.body;
       let image;
   
       // Check if a new image file was uploaded
@@ -141,6 +143,13 @@ const getEditProduct = async (req, res) => {
   
       const additionalimages = req.files.additionalimages ? req.files.additionalimages.map(file => file.filename) : [];
   
+      let updatedPrice = price; // Initialize updated price with the original price
+  
+      // Apply offer if it is greater than zero
+      if (offer > 0) {
+        const offerAmount = (offer / 100) * price; // Calculate offer amount
+        updatedPrice = Math.floor(price - offerAmount); // Calculate updated price after applying offer
+      }
       // Find the product by ID and update its fields
       const updatedProduct = await products.findByIdAndUpdate(
         productId,
@@ -149,16 +158,17 @@ const getEditProduct = async (req, res) => {
           category,
           description,
           status,
-          price,
+          price: updatedPrice,
           quantity,
           image,
-          additionalimages
+          additionalimages, offer
         },
         { new: true } // Return the updated product
       );
   
       if (!updatedProduct) {
-        return res.status(404).send('Product not found');
+        // return res.status(404).send('Product not found');
+        res, redirect("/admin/error")
       }
   
       res.redirect('/admin/products'); // Redirect to the products list after updating
@@ -167,42 +177,6 @@ const getEditProduct = async (req, res) => {
       res.status(500).send('Internal server error');
     }
   };
-  // const updateProduct = async (req, res) => {
-  //     try {
-  //         const productId = req.params.id;
-  //         const { name, category, description, status, price, quantity, croppedImageData } = req.body;
-  //          console.log("cropped image is :",croppedImageData);
-  //          console.log("request body is :",req.body);
-  //         // No need to handle file uploads here
-  
-  //         const additionalimages = req.files.additionalimages ? req.files.additionalimages.map(file => file.filename) : [];
-  
-  //         const updatedProduct = await products.findByIdAndUpdate(
-  //             productId,
-  //             {
-  //                 name,
-  //                 category,
-  //                 description,
-  //                 status,
-  //                 price,
-  //                 quantity,
-  //                 // Store the cropped image data directly
-  //                 image: croppedImageData,
-  //                 additionalimages,
-  //             },
-  //             { new: true }
-  //         );
-  
-  //         if (!updatedProduct) {
-  //             return res.status(404).send('Product not found');
-  //         }
-  
-  //         res.redirect('/admin/products');
-  //     } catch (error) {
-  //         console.error(error);
-  //         res.status(500).send('Internal server error');
-  //     }
-  // };
 
   
    // functions from userController

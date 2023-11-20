@@ -114,8 +114,18 @@ const applyCoupon = async (req, res) => {
   }
 }
 
-
-
+const deleteCoupon = async (req, res) => {
+  console.log("inside delete coupon:",req.params.id);
+    try {
+        const couponId = req.params.id;
+        console.log(couponId)
+        await coupon.findByIdAndDelete(couponId);
+        res.redirect('/admin/coupons'); 
+    } catch (error) {
+        console.error(error);
+        res.render('admin/404')
+    }
+};
 
 
 module.exports={
@@ -123,6 +133,7 @@ module.exports={
     getCoupon,
     getaddCoupon,
     addCoupon,
+    deleteCoupon,
     
     // functions from userController
     applyCoupon,

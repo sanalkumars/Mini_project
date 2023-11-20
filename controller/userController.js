@@ -28,7 +28,7 @@ const secret_Key = process.env.SERECT_KEY
 
 const userHome = async (req, res) => {
   const product = await products.find()
-  const banners = await banner.find()
+  const banners = await banner.find({isDeleted:false})
 
   if (req.session.user) {
 
@@ -316,101 +316,6 @@ const signOut = (req, res) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 module.exports = {
   userHome,
   login,
@@ -420,19 +325,9 @@ module.exports = {
   verifyOTP,
   resendOTP,
   signOut,
-  
- 
-  
+
   // confirmOrder,
   // paymentMethod,
  
-  
  
-  
-  
-
-  
- 
-
-  
 }

@@ -1,56 +1,45 @@
 <!-- addBanner.ejs -->
 
-
-
-
-
-<!-- banner.ejs -->
-
-
-
-
-
-
 <%- include("../partials/adminHeader.ejs") %>
-    <!-- Sidebar End -->
+<!-- Sidebar End -->
 
+<!-- Content Start -->
+<div class="content">
+  <%- include("../partials/adminNavbar.ejs") %>
+  <!-- Navbar End -->
 
-    <!-- Content Start -->
-    <div class="content">
-        <%- include("../partials/adminNavbar.ejs") %>
-            <!-- Navbar End -->
+  <!-- Improved Styling -->
+  <div class="container-fluid pt-4 px-4">
+    <h1 class="text-center mb-4">Add New Banner</h1>
+    <div class="row vh-100 bg-secondary rounded align-items-center justify-content-center mx-0">
+      <div class="col-md-6">
+        <form action="/admin/addBanner" method="post" enctype="multipart/form-data">
+          <!-- Customize the form fields based on your banner model -->
+          <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+          </div>
+            <br>
+          <div class="form-group">
+            <label for="image">Image:</label>
+            <input type="file" class="form-control-file" id="image" name="image" accept="image/*" required>
+          </div>
+             <br>
+          <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea class="form-control" id="description" name="description" required></textarea>
+          </div>
+             <br>
+          <button class="btn btn-primary" type="submit">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- Improved Styling End -->
 
+  <!-- Footer Start -->
+  <%- include("../partials/adminfooter.ejs") %>
+</div>
+</body>
 
-            <!-- Blank Start -->
-            <div class="container-fluid pt-4 px-4">
-                <h1 style="text-align: center;">Add New Banner</h1>
-                <div class="row vh-100 bg-secondary rounded align-items-center justify-content-center mx-0">
-                   
-
-                       
-
-                        <form action="/admin/addBanner" method="post" enctype="multipart/form-data">
-                            <!-- Customize the form fields based on your banner model -->
-                            <label for="name">Name:</label>
-                            <input type="text" id="name" name="name" required>
-
-                            <label for="image">Image:</label>
-                            <input type="file" id="image" name="image" accept="image/*" required>
-
-                            <label for="description">Description:</label>
-                            <textarea id="description" name="description" required></textarea>
-
-                            <button class="btn btn-primary" type="submit">Submit</button>
-                        </form>
-
-                   
-                </div>
-            </div>
-            <!-- Blank End -->
-
-
-            <!-- Footer Start -->
-            <%- include("../partials/adminfooter.ejs") %>
-                </body>
-
-                </html>
+</html>

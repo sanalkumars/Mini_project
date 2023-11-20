@@ -1,54 +1,49 @@
 <!-- banner.ejs -->
 
-
-
-  
-
-  
 <%- include("../partials/adminHeader.ejs") %>
-          <!-- Sidebar End -->
-  
-  
-          <!-- Content Start -->
-          <div class="content">
-            <%- include("../partials/adminNavbar.ejs") %>
-              <!-- Navbar End -->
-  
-  
-              <!-- Blank Start -->
-              <div class="container-fluid pt-4 px-4">
-                  <div class="row vh-100 bg-secondary rounded align-items-center justify-content-center mx-0">
-                      <div class="col-md-6 text-center">
+<!-- Sidebar End -->
 
-                        <% if (bannerData && bannerData.length > 0) { %>
-                            <!-- Display banners if there is data -->
-                            <h1>Banners</h1>
-                            <ul>
-                              <% bannerData.forEach(banner => { %>
-                                <li>
-                                  <h2><%= banner.name %></h2>
-                                  <img src="/uploads/<%= banner.image %>" alt="<%= banner.name %> Image" width="200">
-                                  <p><%= banner.description %></p>
-                                  <form action="/admin/deleteBanner/<%= banner._id %>" method="post">
-                                    <button class="btn btn-primary" type="submit">Delete</button>
-                                  </form>
-                                </li>
-                              <% }); %>
-                            </ul>
-                          <% } else { %>
-                            <!-- Display a message and "Add New Banner" button if no data -->
-                            <h1>No Banners</h1>
-                          <% } %>
-                          <a href="/admin/addBanner"><button class="btn btn-primary">Add New Banner</button></a>
-                          
-                      </div>
+<!-- Content Start -->
+<div class="content">
+  <%- include("../partials/adminNavbar.ejs") %>
+  <!-- Navbar End -->
+
+  <!-- Improved Styling -->
+  <div class="container-fluid pt-4 px-4">
+    <div class="row vh-100 bg-secondary rounded align-items-center justify-content-center mx-0">
+      <div class="col-md-8 text-center">
+        <% if (bannerData && bannerData.length > 0) { %>
+          <h1 class="mb-4">Banners</h1>
+          <div class="row">
+            <% bannerData.forEach(banner => { %>
+              <div class="col-md-4 mb-4">
+                <div class="card">
+                  <img src="/uploads/<%= banner.image %>" class="card-img-top" alt="<%= banner.name %> Image">
+                  <div class="card-body">
+                    <h5 class="card-title"><%= banner.name %></h5>
+                    <p class="card-text"><%= banner.description %></p>
+                    <form action="/admin/deleteBanner/<%= banner._id %>" method="post">
+                      <button class="btn btn-danger" type="submit">Delete</button>
+                    </form>
                   </div>
+                </div>
               </div>
-              <!-- Blank End -->
-  
-  
-              <!-- Footer Start -->
-              <%- include("../partials/adminfooter.ejs") %>
-  </body>
-  
-  </html>
+            <% }); %>
+          </div>
+        <% } else { %>
+          <h1>No Banners</h1>
+        <% } %>
+        <div class="mt-4">
+          <a href="/admin/addBanner" class="btn btn-primary">Add New Banner</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Improved Styling End -->
+
+  <!-- Footer Start -->
+  <%- include("../partials/adminfooter.ejs") %>
+</div>
+</body>
+
+</html>

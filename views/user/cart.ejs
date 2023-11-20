@@ -1,4 +1,3 @@
-
 <style>
   .icon-hover-primary:hover {
   border-color: #3b71ca !important;
@@ -154,8 +153,8 @@
           <div class="card-body d-flex flex-column pt-3 border-top">
             <a href="#" class="nav-link"><%= product.name %></a>
             <div class="price-wrap mb-2">
-              <strong class="">$<%= product.price %></strong>
-              <del class="">$<%= product.price %></del>
+              <strong class="">₹<%= product.price %></strong>
+              <del class=""><%= product.realPrice %></del>
             </div>
             <div class="card-footer d-flex align-items-end pt-3 px-0 pb-0 mt-auto">
               <form action="/cart" method="post">
@@ -173,76 +172,19 @@
   </div>
 </section>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- <script>
-  $(document).ready(function() {
-    console.log("Document ready function is running.");
-    $(".increaseQuantity").on("click", function() {
-      const itemInput = $(this).closest(".input-group").find(".form-control");
-      const currentQuantity = parseInt(itemInput.val());
-      const newQuantity = currentQuantity + 1;
-      updateQuantity(itemInput, newQuantity);
-    });
-  
-    $(".decreaseQuantity").on("click", function() {
-      const itemInput = $(this).closest(".input-group").find(".form-control");
-      const currentQuantity = parseInt(itemInput.val());
-  
-      // Check if the current quantity is greater than 1 before decreasing
-      if (currentQuantity > 1) {
-        const newQuantity = currentQuantity - 1;
-        updateQuantity(itemInput, newQuantity);
-      }
-    });
-  
-    function updateQuantity(itemInput, newQuantity) {
-      const currentQuantity = parseInt(itemInput.val());
-      const itemId = itemInput.data("item-id");
-  
-      $.ajax({
-        type: "POST",
-        url: "/quantityUpdate/" + itemId,
-        data: { quantity: newQuantity },
-        success: function(response) {
-          if (response.success) {
-            itemInput.val(response.newQuantity);
-  
-            // Update the total price in the summary section
-            updateTotalPrice(response.newTotalPrice);
-          } else {
-            handleUpdateError();
-          }
-        },
-        error: function() {
-          handleUpdateError();
-        }
-      });
-    }
-  
-    function updateTotalPrice(newTotalPrice) {
-      const formattedPrice = "$" + newTotalPrice.toFixed(2);
-  
-      const totalPriceElement = $("#totalPriceValue");
-      totalPriceElement.text(formattedPrice);
-  
-      // Update the total price in the second location (if needed)
-      const totalPriceElement2 = $("#totalPriceValue2");
-      totalPriceElement2.text(formattedPrice);
-    }
-  
-    function handleUpdateError() {
-      // Handle error here (e.g., show an error message to the user)
-      console.error("Quantity update failed");
-    }
-  });
-  </script> -->
+
 
   
+ 
   <script>
     $(document).ready(function() {
       $(".increaseQuantity").on("click", function() {
         const itemInput = $(this).closest(".input-group").find(".form-control");
         const currentQuantity = parseInt(itemInput.val());
         const newQuantity = currentQuantity + 1;
+        console.log(itemInput[0]);
+        
+      console.log("quantity of " + itemInput + "was increased from " + currentQuantity + " to " + newQuantity)  
         updateQuantity(itemInput, newQuantity);
       });
     
@@ -253,6 +195,8 @@
         // Check if the current quantity is greater than 1 before decreasing
         if (currentQuantity > 1) {
           const newQuantity = currentQuantity - 1;
+          
+      console.log("quantity of " + itemInput + "was decreased from " + currentQuantity + " to " + newQuantity)  
           updateQuantity(itemInput, newQuantity);
         }
       });
@@ -268,22 +212,26 @@
           success: function(response) {
             if (response.success) {
               itemInput.val(response.newQuantity);
-    
+              const totalPriceElement = document.querySelector('#totalPriceValue');
+              let currentTotal = parseFloat(totalPriceElement.innerText.replaceAll('$', '').trim());
+              totalPriceElement.innerText = currentTotal + response.priceChange;
+              const totalPriceElement2 = document.querySelector('#totalPriceValue2');
+              totalPriceElement2.innerText = currentTotal + response.priceChange;
               // Update the total price in the summary section
-              const totalPriceElement = $("#totalPriceValue");
-              totalPriceElement.text("$" + response.newTotalPrice.toFixed(2)); // Format the price
+              // const totalPriceElement = $("#totalPriceValue");
+              // totalPriceElement.text("$" + response.newTotalPrice.toFixed(2)); // Format the price
     
-              // Update the total price in the second location (if needed)
-              const totalPriceElement2 = $("#totalPriceValue2"); // Assuming you have a second element with ID "totalPriceValue2"
-              totalPriceElement2.text("$" + response.newTotalPrice.toFixed(2)); // Format the price
+              // // Update the total price in the second location (if needed)
+              // const totalPriceElement2 = $("#totalPriceValue2"); // Assuming you have a second element with ID "totalPriceValue2"
+              // totalPriceElement2.text("$" + response.newTotalPrice.toFixed(2)); // Format the price
+              // window.location.reload();
             } else {
               // Handle error
             }
           },
           error: function(err) {
-            if(err.status===400)
-            { 
-               alert("product out of quantity")
+            if (err.status === 400) {
+              alert("Product out of quantity.")
             }
           }
         });
