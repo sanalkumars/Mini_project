@@ -111,12 +111,12 @@ footer > p > a {
     </header>
     <main>
       
-        <form id="login_form" class="form_class" action="/login" method="post">
+        <form id="login_form" class="form_class" action="/login" method="post" novalidate>
             <div class="form_div">
                 <label>Login:</label>
                 <input class="field_class" name="email" type="email" placeholder="Enter the username" autofocus>
                 <div id="emailError" class="error"></div>
-                <p><%=locals.error1 %></p>
+                <p style="color: red;"><%=locals.error1 %></p>
                 <label>Password:</label>
                 <input id="pass" class="field_class" name="password" type="password" placeholder="Enter the password">
                 <div id="passwordError" class="error"></div>               
@@ -131,39 +131,51 @@ footer > p > a {
         </form>
     </main>
     <footer>
-        <p><a href="#">Join Us Now</a></p>
+        <p><a href="/signup">Become BE-FIT Member</a></p>
     </footer>
 
-    <!-- <script>
-        document.getElementById('login_form').addEventListener('submit', function (event) {
-          // Clear previous error messages
-          document.getElementById('emailError').textContent = '';
-          document.getElementById('passwordError').textContent = '';
+ 
       
-          // Validate email
-          const emailInput = document.getElementsByName('email')[0];
-          if (!emailInput.value.trim()) {
-            document.getElementById('emailError').textContent = 'Email is required';
-            event.preventDefault();
-          }
-      
-          // Validate password
-          const passwordInput = document.getElementsByName('password')[0];
-          if (!passwordInput.value.trim()) {
-            document.getElementById('passwordError').textContent = 'Password is required';
-            event.preventDefault();
-          }
-        });
-      </script> -->
-      
-
-
-
-
-
-
-
     <script>
+        const form = document.getElementById("login_form");
+        const email = document.querySelector('input[name="email"]');
+        const password = document.querySelector('input[name="password"]');
+        const emailError = document.getElementById("emailError");
+        const passwordError = document.getElementById("passwordError");
+    
+        form.addEventListener("submit", function(event) {
+            let isValid = true;
+    
+            // Validate the email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regular expression for email validation
+            if (!emailRegex.test(email.value.trim())) {
+                emailError.textContent = "Enter a valid email address";
+                isValid = false;
+            } else {
+                emailError.textContent = "";
+            }
+    
+            // Validate the password
+            if (password.value.length < 6) {
+                passwordError.textContent = "Password must be at least 6 characters long";
+                isValid = false;
+            } else {
+                passwordError.textContent = "";
+            }
+    
+            if (!isValid) {
+                event.preventDefault(); // Prevent form submission
+            }
+        });
+    </script>
+    
+
+
+
+
+
+
+    <!-- <script>
         const form = document.getElementById("login_form");
         const email = document.querySelector('input[name="email"]');
         const password = document.querySelector('input[name="password"]');
@@ -193,5 +205,5 @@ footer > p > a {
                 event.preventDefault(); // Prevent form submission
             }
         });
-    </script>
+    </script> -->
 </body>

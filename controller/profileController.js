@@ -70,56 +70,9 @@ const getProfile = async (req, res) => {
 
 
  
-// function for getting the forgot password ejs
-const getforgotPass = (req, res) => {
-  res.render("user/forgotpass")
-}
-
-  // function for forgotpassword
-
-const forgotPass = async (req, res) => {
-  const usermail = req.body.email
-  console.log(usermail);
-  try {
-    console.log("hai");
-    const check = await userData.findOne({ email: usermail })
-    console.log(check);
 
 
-    if (check) {
 
-      if (check.email === req.body.email) {
-        const otp = generateOTP()
-        console.log("genareated otp for forgotpassword is :", otp);
-
-        const isBlocked = check.isBlocked
-        if (isBlocked) {
-          res.send("cannot login your are blocked by the admin!!!")
-        }
-        else {
-
-
-          req.session.user = req.body.email
-          req.session.otp = otp
-          req.session.requestedOTP = true
-          await sendOTPByEmail(usermail, otp)
-
-          res.render("user/otp", { msg: "otp for verification have been sent to your email" });
-        }
-
-      }
-      else {
-        res.render("user/login", { error: "wrong Deatils" })
-      }
-    } else {
-      res.render("user/login", { error: "User not Found" })
-    }
-  }
-  catch (error) {
-    console.log(error);
-    res.send("! wronge details... ")
-  }
-}
 
 const changepassword = (req, res) => {
 
@@ -198,8 +151,7 @@ const updatePassword = async (req, res) => {
 
   module.exports={
     getProfile,
-    forgotPass,
-    getforgotPass,
+    
     changepassword,
     changepasswordpost,
     getchangePass,

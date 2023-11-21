@@ -131,22 +131,9 @@ const getChart = async (req, res) => {
           }
         ]);
   
-        console.log("totalRevenue aggregation result:", totalRevenue);
+        
   
-        console.log("todaysOrder is:", todaysOrder);
-        console.log("totalOrder is:", totalOrder);
-        console.log("avgOrder is:", avgOrder);
-        console.log("totalRevenue is:", totalRevenue);
-  
-  
-        console.log(dayChart);
-        console.log(monthChart);
-        console.log(yearChart);
-        console.log(paymentMethodChart);
-        console.log("todaysOrder is:", todaysOrder);
-        console.log("totalOrder is:", totalOrder);
-        console.log("avgOrder is:", avgOrder);
-        console.log("totalRevenue is:", totalRevenue);
+        
   
         const datesDay = dayChart.map(item => item._id);
         const orderCountsDay = dayChart.map(item => item.count);
@@ -176,10 +163,7 @@ const getChart = async (req, res) => {
           totalRevenue: totalRevenue.length > 0 ? totalRevenue[0].totalRevenue : 0
         });
   
-        console.log("dayData is:", dayData);
-        console.log("monthData is:", monthData);
-        console.log("yearData is:", yearData);
-        console.log("paymentMethodData is:", paymentMethodData);
+       
       } catch (error) {
         console.error('Error fetching data:', error);
         res.status(500).json({ error: 'Internal Server Error' });

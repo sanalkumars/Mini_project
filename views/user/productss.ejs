@@ -1,3 +1,9 @@
+<style>
+  .card:hover {
+    transform: scale(1.05); /* Increase the size on hover */
+    transition: transform 0.3s ease; /* Add a smooth transition effect */
+  }
+</style>
 
 <%- include("../partials/header.ejs") -%>
   
@@ -23,27 +29,29 @@
         <form action="/search" method="GET">
           <div class="search-container">
               <input type="text" name="searchQuery" placeholder="Search products" id="searchInput">
-              <button type="submit" id="searchButton">Search</button>
+              <button type="submit" id="searchButton" class="btn btn-primary">Search</button>
           </div>
        </form>
         <!-- Collapsible wrapper -->
         <div class="mt-3">
           <label for="categoryDropdown" class="form-label" style="color: blue;">Filter by Category:</label>
           <select id="categoryDropdown" class="form-select" onchange="filterProducts()">
-            <option value="all" selected>Show All Categories</option>
+            <option value="all" <%= selectedCategory === 'all' ? 'selected' : '' %>>Show All Categories</option>
             <% categories.forEach(category => { %>
-              <option value="<%= category.category %>"><%= category.category %></option>
+              <option value="<%= category.category %>" <%= selectedCategory === category.category ? 'selected' : '' %>>
+                <%= category.category %>
+              </option>
             <% }); %>
           </select>
         </div>
 
         <label for="priceRangeDropdown" class="form-label" style="color: blue;">Sort by Price Range:</label>
         <select id="priceRangeDropdown" class="form-select" onchange="sortProducts()">
-          <option value="all" selected>Show All Price Ranges</option>
-          <option value="500">500 and Below</option>
-          <option value="1000">500-1000</option>
-          <option value="2000">1000-2000</option>
-          <option value="above">2000 and Above</option>
+          <option value="all" <%= selectedPriceRange === 'all' ? 'selected' : '' %>>Show All Price Ranges</option>
+          <option value="500" <%= selectedPriceRange === '500' ? 'selected' : '' %>>500 and Below</option>
+          <option value="1000" <%= selectedPriceRange === '1000' ? 'selected' : '' %>>500-1000</option>
+          <option value="2000" <%= selectedPriceRange === '2000' ? 'selected' : '' %>>1000-2000</option>
+          <option value="above" <%= selectedPriceRange === 'above' ? 'selected' : '' %>>2000 and Above</option>
         </select>
 
 
@@ -67,9 +75,10 @@
 
       <% product.forEach(product=>{ %>
         <div class="col-lg-4 col-md-6 col-sm-6 d-flex">
-          <div class="card w-100 my-2 shadow-2-strong">
+          <div class="card w-100 my-2 shadow-2-strong card-hover">
            <a href=" /singleproduct/<%= product._id %>"> <img src="/uploads/<%= product.image %>" alt="<%= product.name %>" class="card-img-top" /> </a> 
             <div class="card-body d-flex flex-column">
+              <h4> <%= product.name %></h4>
               <h5 class="card-title">Price: <%= product.price %> ₹</h5><del class="">₹<%= product.realPrice %></del>
               <p class="card-text"> <%= product.description %></p>
 

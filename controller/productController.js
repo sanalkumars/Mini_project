@@ -26,18 +26,31 @@ const secret_Key = process.env.SERECT_KEY
 // functions from admincontroller
 
 //function for admin to see the products
+const ITEMS_PER_PAGE = 9; // Set the number of items per page
+
 const seeProducts = async (req, res) => {
-    try {
-  
-      const product = await products.find()
-      res.render("admin/products", { product })
-  
-    }
-    catch (err) {
-      console.log(err);
-      res.status(500).send("internal server error")
-    }
+  try {
+    const page = parseInt(req.query.page) || 1; // Get the page number from the query parameters
+
+    const totalProducts = await products.countDocuments();
+    const totalPages = Math.ceil(totalProducts / ITEMS_PER_PAGE);
+
+    const skip = (page - 1) * ITEMS_PER_PAGE;
+    const product = await products.find().skip(skip).limit(ITEMS_PER_PAGE);
+
+    res.render('admin/products', { product, currentPage: page, totalPages });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Internal Server Error');
   }
+};
+
+
+
+
+
+
+
 
 // function to get the product adding form
 
@@ -239,12 +252,16 @@ const getProductss = async (req, res) => {
 
     // Calculate the total number of pages
     const pageCount = Math.ceil(allProducts.length / productsPerPage);
+  const selectedCategory = '';
+  const selectedPriceRange= ' ';
 
     res.render("user/productss", {
       product: currentProducts,
       currentPage,
       pageCount,
-      categories
+      categories,
+      selectedCategory,
+      selectedPriceRange
     });
   } catch (err) {
     console.log("Sorry for the error");
@@ -325,6 +342,12 @@ const filterAndSortProducts = (products, selectedPriceRange) => {
   })
   .sort((a, b) => a.price - b.price);
 };
+
+
+
+
+
+
     
 const getSingleProduct = async (req, res) => {
 

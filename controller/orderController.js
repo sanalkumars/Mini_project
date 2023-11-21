@@ -28,22 +28,27 @@ const secret_Key = process.env.SECRET_KEY
 
 // function for getting user orders
 const getUserOrder = async (req, res) => {
-    try {
-      const order = await orders.find().populate('products.productId').populate("userId")
-  
-      // Check if any order has been returned
-      const hasReturnedOrder = order.some(order => order.isReturned);
-  
-      if (!orders) {
-        throw new Error('No orders found');
-      }
-  
-      res.render('admin/orderManage', { order, hasReturnedOrder });
-    } catch (error) {
-      console.error("error");
-      res.status(500).send('Internal Server Error');
+  try {
+    // Fetch orders and sort them by createdAt in descending order (most recent first)
+    const order = await orders.find()
+      .populate('products.productId')
+      .populate("userId")
+      .sort({ createdAt: -1 });
+
+    // Check if any order has been returned
+    // const hasReturnedOrder = order.some(order => order.isReturned);
+
+    if (!order) {
+      throw new Error('No orders found');
     }
-  };
+
+    res.render('admin/orderManage', { order });
+  } catch (error) {
+    console.error(error); // log the actual error object
+    res.status(500).send('Internal Server Error');
+  }
+};
+
   
 
   const updateUserOrder = async (req, res) => {
@@ -105,6 +110,10 @@ const getCheckOut = async (req, res) => {
     const user = await userData.findOne({ email: req.session.user });
     req.session.userDetails = user;
 
+    // Fetch user's wallet balance
+    const userWallet = await Wallet.findById(user.wallet);
+    console.log("user wallet is :",userWallet);
+
     const cartItems = await cartProduct.find({ userId: user._id }).populate('productId');
     req.session.productDetails = cartItems;
     const products = cartItems.map((item) => ({ productId: item.productId, quantity: item.quantity }));
@@ -114,7 +123,7 @@ const getCheckOut = async (req, res) => {
 
     const address = await Address.find({ userId: user._id });
     const totalPrice = req.session.totalPrice;
-    const grantTotal = totalPrice
+    const grantTotal = totalPrice;
     const coupons = await coupon.find({ appliedUsers: { $nin: [user._id] } });
 
     // Check if cartItems is empty
@@ -123,12 +132,14 @@ const getCheckOut = async (req, res) => {
       return res.redirect('/cart?alert=emptyCart');
     }
 
-    res.render('user/checkout', { user, products, totalPrice, address, coupons, grantTotal });
+    // Pass the wallet balance to the frontend
+    res.render('user/checkout', { user, products, totalPrice, address, coupons, grantTotal, userWallet });
   } catch (error) {
     console.log(error);
     res.status(500).send('Internal Server Error');
   }
 };
+
     
  
    // function for generating oderId with prefix "ODR"

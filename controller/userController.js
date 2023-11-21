@@ -212,7 +212,7 @@ const loginPost = async (req, res) => {
         });
       } else {
         // Passwords do not match
-        res.render("user/login", { error: "Wrong Password !!!" });
+        res.render("user/login", { error1: "Wrong Password !!!" });
       }
     } else {
       // User with the provided email was not found
@@ -299,44 +299,72 @@ const resendOTP = async (req, res) => {
 
 
 // signout for the user 
-// const signOut = (req, res) => {
-//   req.session.destroy((err) => {
-//     console.log('session destroyed')
-//     if (err) {
-//       res.send("error in destroying session!!!!")
-//     }
-//     else {
-//       // user = false
-//       // delete req.session.user
-
-//       res.redirect('/')
-//     }
-//   })
-// }
 const signOut = (req, res) => {
-  // Clear the session
   req.session.destroy((err) => {
-    console.log('session destroyed');
+    console.log('session destroyed')
     if (err) {
-      res.send("error in destroying session!!!!");
-    } else {
-      // Clear browser history and redirect to the home page
-      res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
-      res.header('Pragma', 'no-cache');
-      res.header('Expires', '-1');
-      res.header('Expires', '-1');
-      res.header('Cache-Control', 'no-cache');
-      res.header('Cache-Control', 'no-store');
-      res.header('Cache-Control', 'must-revalidate');
-      res.header('Cache-Control', 'post-check=0, pre-check=0');
-
-      // Redirect to the home page after logout
-      res.redirect('/');
+      res.send("error in destroying session!!!!")
     }
-  });
-};
+    else {
+      // user = false
+      // delete req.session.user
+
+      res.redirect('/')
+    }
+  })
+}
+ 
+
+// function for getting the forgot password ejs
+const getforgotPass = (req, res) => {
+  res.render("user/forgotpass")
+}
+
+  // function for forgotpassword
+
+const forgotPass = async (req, res) => {
+  const usermail = req.body.email
+  console.log(usermail);
+  try {
+    console.log("hai");
+    const check = await userData.findOne({ email: usermail })
+    console.log(check);
 
 
+    if (check) {
+
+      if (check.email === req.body.email) {
+        const otp = generateOTP()
+        console.log("genareated otp for forgotpassword is :", otp);
+
+        const isBlocked = check.isBlocked
+        if (isBlocked) {
+          res.send("cannot login your are blocked by the admin!!!")
+        }
+        else {
+
+
+          req.session.user = req.body.email
+          req.session.otp = otp
+          req.session.requestedOTP = true
+          await sendOTPByEmail(usermail, otp)
+
+          res.render("user/otp", { msg: "otp for verification have been sent to your email" });
+        }
+
+      }
+      else {
+        res.render("user/login", { error: "wrong Deatils" })
+      }
+    } else {
+      res.render("user/login", { error: "User not Found" })
+    }
+  }
+  catch (error) {
+    console.log(error);
+    res.send("! wronge details... ")
+  }
+}
 
 
 module.exports = {
@@ -348,7 +376,8 @@ module.exports = {
   verifyOTP,
   resendOTP,
   signOut,
-
+  forgotPass,
+  getforgotPass,
   // confirmOrder,
   // paymentMethod,
  

@@ -20,7 +20,7 @@
                         <span>Enter Your Registered Email</span>
                         <div class="text-danger fw-bold" id="notification"> </div>
                     </div>
-                    <form id="formSubmition" action="/forgotpassword" method="post" style="width:100% " class="mt-3">
+                    <form id="formSubmition" action="/forgotpassword" method="post" style="width:100% " class="mt-3" novalidate>
                         <div class=" credntials d-flex flex-column align-items-center justify-content-center gap-2"
                             style="width: 100%;">
                             <input class="signInput " type="email" placeholder="email" name="email" id="email"required>
@@ -33,6 +33,28 @@
                 </div>
             </div>
     </div>
+    <script>
+        const form = document.getElementById("formSubmition");
+        const email = document.querySelector('input[name="email"]');
+        const emailError = document.getElementById("Number");
+    
+        form.addEventListener("submit", function(event) {
+            let isValid = true;
+    
+            // Validate the email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regular expression for email validation
+            if (!emailRegex.test(email.value.trim())) {
+                emailError.textContent = "Enter a valid email address";
+                isValid = false;
+            } else {
+                emailError.textContent = "";
+            }
+    
+            if (!isValid) {
+                event.preventDefault(); // Prevent form submission
+            }
+        });
+    </script>
     
 </body>
 </html>

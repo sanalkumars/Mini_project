@@ -1,4 +1,4 @@
-<%- include("../partials/layouts.ejs") %>
+<!-- <%- include("../partials/layouts.ejs") %>
 
 <%- include("../partials/adminHeader.ejs") %>
         <!-- Content Start -->
@@ -18,8 +18,11 @@
                         <img src="/uploads/<%= product.image %>" alt="<%= product.name %>" class="card-img-top" style="max-height: 200px;"> <!-- Adjust the image size -->
                       </a>
                       <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">Price: <%= product.price %> $</h5>
-                        <p class="card-text"><%= product.description %></p>
+                        <p class="card-text fw-bold ">Product: <%= product.name %></p>
+                        <p class="card-text fw-bold ">Price: <%= product.price %> ₹</p>
+                        <p class="card-text fw-bold ">Quantity: <%= product.quantity %></p>
+                        <p class="card-text fw-bold ">Description: <%= product.description %></p>
+
                         <div class="card-footer d-flex align-items-end pt-3 px-0 pb-0 mt-auto" id="mon">
                           <form action="/admin/editproducts/<%= product.id %>" method="get">
                             <input type="hidden" name="productId" value="<%= product._id %>">
@@ -34,13 +37,32 @@
                     </div>
                   </div>
                 <% }); %>
+                <div class="pagination mt-3" style="display: flex; justify-content: center;">
+                  <% if (currentPage > 1) { %>
+                    <a href="?page=<%= currentPage - 1 %>">Previous</a>
+                  <% } %>
+            
+                  <% for (let i = 1; i <= totalPages; i++) { %>
+                    <% if (i === currentPage) { %>
+                      <span class="current-page"> </span>
+                    <% } else { %>
+                      <a href="?page=<%= i %>"></a>
+                    <% } %>
+                  <% } %>
+            
+                  <% if (currentPage < totalPages) { %>
+                    <a href="?page=<%= currentPage + 1 %>">Next </a>
+                  <% } %>
+                </div>
               </div>
+               
               
             </div>
            
             <%- include("../partials/adminfooter.ejs") %>
              </div>
             
-            <!-- Blank End -->
+             <!-- with porevious&laquo; 
+              with next &raquo;  -->
 
-           
+             -->

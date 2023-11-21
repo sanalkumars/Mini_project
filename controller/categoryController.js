@@ -31,7 +31,7 @@ const getCategory = async (req, res) => {
     try {
   
       if (req.session.admin) {
-        const categories = await category.find()
+        const categories = await category.find( { isDeleted:false })
         res.render("admin/category", { categories })
       } else {
         res.render("admin/login")
@@ -41,6 +41,7 @@ const getCategory = async (req, res) => {
       res.status(500).send("internal server error")
     }
   }
+
 
   const editCategory = async (req, res) => {
     const categoryId = req.params.id;
@@ -87,7 +88,7 @@ const editCategoryPost = async (req, res) => {
   const deletecategory = async (req, res) => {
     const cateID = req.params.id
     try {
-      await category.findByIdAndUpdate(cateID, { status: "unavailable" })
+      await category.findByIdAndUpdate(cateID,{isDeleted:true})
       res.redirect("/admin/category")
     } catch (error) {
       console.log(error);
@@ -98,31 +99,54 @@ const editCategoryPost = async (req, res) => {
 
   // function to add new category and also to check wheather it exist already or not
 
+// const addCategory = async (req, res) => {
+//     const newcata = req.body.category;
+//     console.log(newcata);
+  
+//     try {
+//       const existsCata = await category.find({ category: newcata });
+//       console.log(existsCata);
+  
+//       if (existsCata.length === 0) {
+//         console.log("Category doesn't exist. Creating a new one.");
+//         const cata = req.body.category;
+//         const newcategory = new category({
+//           category: cata
+//         });
+//         await newcategory.save();
+//         res.redirect('/admin/category');
+//       } else {
+//         const categories = await category.find();
+//         const msg = "Sorry, this category already exists";
+//         res.render("admin/category", { msg, categories });
+//       }
+//     } catch (error) {
+//       res.status(500).send("Internal server error");
+//     }
+//   }
 const addCategory = async (req, res) => {
-    const newcata = req.body.category;
-    console.log(newcata);
-  
-    try {
-      const existsCata = await category.find({ category: newcata });
-      console.log(existsCata);
-  
-      if (existsCata.length === 0) {
-        console.log("Category doesn't exist. Creating a new one.");
-        const cata = req.body.category;
-        const newcategory = new category({
-          category: cata
-        });
-        await newcategory.save();
-        res.redirect('/admin/category');
+  const newCategory = req.body.category;
+
+  try {
+      const existsCategory = await category.findOne({ category: { $regex: new RegExp(newCategory, 'i') } });
+
+      if (!existsCategory) {
+          console.log("Category doesn't exist. Creating a new one.");
+          const newCategoryObject = new category({
+              category: newCategory
+          });
+          await newCategoryObject.save();
+          res.redirect('/admin/category');
       } else {
-        const categories = await category.find();
-        const msg = "Sorry, this category already exists";
-        res.render("admin/category", { msg, categories });
+          const categories = await category.find();
+          const msg = "Sorry, this category already exists";
+          res.render("admin/category", { msg, categories });
       }
-    } catch (error) {
+  } catch (error) {
+      console.error(error);
       res.status(500).send("Internal server error");
-    }
   }
+};
 
 
 

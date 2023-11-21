@@ -26,14 +26,15 @@ router.post("/verifyOTP",userController.verifyOTP)
 router.post("/resendOTP",userController.resendOTP)
 router.get("/signout",userController.signOut)
 router.get("/home",userauthentication.isBlock,userauthentication.userauthentication,userController.userHome)
+router.get("/getforgotpassword",userController.getforgotPass)
+router.post("/forgotpassword",userController.forgotPass)
 
 
 
 
 // route for user profileController
 router.get("/profile",userauthentication.isBlock,userauthentication.userauthentication,profileController.getProfile)
-router.get("/getforgotpassword",profileController.getforgotPass)
-router.post("/forgotpassword",profileController.forgotPass)
+
 router.get("/changepassword",userauthentication.isBlock,userauthentication.userauthentication,profileController.changepassword)
 router.post("/changepasswordpost",userauthentication.isBlock,userauthentication.userauthentication,profileController.changepasswordpost)
 
@@ -45,7 +46,7 @@ router.post("/changepasswordpost",userauthentication.isBlock,userauthentication.
 
 // route for user to view products added by admin/productController
 router.get("/products",productController.getProductss)
-router.get('/filteredProducts/:category',userauthentication.isBlock,userauthentication.userauthentication, productController.getFilteredProducts);
+router.get('/filteredProducts/:category',productController.getFilteredProducts);
 router.get("/singleproduct/:id",productController.getSingleProduct)
 router.get("/productss",userauthentication.isBlock,userauthentication.userauthentication,productController.userproductss)
 router.get("/search",userauthentication.isBlock,userauthentication.userauthentication,productController.searchProduct)
@@ -54,7 +55,7 @@ router.get("/search",userauthentication.isBlock,userauthentication.userauthentic
 
 
 // routes for cartController
-router.get("/cart",userauthentication.isBlock,userauthentication.userauthentication,cartControllers.showCarts)
+router.get("/cart",userauthentication.userauthentication,userauthentication.isBlock,cartControllers.showCarts)
 router.post("/cart",userauthentication.userauthentication,cartControllers.addtocart)
 router.post("/cart/remove/:itemId",userauthentication.isBlock,userauthentication.userauthentication,cartControllers.removecartItem)
 router.post("/quantityUpdate/:itemId",userauthentication.isBlock,userauthentication.userauthentication,cartControllers.updateQuantity)
