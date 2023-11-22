@@ -36,7 +36,7 @@ const seeProducts = async (req, res) => {
     const totalPages = Math.ceil(totalProducts / ITEMS_PER_PAGE);
 
     const skip = (page - 1) * ITEMS_PER_PAGE;
-    const product = await products.find().skip(skip).limit(ITEMS_PER_PAGE);
+    const product = await products.find({ status: 'active' }).skip(skip).limit(ITEMS_PER_PAGE);
 
     res.render('admin/products', { product, currentPage: page, totalPages });
   } catch (err) {
@@ -105,8 +105,8 @@ const deleteProduct = async (req, res) => {
       const productId = req.params.id
       await products.findByIdAndUpdate(productId, { status: "deleted" })
   
-      const product = await products.find({ status: 'active' })
-      res.render("admin/products", { product })
+      const product = await products.find()
+      res.redirect('/admin/products')
     }
     catch (error) {
       res.status(500).send('internal server error')
@@ -135,6 +135,27 @@ const getEditProduct = async (req, res) => {
       res.status(500).send("internal server error")
     }
   }
+
+// function for admin to see single product
+
+  const viewSingleProduct = async (req, res) => {
+
+    const product_id = req.params.id
+    console.log("thhis is my product id :", product_id);
+    try {
+      const product = await products.findById(product_id)
+      const allproducts = await products.find()
+  
+  
+      if (product) {
+        res.render('admin/singleProduct', { product, allproducts })
+      }
+    }
+    catch (error) {
+      res.status(500).send("internal server error")
+    }
+  } 
+
 
 
  
@@ -417,6 +438,7 @@ module.exports={
   deleteProduct,
   updateProduct,
   getEditProduct,
+  viewSingleProduct,
 // functions from userController
  getProductss,
  searchProduct,

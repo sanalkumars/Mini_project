@@ -24,7 +24,7 @@ const Login = (req, res) => {
     res.redirect("/admin/dashboard")
   }
   else {
-    const msg = "hai"
+    const msg = " "
     res.render("admin/login", { msg })
   }
 

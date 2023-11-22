@@ -57,6 +57,19 @@
                 <p>
                  <%= product.description %>
                 </p>
+                <p>
+                  
+                  <% if (product.quantity <= 5) { %>
+                    <% if (product.quantity === 1) { %>
+                      <span style="color: red;">Only one more left</span>
+                    <% } else { %>
+                      <span style="color: red;">Only <%= product.quantity %> more left</span>
+                    <% } %>
+                  
+                  <% } else { %>
+                    Item left: <%= product.quantity %>
+                    <% } %>
+                </p>
                 <hr />
       
                 <div class="row mb-4">

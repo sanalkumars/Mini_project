@@ -3,6 +3,18 @@ const { getUsers } = require("../controller/adminController")
 const router = express.Router()
 const multer = require("multer")
 
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, "public/uploads"); // Specifying the destination folder for uploaded images
+    },
+    filename: (req, file, cb) => {
+      cb(null, Date.now() + "-" + file.originalname); // Generate a unique filename
+    },
+  });
+  
+//   const upload = multer({ storage });
+
 const adminController = require("../controller/adminController")
 const orderController = require('../controller/orderController')
 const productController = require('../controller/productController')
@@ -34,6 +46,7 @@ router.get('/error',adminController.getError)
 
 router.get("/products",adminauthenticaton.adminauthenticaton, productController.seeProducts)
 router.get("/add",adminauthenticaton.adminauthenticaton, productController.getProducts)
+router.get("/viewSingleProduct/:id",adminauthenticaton.adminauthenticaton, productController.viewSingleProduct)
 router.post("/add",adminauthenticaton.adminauthenticaton, productController.addProducts)
 router.get("/addproducts",adminauthenticaton.adminauthenticaton, productController.getProducts)
 router.post("/addproducts",adminauthenticaton.adminauthenticaton, upload.fields([{ name: 'image', maxCount: 1}, {name: 'additionalimages', maxCount: 3
