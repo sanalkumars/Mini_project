@@ -29,22 +29,27 @@ const secret_Key = process.env.SECRET_KEY
 // function for getting user orders
 const getUserOrder = async (req, res) => {
   try {
-    // Fetch orders and sort them by createdAt in descending order (most recent first)
-    const order = await orders.find()
-      .populate('products.productId')
-      .populate("userId")
-      .sort({ createdAt: -1 });
+    const recentOrders = await orders.find()
+      .sort({ orderDate: -1 })
+      .populate({
+        path: 'products.productId',
+        model: 'products'
+      })
+      .populate({
+        path: 'userId',
+        model: 'userData'
+      })
+      .exec();
 
-    // Check if any order has been returned
-    // const hasReturnedOrder = order.some(order => order.isReturned);
+    console.log("Recent order user name is:", recentOrders);
 
-    if (!order) {
+    if (!recentOrders || recentOrders.length === 0) {
       throw new Error('No orders found');
     }
 
-    res.render('admin/orderManage', { order });
+    res.render('admin/orderManage', { order: recentOrders });
   } catch (error) {
-    console.error(error); // log the actual error object
+    console.error(error);
     res.status(500).send('Internal Server Error');
   }
 };
@@ -320,9 +325,13 @@ const getMyOrder = async (req, res) => {
       const address = await Address.find({ userId: user._id })
   
       const userId = user._id;
-      const order = await orders.find({ userId }).populate('products.productId');
+      const recentOrders = await orders.aggregate([
+        { $match: { userId } },
+        { $sort: { orderDate: -1 } }, // (most recent first)
+        { $lookup: { from: 'products', localField: 'products.productId', foreignField: '_id', as: 'products' } },
+      ]).exec();
   
-      res.render('user/myorder', { user, address, order })
+      res.render('user/myorder', { user, address, order:recentOrders })
   
   
       // Render the 'myorder' view and pass the order data to it
@@ -337,6 +346,8 @@ const getMyOrder = async (req, res) => {
   }
  
 };
+
+
 
 const cancelOrder = async (req, res) => {
   const orderId = req.params.id;

@@ -90,76 +90,111 @@
 
 
 
- <!-- script for validating the otp form -->
 <script>
-    
+    // Function to start the countdown timer
+    function startCountdown() {
+        let countdown = 60;
+        const countdownDisplay = document.getElementById('countdown');
+        const resendButton = document.getElementById('resendOTP');
+
+        function updateCountdown() {
+            const minutes = Math.floor(countdown / 60).toString().padStart(2, '0');
+            const seconds = (countdown % 60).toString().padStart(2, '0');
+            countdownDisplay.textContent = `${minutes}:${seconds}`;
+        }
+
+        function stopCountdown() {
+            clearInterval(timer);
+            countdownDisplay.textContent = "";
+        }
+
+        function decrementCountdown() {
+            countdown--;
+            updateCountdown();
+            if (countdown === 0) {
+                stopCountdown();
+                // Enable the resend button
+                resendButton.disabled = false;
+                resendButton.classList.remove('btn-secondary');
+                resendButton.classList.add('btn-primary');
+            }
+        }
+
+        updateCountdown();
+        const timer = setInterval(decrementCountdown, 1000);
+
+        return {
+            stop: stopCountdown
+        };
+    }
+
     function validateOTP() {
         const otpInput = document.getElementById("otp");
         const message = document.getElementById("message");
+        const resendButton = document.getElementById("resendOTP");
+
         const otpValue = otpInput.value;
 
-        
         if (!otpValue.match(/^\d+$/)) {
             message.innerText = "OTP must contain only numeric characters.";
             return false;
         } else {
-            message.innerText = "";
-            return true;
+            // Assuming the backend endpoint for OTP verification is '/verifyOTP'
+            fetch('/verifyOTP', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ otp: otpValue }),
+            })
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.isValid) {
+                    message.innerText = "";
+                    // Redirect to home page if the OTP is valid
+                    window.location.href = "/";
+                } else {
+                    message.innerText = "Invalid OTP. Please try again";
+                    // Stop the countdown timer
+                    countdownTimer.stop();
+                    // Enable the resend button
+                    resendButton.disabled = false;
+                    resendButton.classList.remove('btn-secondary');
+                    resendButton.classList.add('btn-primary');
+                }
+            })
+            .catch((err) => {
+                message.innerText = "An error occurred.";
+            });
+
+            // Always return false to prevent form submission
+            return false;
         }
     }
+
+    document.getElementById('resendOTP').addEventListener('click', function() {
+        const generatedOTP = Math.floor(1000 + Math.random() * 900000);
+        console.log(`Generated OTP: ${generatedOTP}`);
+
+        // Start the countdown timer
+        countdownTimer = startCountdown();
+
+        this.disabled = true;
+        this.classList.remove('btn-primary');
+        this.classList.add('btn-secondary');
+
+        fetch('/resendOTP', { method: "POST" })
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById("message").innerText = data.msg;
+            }).catch(err => {
+                document.getElementById("message").innerText = "An error occurred.";
+            });
+    });
+
+    // Start the initial countdown when the page loads
+    let countdownTimer = startCountdown();
 </script>
-
-
-
-
-<script>
-    let timer;                      
-        let countdown = 60; 
-
-        function startCountdown() {
-            timer = setInterval(function() {
-                countdown--;
-                if (countdown >= 0) {
-                    const minutes = Math.floor(countdown / 60).toString().padStart(2, '0');
-                    const seconds = (countdown % 60).toString().padStart(2, '0');
-                    document.getElementById('countdown').textContent =`${minutes}:${seconds}`;
-                }
-                if (countdown === 0) {
-                    clearInterval(timer);
-                    document.getElementById('resendOTP').disabled = false;
-                    document.getElementById('resendOTP').classList.remove('btn-secondary');
-                    document.getElementById('resendOTP').classList.add('btn-primary');
-                }
-            }, 1000);
-        }
-
-        document.getElementById('resendOTP').addEventListener('click', function() {
-           
-            const generatedOTP = Math.floor(1000 + Math.random() * 900000); 
-            console.log(`Generated OTP: ${generatedOTP}`
-            );
-            
-           
-            countdown = 60;
-            startCountdown();
-
-            
-            this.disabled = true;
-            this.classList.remove('btn-primary');
-            this.classList.add('btn-secondary');
-
-            fetch('/resendOTP', {method: "POST"})
-                .then(res => res.json())
-                .then(data => {
-                    document.getElementById("message").innerText = data.msg;
-                }).catch(err => {
-                    document.getElementById("message").innerText = "An error occured.";
-                });
-        });
-
-        startCountdown();
-</script>
-
 
 
 </body>

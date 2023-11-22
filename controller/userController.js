@@ -232,48 +232,42 @@ const loginPost = async (req, res) => {
 
 
 
-
-
-
-
-
-
-
-
-
 const verifyOTP = async (req, res) => {
-  const enteredOTP = req.body.otp;
+  const enteredOTP = parseInt(req.body.otp, 10);
   const storedOTP = req.session.otp;
-  console.log(req.session);
-
+  console.log("entered otp is ",enteredOTP);
+  console.log("entstoredOTPered otp is ",storedOTP);
   try {
-    const user = await userData.findOne({ email: req.session.user });
+      const user = await userData.findOne({ email: req.session.user });
 
-    if (!user) {
-      return res.render("user/otp", { msg: "User not found" });
-    }
+      if (!user) {
+          return res.json({ isValid: false, msg: "User not found" });
+      }
 
-    if (user.blocked) {
-      return res.render("error", {
-        error: "Your account has been blocked. Please contact support.",
-      });
-    }
-    console.log(enteredOTP, storedOTP);
-    if (enteredOTP == storedOTP) {
+      if (user.blocked) {
+          return res.json({
+              isValid: false,
+              msg: "Your account has been blocked. Please contact support.",
+          });
+      }
 
-      res.redirect("/");
-
-    } else {
-
-      res.render("user/otp", { msg: "Invalid OTP. Please try again" });
-    }
+      if (enteredOTP === storedOTP) {
+        
+          // Correct OTP
+          // Redirect to home page
+          return res.json({ isValid: true});
+      } else {
+          // Incorrect OTP
+          return res.json({ isValid: false, msg: "Invalid OTP. Please try again" });
+      }
   } catch (error) {
-    console.error(error);
-    res.send("An error occurred while processing your request.");
+      console.error(error);
+      return res.status(500).json({ isValid: false, msg: "An error occurred during OTP verification." });
   }
 };
 
 // function for generating and sending otp
+
 
 
 

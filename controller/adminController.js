@@ -58,7 +58,7 @@ const LoginPost = async (req, res) => {
   }
   else {
     console.log("wrong details");
-    res.render("admin/signin", { msg: "invalid user name and password" })
+    res.render("admin/login", { msg: "invalid user name and password" })
 
   }
 }
