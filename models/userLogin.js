@@ -26,7 +26,7 @@ const loginSchema = new mongoose.Schema({
     },
     isBlocked:{
         type:Boolean,
-        dafault:false
+        dafault:false 
     },
     wallet: {
         type: mongoose.Schema.Types.ObjectId,

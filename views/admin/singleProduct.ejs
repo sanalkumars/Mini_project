@@ -1,4 +1,10 @@
      
+  <style>
+    #productName{
+      color: white;
+    }
+  </style>
+
             <%- include("../partials/adminHeader.ejs") %>
 
 
@@ -14,7 +20,9 @@
                     <section class="py-5">
                         <div class="container">
                           <div class="row gx-5">
-                           
+                            <h4 id="productName">
+                              <%= product.name %>
+                            </h4>
                             <aside class="col-lg-6 product-images">   
                                           <div class=" d-flex justify-content-center mb-3 zoom-container main-image ">
                                               <div class="border rounded-4 mb-3 d-flex justify-content-center" id="main">
@@ -33,15 +41,14 @@
                               </div>
                               
                               </div>
+                             
                               <!-- thumbs-wrap.// -->
                               <!-- gallery-wrap .end// -->
                            </aside>
-                           
+                         
                             <main class="col-lg-6">
                               <div class="ps-lg-3">
-                                <h4 class="title text-dark">
-                                  <%= product.name %>
-                                </h4>
+                                
                                 <!-- <div class="d-flex flex-row my-3"> -->
                                   <!-- <div class="text-warning mb-1 me-2">
                                     <i class="fa fa-star"></i>

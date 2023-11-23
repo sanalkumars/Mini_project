@@ -21,6 +21,8 @@ router.get("/login",userController.login)
 router.post("/login",userController.loginPost)
 router.get("/signup",userController.signup)
 router.post("/signup",userController.signupPost)
+router.get("/otp",userController.otpsend)
+
 // route for otp generating
 router.post("/verifyOTP",userController.verifyOTP)
 router.post("/resendOTP",userController.resendOTP)
@@ -49,7 +51,7 @@ router.get("/products",productController.getProductss)
 router.get('/filteredProducts/:category',productController.getFilteredProducts);
 router.get("/singleproduct/:id",productController.getSingleProduct)
 router.get("/productss",userauthentication.isBlock,userauthentication.userauthentication,productController.userproductss)
-router.get("/search",userauthentication.isBlock,userauthentication.userauthentication,productController.searchProduct)
+router.get("/search",productController.searchProduct)
 
 
 

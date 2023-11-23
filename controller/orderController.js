@@ -37,7 +37,8 @@ const getUserOrder = async (req, res) => {
       })
       .populate({
         path: 'userId',
-        model: 'userData'
+        model: 'userData',
+        select: 'name',
       })
       .exec();
 
@@ -46,6 +47,7 @@ const getUserOrder = async (req, res) => {
     if (!recentOrders || recentOrders.length === 0) {
       throw new Error('No orders found');
     }
+    
 
     res.render('admin/orderManage', { order: recentOrders });
   } catch (error) {

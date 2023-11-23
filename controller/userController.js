@@ -108,7 +108,10 @@ const sendOTPByEmail = async (email, otp) => {
   }
 }
 
-
+const otpsend=(req,res)=>{
+  const msg= "Please Enter the OTP send to your email "
+  res.render("user/otp",{msg})
+}
 
 
 
@@ -169,9 +172,7 @@ const signupPost = async (req, res) => {
           req.session.otp = otp;
           req.session.requestedOTP = true;
           await sendOTPByEmail(email, otp);
-          res.render("user/otp", {
-            msg: "Please enter the OTP sent to your email",
-          });
+          res.redirect('/otp')
         } else {
           res.render("user/login", { error: "Wrong Password !!!" });
         }
@@ -207,9 +208,7 @@ const loginPost = async (req, res) => {
         req.session.otp = otp;
         req.session.requestedOTP = true;
         await sendOTPByEmail(email, otp);
-        res.render("user/otp", {
-          msg: "Please enter the OTP sent to your email",
-        });
+        res.redirect('/otp')
       } else {
         // Passwords do not match
         res.render("user/login", { error1: "Wrong Password !!!" });
@@ -372,6 +371,7 @@ module.exports = {
   signOut,
   forgotPass,
   getforgotPass,
+  otpsend,
   // confirmOrder,
   // paymentMethod,
  

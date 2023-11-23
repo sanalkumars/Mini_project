@@ -22,7 +22,7 @@
                             <thead>
                                 <tr class="text-white">
                                     <!-- <th scope="col"><input class="form-check-input" type="checkbox"></th> -->
-                                    <th scope="col">Coustomer</th>
+                                    <!-- <th scope="col">Coustomer</th> -->
                                     <th scope="col">Order_ID</th>
                                     <th scope="col">Payment Method</th>
                                     <th scope="col">Amount</th>
@@ -33,7 +33,7 @@
                             <tbody>
                                 <% order.forEach(order => { %>
                                     <tr>
-                                        <td><%= order.userId.name %></td>
+                                        
                                         <td><%= order._id %></td>
                                         <td><%= order.paymentMethod %></td>
                                         <td><%= order.totalPrice %></td>

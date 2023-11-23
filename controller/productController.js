@@ -424,8 +424,9 @@ const searchProduct = async (req, res) => {
     const selectedPriceRange=''
     // Calculate the total number of pages
     const pageCount = Math.ceil(matchedProducts.length / productsPerPage);
+    const selectedCategory= " ";
 
-    res.render('user/productss', { product: currentProducts, msg, currentPage, pageCount,categories,selectedPriceRange });
+    res.render('user/productss', { product: currentProducts, msg, currentPage, pageCount,categories,selectedPriceRange,selectedCategory });
   } catch (err) {
     res.status(500).send('Internal server error');
   }
