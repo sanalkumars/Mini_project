@@ -27,7 +27,7 @@
                 <div class="d-flex justify-content-center mt-5 " style="min-height: 100vh;">
                     <div>
                         
-                        <form id="productForm" action="/admin/editproducts/<%= product.id %>" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        <form id="productForm" action="/admin/editproducts/<%= product.id %>" method="post" enctype="multipart/form-data" class="needs-validation" novalidate onsubmit="return validateForm();">
                             
                             <input type="hidden" id="croppedImageData" name="croppedImageData" value="">
                             <!-- Add your form content here -->
@@ -112,6 +112,82 @@
         <!-- Back to Top -->
         <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
     </div>
+
+<!--script form form validation is -->
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const form = document.getElementById('productForm');
+  
+      form.addEventListener('submit', function (event) {
+        if (!validateForm()) {
+          event.preventDefault();
+        }
+      });
+  
+      function validateForm() {
+        let isValid = true;
+  
+        // Validate Product Name
+        const name = document.getElementById('name').value;
+        if (name.trim() === '') {
+          alert('Please enter a valid Product Name.');
+          isValid = false;
+        }
+  
+        // Validate Category
+        const category = document.getElementById('category').value;
+        if (category.trim() === '') {
+          alert('Please select a valid Category.');
+          isValid = false;
+        }
+  
+        // Validate Description
+        const description = document.getElementById('description').value;
+        if (description.trim() === '') {
+          alert('Please fill this field.');
+          isValid = false;
+        }
+  
+        // Validate Status
+        const status = document.getElementById('status').value;
+        if (status.trim() === '') {
+          alert('Please enter a valid Status.');
+          isValid = false;
+        }
+  
+        // Validate Price
+        const price = parseFloat(document.getElementById('price').value);
+        if (isNaN(price) || price < 0) {
+          alert('Please enter a valid number for Price.');
+          isValid = false;
+        }
+  
+        // Validate Quantity
+        const quantity = parseInt(document.getElementById('quantity').value, 10);
+        if (isNaN(quantity) || quantity < 0) {
+          alert('Please enter a valid  Quantity.');
+          isValid = false;
+        }
+  
+        // Validate Offer
+        const offer = parseInt(document.getElementById('offer').value, 10);
+        if (isNaN(offer) || offer < 0 || offer > 90) {
+          alert('Please enter a valid Offer percentage ');
+          isValid = false;
+        }
+  
+        // Add additional validations as needed
+  
+        return isValid;
+      }
+    });
+  </script>
+  
+
+
+<!--script form form validation is -->
+
   <script>
     function confirmDeleteImage(button) {
         // Confirm deletion with a dialog

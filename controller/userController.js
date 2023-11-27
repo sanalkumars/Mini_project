@@ -23,7 +23,7 @@ const secret_Id = process.env.SECRET_ID
 const secret_Key = process.env.SERECT_KEY
 
 
-
+let data= true;
 
 
 const userHome = async (req, res) => {
@@ -169,7 +169,8 @@ const signupPost = async (req, res) => {
             res.render("user/login", { error: "you are blocked by admin !!!" });
           }
           req.session.user = req.body.email;
-          req.session.otp = otp;
+          // req.session.otp = otp;
+          req.session.otp = { code: otp, timestamp: Date.now() }; 
           req.session.requestedOTP = true;
           await sendOTPByEmail(email, otp);
           res.redirect('/otp')
@@ -205,8 +206,10 @@ const loginPost = async (req, res) => {
           res.render("user/login", { error: "you are blocked by admin !!!" });
         }
         req.session.user = req.body.email;
+        // req.session.otp = { code: otp, timestamp: Date.now() }; 
         req.session.otp = otp;
         req.session.requestedOTP = true;
+        data = true
         await sendOTPByEmail(email, otp);
         res.redirect('/otp')
       } else {
@@ -236,6 +239,14 @@ const verifyOTP = async (req, res) => {
   const storedOTP = req.session.otp;
   console.log("entered otp is ",enteredOTP);
   console.log("entstoredOTPered otp is ",storedOTP);
+
+ const elapsedTime = Math.floor((Date.now() - storedOTP.timestamp) / 1000);
+  if (elapsedTime > 60) {
+    console.log("hai123");
+    return res.json({ isValid: false, msg: "OTP has expired. Please request a new OTP." });
+    console.log(123654);
+  }
+
   try {
       const user = await userData.findOne({ email: req.session.user });
 
@@ -254,7 +265,7 @@ const verifyOTP = async (req, res) => {
         
           // Correct OTP
           // Redirect to home page
-          return res.json({ isValid: true});
+          return res.json({ isValid: true, data});
       } else {
           // Incorrect OTP
           return res.json({ isValid: false, msg: "Invalid OTP. Please try again" });
@@ -341,7 +352,7 @@ const forgotPass = async (req, res) => {
           req.session.otp = otp
           req.session.requestedOTP = true
           await sendOTPByEmail(usermail, otp)
-
+          data= false;
           res.render("user/otp", { msg: "otp for verification have been sent to your email" });
         }
 
@@ -360,6 +371,46 @@ const forgotPass = async (req, res) => {
 }
 
 
+const getError=(req,res)=>{
+ 
+   res.render('user/error')
+}
+
+// functyions for reset password functionality
+
+const getResetPass = (req,res)=>{
+  res.render('user/resetPass')
+}
+
+
+const getResetPassPost = async (req, res) => {
+  try {
+    console.log("hai");
+
+    const userEmail = req.session.user; // Assuming you have the user email in the request body
+
+    const newPassword = req.body.password;
+    const bcryptedPass = await passwordcrypt(newPassword);
+    console.log("ha2i");
+    const updatedUser = await userData.findOneAndUpdate(
+      { email: userEmail },
+      { $set: { password: bcryptedPass } },
+      { new: true }
+    );
+    console.log("ha24i");
+    if (!updatedUser) {
+      return res.redirect("/error"); // Use return to avoid sending multiple responses
+    }
+    console.log("h3463ai");
+    return res.redirect("/login"); // Use return to avoid sending multiple responses
+  } catch (error) {
+    console.error(error);
+    return res.redirect("/error"); // Use return to avoid sending multiple responses
+  }
+};
+
+
+
 module.exports = {
   userHome,
   login,
@@ -372,6 +423,9 @@ module.exports = {
   forgotPass,
   getforgotPass,
   otpsend,
+  getError,
+  getResetPass,
+  getResetPassPost
   // confirmOrder,
   // paymentMethod,
  

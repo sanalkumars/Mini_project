@@ -29,7 +29,7 @@ const getCoupon = async (req, res) => {
 
     try {
       const coupons = await coupon.find()
-      console.log(coupons);
+      
   
   
       res.render('admin/Coupons', { coupons })
@@ -78,22 +78,83 @@ const getCoupon = async (req, res) => {
   };
 
 
+  const deleteCoupon = async (req, res) => {
+    console.log("inside delete coupon:",req.params.id);
+      try {
+          const couponId = req.params.id;
+          console.log(couponId)
+          await coupon.findByIdAndDelete(couponId);
+          res.redirect('/admin/coupons'); 
+      } catch (error) {
+          console.error(error);
+          res.render('admin/404')
+      }
+  };
+
+
 // function from userController
 
 
 
 // function for applying coupon
+// const applyCoupon = async (req, res) => {
+//   try {
+//     // Get the coupon code from the request body
+//     const couponCode = req.body.couponCode;
+//     const totalprice = req.body.totalPrice;
+
+//     const couponData = await coupon.findOne({ couponName: couponCode });
+
+//       // Check if the coupon is expired
+//       const currentDate = new Date();
+//       if (couponData.expiryDate && couponData.expiryDate < currentDate) {
+//         return res.status(400).json({ error: 'Coupon has expired' });
+//       }
+
+//     const couponDiscount = Math.floor((totalprice * couponData.couponValue) / 100);
+//     console.log("coupon discount is :", couponDiscount);
+//     const grantTotal = totalprice - couponDiscount;
+
+//     // Assuming userId is available in your request or from your authentication system
+//     const user = await userData.findOne({ email: req.session.user });
+//     const userId = user._id; // Adjust this based on how you store user information
+
+//     if (!couponData.appliedUsers.includes(userId)) {
+//       // Push the user's ID to the appliedUsers array
+//       couponData.appliedUsers.push(userId);
+
+//       // Save the coupon data with the updated appliedUsers array
+//       await couponData.save();
+//     }
+
+//     res.json({ grantTotal, couponDiscount });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send('Internal Server Error');
+//   }
+// }
 const applyCoupon = async (req, res) => {
   try {
-    // Get the coupon code from the request body
-    const couponCode = req.body.couponCode;
-    const totalprice = req.body.totalPrice;
+    // Get the coupon code and total price from the request body
+    const { couponCode, totalPrice } = req.body;
 
+    // Find the coupon data by coupon code
     const couponData = await coupon.findOne({ couponName: couponCode });
 
-    const couponDiscount = Math.floor((totalprice * couponData.couponValue) / 100);
-    console.log("coupon discount is :", couponDiscount);
-    const grantTotal = totalprice - couponDiscount;
+    // Check if the coupon is expired
+    const currentDate = new Date();
+    if (couponData.expiryDate && couponData.expiryDate < currentDate) {
+      return res.status(400).json({ error: 'Coupon has expired' });
+    }
+
+    // Check if the total price is greater than the minimum value of the coupon
+    if (totalPrice < couponData.minValue) {
+      return res.status(400).json({ error: 'Total price is less than the minimum value required for this coupon' });
+    }
+
+    // Calculate coupon discount and grant total
+    const couponDiscount = Math.floor((totalPrice * couponData.couponValue) / 100);
+    const grantTotal = totalPrice - couponDiscount;
 
     // Assuming userId is available in your request or from your authentication system
     const user = await userData.findOne({ email: req.session.user });
@@ -112,20 +173,12 @@ const applyCoupon = async (req, res) => {
     console.error(error);
     res.status(500).send('Internal Server Error');
   }
-}
-
-const deleteCoupon = async (req, res) => {
-  console.log("inside delete coupon:",req.params.id);
-    try {
-        const couponId = req.params.id;
-        console.log(couponId)
-        await coupon.findByIdAndDelete(couponId);
-        res.redirect('/admin/coupons'); 
-    } catch (error) {
-        console.error(error);
-        res.render('admin/404')
-    }
 };
+
+
+
+
+
 
 
 module.exports={

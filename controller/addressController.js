@@ -111,6 +111,22 @@ const getAddress = async (req, res) => {
     }
   };
 
+ 
+  const deleteAddress=async(req,res)=>{
+    const addressId = req.params.id
+    try{
+
+      await Address.findByIdAndDelete(addressId)
+      res.redirect("/profile")
+
+    }catch(error)
+    {
+         console.log(error);
+         res.redirect('/error')
+    }
+  }
+
+
 
 
 module.exports={
@@ -119,4 +135,5 @@ module.exports={
   showAddress,
   editAddress,
   updateAddress,
+  deleteAddress,
 }

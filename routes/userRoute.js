@@ -17,6 +17,7 @@ const couponController = require('../controller/couponController')
 // route for userController
 
 router.get("/",userController.userHome)
+router.get("/error",userController.getError)
 router.get("/login",userController.login)
 router.post("/login",userController.loginPost)
 router.get("/signup",userController.signup)
@@ -30,13 +31,16 @@ router.get("/signout",userController.signOut)
 router.get("/home",userauthentication.isBlock,userauthentication.userauthentication,userController.userHome)
 router.get("/getforgotpassword",userController.getforgotPass)
 router.post("/forgotpassword",userController.forgotPass)
+router.get("/resetPass",userController.getResetPass)
+router.post("/resetPass",userController.getResetPassPost)
 
 
 
 
 // route for user profileController
 router.get("/profile",userauthentication.isBlock,userauthentication.userauthentication,profileController.getProfile)
-
+router.get("/editProfile",userauthentication.isBlock,userauthentication.userauthentication,profileController.getEditProfile)
+router.post("/editProfile/:id",userauthentication.isBlock,userauthentication.userauthentication,profileController.getEditProfilePost)
 router.get("/changepassword",userauthentication.isBlock,userauthentication.userauthentication,profileController.changepassword)
 router.post("/changepasswordpost",userauthentication.isBlock,userauthentication.userauthentication,profileController.changepasswordpost)
 
@@ -83,6 +87,7 @@ router.get("/addAddress",userauthentication.isBlock,userauthentication.userauthe
 router.post("/addAddress",userauthentication.isBlock,userauthentication.userauthentication,addressController.addAddress)
 router.post("/updateAddress/:id",userauthentication.isBlock,userauthentication.userauthentication,addressController.updateAddress)
 router.get("/editAddress/:id",userauthentication.isBlock,userauthentication.userauthentication,addressController.editAddress)
+router.get("/deleteAddress/:id",userauthentication.isBlock,userauthentication.userauthentication,addressController.deleteAddress)
 
 
 // route for  couponController

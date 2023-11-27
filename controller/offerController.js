@@ -98,7 +98,9 @@ const claimReferenceCode = async (req, res) => {
     if (reference.usedBy.includes(user._id)) {
       return res.status(400).json({ message: "Reference code already used" });
     }
-
+    if (reference.userId.equals(user._id)) {
+      return res.status(400).json({ message: "Cannot claim your own referral code" });
+    }
     // Mark the reference code as used by the current user
     reference.usedBy.push(user._id);
     await reference.save();

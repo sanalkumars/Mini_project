@@ -125,14 +125,21 @@ const getCheckOut = async (req, res) => {
     req.session.productDetails = cartItems;
     const products = cartItems.map((item) => ({ productId: item.productId, quantity: item.quantity }));
 
-    console.log(cartItems, "cartItems");
-    console.log(products);
+   
 
     const address = await Address.find({ userId: user._id });
     const totalPrice = req.session.totalPrice;
     const grantTotal = totalPrice;
-    const coupons = await coupon.find({ appliedUsers: { $nin: [user._id] } });
+    console.log("hello123456");
+    // const coupons = await coupon.find({ appliedUsers: { $nin: [user._id] } });
+    const currentDate = new Date();
+const coupons = await coupon.find({
+  appliedUsers: { $nin: [user._id] },
+  expiryDate: { $gte: currentDate.toISOString() }
+});
 
+    
+     console.log("hello123456");
     // Check if cartItems is empty
     if (cartItems.length === 0) {
       // Redirect to cart page with alert message

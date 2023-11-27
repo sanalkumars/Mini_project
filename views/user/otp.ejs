@@ -134,6 +134,7 @@
         const resendButton = document.getElementById("resendOTP");
 
         const otpValue = otpInput.value;
+        const storedOTP = "<%= locals.storedOTP %>"; 
 
         if (!otpValue.match(/^\d+$/)) {
             message.innerText = "OTP must contain only numeric characters.";
@@ -150,10 +151,16 @@
             .then((res) => res.json())
             .then((data) => {
                 if (data.isValid) {
-                    message.innerText = "";
-                    // Redirect to home page if the OTP is valid
+                message.innerText = "";
+                // Redirect to home page if the OTP is valid
+                if (data.data) {
+                    // If data is true, redirect to home page
                     window.location.href = "/";
                 } else {
+                    // If data is false, redirect to '/resetPass'
+                    window.location.href = "/resetPass";
+                }
+            }else {
                     message.innerText = "Invalid OTP. Please try again";
                     // Stop the countdown timer
                     countdownTimer.stop();

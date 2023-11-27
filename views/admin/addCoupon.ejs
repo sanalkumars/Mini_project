@@ -24,14 +24,13 @@
                 <h1 style="text-align: center; color: rgb(17, 13, 13);">Add New Coupon</h1>
                 <div class="d-flex justify-content-center mt-5 " style="min-height: 100vh;">
                     <div>
-                        
                         <form action="/admin/addCoupons" method="post" id="formCoupon" style="color: black;">
                             <div class="mb-3">
                                 <label for="couponName" class="form-label">Coupon Name*</label>
                                 <input type="text" class="form-control" name="couponName" id="couponName" required>
                             </div>
                             <div class="mb-3">
-                                <label for="couponValue" class="form-label">Amount*</label>
+                                <label for="couponValue" class="form-label">Enter Coupon Percentage*</label>
                                 <input type="text" class="form-control" name="couponValue" id="couponValue" required>
                             </div>
                             <div class="row">
@@ -51,15 +50,40 @@
                             <div class="text-success mb-3"><%= locals.suMessage ? suMessage : " " %></div>
                             <div class="text-danger mb-3"><%= locals.message ? message : " " %></div>
                             <div class="text-center">
-                                <button class="btn btn-success" type="submit">Submit</button>
+                                <button class="btn btn-success" type="button" onclick="validateForm()">Submit</button>
                             </div>
                         </form>
                     </div>
                 </div>
-         
-
-               
             </div>
+            
+            <script>
+                function validateForm() {
+                    var couponName = document.getElementById("couponName").value;
+                    var couponValue = parseFloat(document.getElementById("couponValue").value);
+                    var maxValue = parseFloat(document.getElementById("maxValue").value);
+                    var minValue = parseFloat(document.getElementById("minValue").value);
+            
+                    if (couponName === "" || isNaN(couponValue) || isNaN(maxValue) || isNaN(minValue)) {
+                        alert("Please fill in all fields.");
+                        return false;
+                    }
+            
+                    if (minValue <= 0) {
+                        alert("Please enter a valid minimum value");
+                        return false;
+                    }
+            
+                    if (couponValue <= 0 || couponValue >= 90) {
+                        alert("Please enter a valid percentege for coupon value");
+                        return false;
+                    }
+            
+                    // If all validations pass, submit the form
+                    document.getElementById("formCoupon").submit();
+                }
+            </script>
+            
         
             
 

@@ -301,31 +301,33 @@
 
 
 
-  <script>
+<script>
+  $('#applyCouponButton').on('click', function (event) {
+    event.preventDefault();
 
-    $('#applyCouponButton').on('click', function (event) {
-      event.preventDefault();
+    const couponCode = $('#couponCodeInput').val();
+    const totalPrice = parseFloat($('#totalPrice').text());
 
-      const couponCode = $('#couponCodeInput').val();
-      const totalPrice = parseFloat($('#totalPrice').text());
-
-
-      $.ajax({
-        type: 'POST',
-        url: '/applyCoupon',
-        data: { couponCode: couponCode, totalPrice: totalPrice },
-        success: function (data) {
-
-          $('#grantTotal').text(data.grantTotal);
-          $('#couponDiscount').text(data.couponDiscount);
-        },
-        error: function (error) {
-            
+    $.ajax({
+      type: 'POST',
+      url: '/applyCoupon',
+      data: { couponCode: couponCode, totalPrice: totalPrice },
+      success: function (data) {
+        $('#grantTotal').text(data.grantTotal);
+        $('#couponDiscount').text(data.couponDiscount);
+      },
+      error: function (xhr) {
+        const errorMessage = xhr.responseJSON.error;
+        if (errorMessage) {
+          alert("Insufficient purchase amount to claim this Coupon!!!");
+        } else {
+          alert('An error occurred while applying the coupon.');
         }
-      });
+      }
     });
+  });
+</script>
 
-  </script>
 
 
   <!-- script for sending the data to the backe end through ajax-->

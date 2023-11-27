@@ -41,7 +41,14 @@
                 function applyOffer(categoryId) {
                     var percentage = document.getElementById('percentage_' + categoryId).value;
                     var categoryIdValue = document.getElementById('categoryId_' + categoryId).value;
-        
+                    
+
+                    const offer = parseInt(document.getElementById('offer').value, 10);
+      if (isNaN(offer) || offer < 1 || offer > 90) {
+        alert('Please enter a valid Offer percentage between 1 and 90.');
+        isValid = false;
+      }
+
                     // Make an AJAX request to send the data to the backend
                     var xhr = new XMLHttpRequest();
                     xhr.open('POST', '/admin/applyOffer', true);
@@ -64,4 +71,4 @@
             </script>
 
             <!-- Footer Start -->
-            <%- include("../partials/adminfooter.ejs") %>
+            <%- include("../partials/adminfooter.ejs")%>

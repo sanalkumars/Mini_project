@@ -13,7 +13,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h1 class="card-title">Enter your Address Details</h1>
-                        <form action="/addAddress" method="POST"> 
+                        <form name="addressForm" action="/addAddress" method="POST" onsubmit="return validateForm()" novalidate>
                             <div class="form-group">
                                 <label for="houseName">House Name:</label>
                                 <input type="text" class="form-control" name="houseName" required>
@@ -47,6 +47,58 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function validateForm() {
+            var houseName = document.forms["addressForm"]["houseName"].value;
+            var street = document.forms["addressForm"]["street"].value;
+            var city = document.forms["addressForm"]["city"].value;
+            var state = document.forms["addressForm"]["state"].value;
+            var zip = document.forms["addressForm"]["zip"].value;
+
+            // Trim spaces from the input
+            houseName = houseName.trim();
+            street = street.trim();
+            city = city.trim();
+
+            // Check if any of the required fields are empty
+            if (houseName === "" || street === "" || city === "" || state === "" || zip === "") {
+                alert("All fields must be filled out");
+                return false;
+            }
+
+            // Check if text fields contain only letters
+            if (!/^[a-zA-Z\s]+$/.test(houseName)) {
+                alert("Please enter a valid House name");
+                return false;
+            }
+            if ( !/^[a-zA-Z]+$/.test(street) ) {
+                alert("Please enter a valid street");
+                return false;
+            }
+            if ( !/^[a-zA-Z]+$/.test(city)) {
+                alert("Please enter a valid city name");
+                return false;
+            }
+
+
+            // Check if ZIP Code contains only numbers
+            if (!/^\d+$/.test(zip)) {
+                alert("Please enter a valid zip code!!!");
+                return false;
+            }
+
+            // Check if zip code is exactly 6 characters long
+            if (zip.length !== 6) {
+                alert("ZIP Code must be 6 characters long");
+                return false;
+            }
+
+            // Additional validation logic can be added as needed
+
+            return true;
+        }
+    </script>
 
     <!-- Add Bootstrap JS (optional) -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

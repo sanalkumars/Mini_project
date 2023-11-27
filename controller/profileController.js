@@ -149,12 +149,54 @@ const updatePassword = async (req, res) => {
 };
 
 
+const getEditProfile=  async(req,res)=>{
+
+ try {
+  if (req.session.user) {
+    const user = await userData.findOne({ email: req.session.user })
+     res.render('user/editProfile',{user})
+  }
+ } catch (error) {
+  console.log(error);
+  res.redirect("/error")
+ }
+
+};
+
+const getEditProfilePost = async (req, res) => {
+  try {
+      if (req.session.user) {
+        const userId = req.params.id
+          // Assuming you have the user data available in the request body
+          const { name, email } = req.body;
+
+          
+         
+
+          // Update the user data in the database
+          const updatedUser = await userData.findByIdAndUpdate(
+              userId,
+              { name, email },
+              { new: true } 
+          );
+
+          // Redirect or render as needed
+          res.redirect("/profile"); // Change the route as needed
+      }
+  } catch (error) {
+      console.error(error);
+      res.redirect("/error");
+  }
+};
+
+
   module.exports={
     getProfile,
-    
     changepassword,
     changepasswordpost,
     getchangePass,
     updatePassword,
+    getEditProfile,
+    getEditProfilePost
     
   }
