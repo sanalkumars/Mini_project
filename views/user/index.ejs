@@ -228,13 +228,20 @@ rel="stylesheet"
               <img src="/uploads/<%= product.image %>" alt="<%= product.name %>" class="card-img-top" style="height: 200px; object-fit: contain; width: 100%;">
               <div class="card-body d-flex flex-column">
                 <h3 class="card-title"><%= product.name %></h3>
-                <h5 class="card-title">₹<%= product.price %></h5> <del class="">₹<%= product.realPrice %></del>
+                <h5 class="card-title">₹<%= product.price %></h5> 
+
+                <% if (product.price !==product.realPrice) { %>
+                  <del class="">₹<%= product.realPrice %></del>
+                  <% } %>
+                  
                 <p class="card-text"><%= product.description %></p>
                 <div class="card-footer d-flex align-items-end pt-3 px-0 pb-0 mt-auto">
-                  <form action="/cart" method="post">
+
+                  <form action="/cart" method="post" <% if (product.quantity <= 0) { %>disabled<% } %>>
                     <input type="hidden" name="productId" value="<%= product._id %>">
-                    <button type="submit" class="btn btn-primary shadow-0 me-1">Add to Cart <i class="fa-solid fa-cart-shopping"></i></button>
+                    <button type="submit" class=" btn btn-primary shadow-1 me-1" <% if (product.quantity <= 0) { %>disabled<% } %>>Add to Cart <i class="fa-solid fa-cart-shopping"></i></button>
                   </form>
+                  
                   <form action="/singleproduct/<%= product._id %>">
                     <input type="hidden" name="productId" value="<%= product._id %>">
                     <a href="/singleproduct/<%= product._id %>"><button type="submit" class="btn btn-primary shadow-0 me-1">View Details</button></a>

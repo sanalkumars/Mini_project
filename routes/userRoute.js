@@ -92,6 +92,9 @@ router.get("/deleteAddress/:id",userauthentication.isBlock,userauthentication.us
 
 // route for  couponController
 router.post("/applyCoupon",userauthentication.isBlock,userauthentication.userauthentication, couponController.applyCoupon)
+router.post("/removeCoupon",userauthentication.isBlock,userauthentication.userauthentication, couponController.removeCoupon)
+
+
 
 //route for invoice download
 

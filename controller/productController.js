@@ -275,14 +275,15 @@ const getProductss = async (req, res) => {
     const pageCount = Math.ceil(allProducts.length / productsPerPage);
   const selectedCategory = '';
   const selectedPriceRange= ' ';
-
+   const sortOrder=''
     res.render("user/productss", {
       product: currentProducts,
       currentPage,
       pageCount,
       categories,
       selectedCategory,
-      selectedPriceRange
+      selectedPriceRange,
+      sortOrder
     });
   } catch (err) {
     console.log("Sorry for the error");
@@ -294,37 +295,38 @@ const getProductss = async (req, res) => {
 const getFilteredProducts = async (req, res) => {
   try {
     const selectedCategory = req.params.category;
-    const selectedPriceRange = req.query.priceRange;
+    const sortOrder = req.query.sortOrder;
 
     console.log("Selected category is:", selectedCategory);
-    console.log("Selected price range is:", selectedPriceRange);
+    console.log("Selected sort order is:", sortOrder);
 
     const productsPerPage = 9; // Number of products to display per page
     const currentPage = parseInt(req.query.page) || 1;
 
     let query = { status: 'active' };
 
-    // Add category filter to query if not 'all'
+    // Add case-insensitive category filter to query if not 'all'
     if (selectedCategory !== 'all') {
-      query.category = selectedCategory;
+      const categoryRegex = new RegExp(selectedCategory, 'i');
+      query.category = categoryRegex;
     }
 
     // Fetch products based on the category filter
     let filteredProducts = await products.find(query);
 
-    // Filter and sort products by price range if specified
-    if (selectedPriceRange) {
-      filteredProducts = filterAndSortProducts(filteredProducts, selectedPriceRange);
-    } else {
-      // If no price range is selected, sort products by default (e.g., by ID or another criterion)
-      filteredProducts.sort((a, b) => a._id - b._id);
-    }
-
     const startIndex = (currentPage - 1) * productsPerPage;
     const endIndex = startIndex + productsPerPage;
 
     // Extract the products for the current page
-    const currentProducts = filteredProducts.slice(startIndex, endIndex);
+    let currentProducts;
+
+    // If a sort order is selected, apply sorting to the filtered products
+    if (sortOrder) {
+      currentProducts = sortProducts(filteredProducts, sortOrder).slice(startIndex, endIndex);
+    } else {
+      // If no sort order is selected, apply sorting to all available products
+      currentProducts = sortProducts(await products.find({ status: 'active' }), sortOrder).slice(startIndex, endIndex);
+    }
 
     // Calculate the total number of pages
     const pageCount = Math.ceil(filteredProducts.length / productsPerPage);
@@ -334,7 +336,7 @@ const getFilteredProducts = async (req, res) => {
       product: currentProducts,
       categories: allCategories,
       selectedCategory,
-      selectedPriceRange,
+      sortOrder,
       pageCount,
       currentPage
     });
@@ -344,25 +346,22 @@ const getFilteredProducts = async (req, res) => {
   }
 };
 
-// Helper function to filter and sort products by price range
-const filterAndSortProducts = (products, selectedPriceRange) => {
-  return products.filter(product => {
-    const price = product.price;
 
-    if (selectedPriceRange === '500') {
-      return price <= 500;
-    } else if (selectedPriceRange === '1000') {
-      return price > 500 && price <= 1000;
-    } else if (selectedPriceRange === '2000') {
-      return price > 1000 && price <= 2000;
-    } else if (selectedPriceRange === 'above') {
-      return price > 2000;
+// Helper function to sort products based on price and sort order
+const sortProducts = (products, sortOrder) => {
+  return products.sort((a, b) => {
+    if (sortOrder === 'asc') {
+      return a.price - b.price;
+    } else if (sortOrder === 'desc') {
+      return b.price - a.price;
     }
 
-    return true; // Default: no filtering
-  })
-  .sort((a, b) => a.price - b.price);
+    return 0; // Default: no sorting
+  });
 };
+
+
+
 
 
 
@@ -425,8 +424,8 @@ const searchProduct = async (req, res) => {
     // Calculate the total number of pages
     const pageCount = Math.ceil(matchedProducts.length / productsPerPage);
     const selectedCategory= " ";
-
-    res.render('user/productss', { product: currentProducts, msg, currentPage, pageCount,categories,selectedPriceRange,selectedCategory });
+    const sortOrder=''
+    res.render('user/productss', { product: currentProducts, msg, currentPage, pageCount,categories,selectedPriceRange,selectedCategory ,sortOrder});
   } catch (err) {
     res.status(500).send('Internal server error');
   }

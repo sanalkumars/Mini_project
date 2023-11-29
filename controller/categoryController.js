@@ -76,7 +76,7 @@ const editCategoryPost = async (req, res) => {
         if (!categoryData) {
             return res.status(404).send('Category not found');
         }
-        const categories = await category.find( { isDeleted:false })
+        
          
         res.redirect("/admin/category");
     } catch (error) {

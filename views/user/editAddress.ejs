@@ -82,7 +82,7 @@
     <div class="login-container">
         <h2>Edit Address</h2>
 
-        <form action="/updateaddress/<%= address._id %>" method="POST">
+        <form action="/updateaddress/<%= address._id %>" method="POST"  novalidate>
 
             <div class="form-group">
                 <label for="userName">User Name:</label>
@@ -146,9 +146,68 @@
                 <input type="text" class="form-control" id="zip" name="zip" value="<%= address.zip %>" required>
             </div>
 
-            <button type="submit" class="btn btn-primary">Save Address</button>
+            <button type="submit" class="btn btn-primary" onclick="validateAddressForm(event)">Save Address</button>
         </form>
     </div>
+
+    <script>
+      function validateAddressForm(event) {
+        // Reset previous error messages
+        resetErrorMessages();
+  
+        // Validate User Name
+        const userName = document.getElementById("userName").value.trim();
+        if (userName === "") {
+          displayErrorMessage("Please enter a user name.");
+          event.preventDefault();
+          return false;
+        }
+  
+        // Validate Street
+        const street = document.getElementById("street").value.trim();
+        if (street === "") {
+          displayErrorMessage("Please enter a street address.");
+          event.preventDefault();
+          return false;
+        }
+  
+        // Validate City
+        const city = document.getElementById("city").value.trim();
+        if (city === "") {
+          displayErrorMessage("Please enter a city.");
+          event.preventDefault();
+          return false;
+        }
+  
+        // Validate State
+        const state = document.getElementById("state").value;
+        if (state === "") {
+          displayErrorMessage("Please select a state.");
+          event.preventDefault();
+          return false;
+        }
+  
+        // Validate ZIP Code
+        const zip = document.getElementById("zip").value.trim();
+        if (zip === "" || !/^\d{6}$/.test(zip)) {
+          displayErrorMessage("Please enter a valid ZIP code.");
+          event.preventDefault();
+          return false;
+        }
+  
+        // Allow form submission if validation passes
+        return true;
+      }
+  
+      function displayErrorMessage(message) {
+        alert(message);
+      }
+  
+      function resetErrorMessages() {
+        // Resetting error messages is not applicable when using alerts
+      }
+    </script>
+      
 </body>
 
 </html>

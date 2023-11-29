@@ -22,11 +22,13 @@
                 <h1 style="text-align: center; color: rgb(248, 244, 244);">Available Categories</h1>
                 <div class="d-flex flex-column justify-content-center align-items-center" style="min-height: 100vh;">
                     <div class="form-container d-flex justify-content-center align-items-center mb-4">
-                        <form action="/admin/addcategory" method="post">
-                            <label for="category">Enter the new category:</label>
-                            <input type="text" name="category" id="category" placeholder="New category" required>
-                            <button type="submit" class="btn btn-primary">ADD</button>
-                        </form>
+
+                    <form action="/admin/addcategory" method="post" onsubmit="return validateForm()" novalidate>
+                        <label for="category">Enter the new category:</label>
+                        <input type="text" name="category" id="category" placeholder="New category" required>
+                        <button type="submit" class="btn btn-primary">ADD</button>
+                    </form>
+
                         
                     </div>
                     <div class="text-center">
@@ -87,4 +89,22 @@
         <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
     </div>
 
+    <script>
+        function validateForm() {
+    console.log('validateForm is called');
     
+    var categoryInput = document.getElementById('category');
+    var categoryValue = categoryInput.value.trim();
+
+    // Check if the category input is not empty
+    if (categoryValue === '') {
+        alert('Please enter a category');
+        return false; // Prevent form submission
+    }
+
+    // You can add more complex validation logic here if needed
+
+    return true; // Allow form submission
+}
+
+    </script>

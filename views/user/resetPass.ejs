@@ -50,12 +50,12 @@
 <body>
 
 <div class="container">
-    <form id="resetPasswordForm" action="/resetPass" method="post" novalidate>
+    <form id="resetPasswordForm" action="/resetPass" method="post" onsubmit="validateForm(event)" novalidate>
         <div id="errorMessage" class="error-message"></div>
 
         <div class="form-group">
-            <label for="newPassword">New Password</label>
-            <input type="password" id="newPassword" name="password" class="form-control" required>
+            <label for="password">New Password</label>
+            <input type="password" id="password" name="password" class="form-control" required>
         </div>
 
         <div class="form-group">
@@ -63,32 +63,35 @@
             <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" required>
         </div>
 
-        <button type="submit" class="btn btn-danger" onclick="validateForm()">Change Password</button>
+        <button type="submit" class="btn btn-danger" >Change Password</button>
     </form>
 </div>
     
    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
    <script>
-        function validateForm() {
-            var newPassword = document.getElementById('newPassword').value;
-            var confirmPassword = document.getElementById('confirmPassword').value;
-            var errorMessage = document.getElementById('errorMessage');
+    function validateForm(event) {
+    var newPassword = document.getElementById('password').value;
+    var confirmPassword = document.getElementById('confirmPassword').value;
+    var errorMessage = document.getElementById('errorMessage');
 
-            if (newPassword.trim() === '' || confirmPassword.trim() === '') {
-                errorMessage.textContent = 'Both fields are required.';
-                return false;
-            }
+    if (newPassword.trim() === '' || confirmPassword.trim() === '') {
+        errorMessage.textContent = 'Both fields are required.';
+        event.preventDefault(); // Prevent form submission
+        return false;
+    }
 
-            if (newPassword !== confirmPassword) {
-                errorMessage.textContent = 'Passwords do not match.';
-                return false;
-            }
+    if (newPassword !== confirmPassword) {
+        errorMessage.textContent = 'Passwords do not match.';
+        event.preventDefault(); // Prevent form submission
+        return false;
+    }
 
-            // Clear error message if validation passes
-            errorMessage.textContent = '';
-            return true;
-        }
+    // Clear error message if validation passes
+    errorMessage.textContent = '';
+    return true;
+}
    </script>
+
 
 </body>
 </html>

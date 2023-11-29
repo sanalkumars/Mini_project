@@ -75,20 +75,10 @@ const orderSchema = new mongoose.Schema({
         },
         cancelReason: {
           type: String,
-      },
-  
-       
-          
+      },          
     });
-
-   
-
 
 const orders = new mongoose.model("orders",orderSchema)
 module.exports= orders
-
-
-
-
 
 

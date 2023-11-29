@@ -68,63 +68,68 @@
 </head>
 <body>
 
-    <div class="container" >
-        <h1>Change Password</h1>
-        <h3 class="error-message"><%=locals.errorMessage%></h3>
-        <form action="/changepasswordpost" method="POST">
-            <div class="form-group">
-                <label for="currentPassword">Current Password</label>
-                <input type="password" id="currentPassword" name="currentPassword" required>
-            </div>
+  <!-- ... (your existing HTML code) ... -->
 
-            <div class="form-group">
-                <label for="newPassword">New Password</label>
-                <input type="password" id="newPassword" name="newPassword" required>
-            </div>
+<div class="container">
+    <h1>Change Password</h1>
+    <form action="/changepasswordpost" method="POST" novalidate>
+        <div class="form-group">
+            <label for="currentPassword">Current Password</label>
+            <input type="password" id="currentPassword" name="currentPassword" required>
+            <h3 id="currentPasswordError" class="error-message"></h3>
+        </div>
 
-            <div class="form-group">
-                <label for="confirmPassword">Confirm New Password</label>
-                <input type="password" id="confirmPassword" name="confirmPassword" required>
-            </div>
+        <div class="form-group">
+            <label for="newPassword">New Password</label>
+            <input type="password" id="newPassword" name="newPassword" required>
+            <h3 id="newPasswordError" class="error-message"></h3>
+        </div>
 
-            <button type="submit">Change Password</button>
+        <div class="form-group">
+            <label for="confirmPassword">Confirm New Password</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" required>
+            <h3 id="confirmPasswordError" class="error-message"></h3>
+        </div>
 
-             
-        </form>
-    </div>
+        <button type="submit">Change Password</button>
+    </form>
+</div>
 
-
-
-    <script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
         document.querySelector('form').addEventListener('submit', function (event) {
-          // Clear previous error messages
-          document.querySelectorAll('.error').forEach(errorElement => errorElement.textContent = '');
-      
-          // Validate current password
-          const currentPasswordInput = document.getElementById('currentPassword');
-          if (!currentPasswordInput.value.trim()) {
-            document.getElementById('currentPasswordError').textContent = 'Current Password is required';
-            event.preventDefault();
-          }
-      
-          // Validate new password
-          const newPasswordInput = document.getElementById('newPassword');
-          if (!newPasswordInput.value.trim()) {
-            document.getElementById('newPasswordError').textContent = 'New Password is required';
-            event.preventDefault();
-          }
-      
-          // Validate confirm password
-          const confirmPasswordInput = document.getElementById('confirmPassword');
-          if (!confirmPasswordInput.value.trim()) {
-            document.getElementById('confirmPasswordError').textContent = 'Confirm Password is required';
-            event.preventDefault();
-          } else if (newPasswordInput.value !== confirmPasswordInput.value) {
-            document.getElementById('confirmPasswordError').textContent = 'Passwords do not match';
-            event.preventDefault();
-          }
+            // Clear previous error messages
+            document.querySelectorAll('.error-message').forEach(errorElement => errorElement.textContent = '');
+
+            // Validate current password
+            const currentPasswordInput = document.getElementById('currentPassword');
+            if (!currentPasswordInput.value.trim()) {
+                document.getElementById('currentPasswordError').textContent = 'Current Password is required';
+                event.preventDefault();
+            }
+
+            // Validate new password
+            const newPasswordInput = document.getElementById('newPassword');
+            if (!newPasswordInput.value.trim()) {
+                document.getElementById('newPasswordError').textContent = 'New Password is required';
+                event.preventDefault();
+            }
+
+            // Validate confirm password
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+            if (!confirmPasswordInput.value.trim()) {
+                document.getElementById('confirmPasswordError').textContent = 'Confirm Password is required';
+                event.preventDefault();
+            } else if (newPasswordInput.value !== confirmPasswordInput.value) {
+                document.getElementById('confirmPasswordError').textContent = 'Passwords do not match';
+                event.preventDefault();
+            }
         });
-      </script>
+    });
+</script>
+
+<!-- ... (your existing HTML code) ... -->
+
       
 
 

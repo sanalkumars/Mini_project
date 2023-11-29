@@ -55,10 +55,13 @@
                                 <label for="price">Price:</label>
                                 <input type="number" id="price" name="price" value="<%= product.price %>" class="form-control" required>
                             </div>
+
                             <div class="form-group">
                                 <label for="quantity">Quantity:</label>
-                                <input type="number" id="quantity" name="quantity" value="<%= product.quantity %>" class="form-control" required>
+                                <input type="number" id="quantity" name="quantity" value="<%= product.quantity <= 0 ? 0 : product.quantity %>" class="form-control" required>
                             </div>
+                            
+                            
                             <div class="form-group">
                                 <label for="image">Product Image:</label>
                                 <input type="file" id="image" name="image" accept="image/*" class="form-control-file">
@@ -172,7 +175,7 @@
   
         // Validate Offer
         const offer = parseInt(document.getElementById('offer').value, 10);
-        if (isNaN(offer) || offer < 0 || offer > 90) {
+        if (isNaN(offer) || offer < 0 || offer > 100) {
           alert('Please enter a valid Offer percentage ');
           isValid = false;
         }

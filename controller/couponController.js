@@ -177,6 +177,48 @@ const applyCoupon = async (req, res) => {
 
 
 
+const removeCoupon = async (req, res) => {
+  try {
+    
+    const { totalPrice } = req.body;
+
+   
+    const user = await userData.findOne({ email: req.session.user });
+    const userId = user._id; 
+
+    // Find the coupon data that was previously applied to the user
+    const couponData = await coupon.findOne({
+      appliedUsers: userId,
+    });
+
+    // Check if the user has a coupon applied
+    if (!couponData) {
+      return res.status(400).json({ error: 'No coupon applied to the user' });
+    }
+
+    // Remove the user from the appliedUsers array
+    const userIndex = couponData.appliedUsers.indexOf(userId);
+    if (userIndex !== -1) {
+      couponData.appliedUsers.splice(userIndex, 1);
+    }
+
+    // removing the coupon discount
+    console.log("total price is :",totalPrice);
+    
+    const couponDiscount = Math.floor((totalPrice * couponData.couponValue) / 100);
+    const grantTotal = totalPrice;
+    // grantTotal= totalPrice;
+    console.log("new granttotal is :",grantTotal);
+
+   
+    await couponData.save();
+
+    res.json({ grantTotal, couponDiscount });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+};
 
 
 
@@ -190,4 +232,5 @@ module.exports={
     
     // functions from userController
     applyCoupon,
+    removeCoupon
 }

@@ -48,7 +48,8 @@ const getChart = async (req, res) => {
           {
             $group: {
               _id: { $dateToString: { format: "%Y-%m-%d", date: "$orderDate" } },
-              count: { $sum: 1 }
+              count: { $sum: 1 },
+              totalPrice: { $sum: "$totalPrice" }
             }
           },
           {
@@ -58,13 +59,16 @@ const getChart = async (req, res) => {
             $limit: 30 // Limit to the last 30 days
           }
         ]);
+        
+        console.log("dayChart:", dayChart);
+        
   
         // Aggregate data for the monthly chart
         const monthChart = await orders.aggregate([
           {
             $group: {
               _id: { $dateToString: { format: "%Y-%m", date: "$orderDate" } },
-              count: { $sum: 1 }
+              count: { $sum: 1 },totalPrice: { $sum: "$totalPrice" }
             }
           },
           {
@@ -77,7 +81,7 @@ const getChart = async (req, res) => {
           {
             $group: {
               _id: { $dateToString: { format: "%Y", date: "$orderDate" } },
-              count: { $sum: 1 }
+              count: { $sum: 1 },totalPrice: { $sum: "$totalPrice" }
             }
           },
           {
@@ -90,7 +94,7 @@ const getChart = async (req, res) => {
           {
             $group: {
               _id: "$paymentMethod",
-              count: { $sum: 1 }
+              count: { $sum: 1 },totalPrice: { $sum: "$totalPrice" }
             }
           }
         ]);
@@ -125,7 +129,7 @@ const getChart = async (req, res) => {
           {
             $group: {
               _id: null,
-              totalRevenue: { $sum: "$grandTotal" },
+              totalRevenue: { $sum: "$totalPrice" },
               count: { $sum: 1 } // Debugging: count the documents
             }
           }
@@ -137,19 +141,27 @@ const getChart = async (req, res) => {
   
         const datesDay = dayChart.map(item => item._id);
         const orderCountsDay = dayChart.map(item => item.count);
-        let dayData = { dates: datesDay, orderCounts: orderCountsDay };
+        const totalRevenueDay = dayChart.map(item => item.totalPrice);
+        console.log("totalrevenue day is :",totalRevenueDay);
+
+        let dayData = { dates: datesDay, orderCounts: orderCountsDay,totalRevenue:totalRevenueDay };
   
+
         const datesMonth = monthChart.map(item => item._id);
         const orderCountsMonth = monthChart.map(item => item.count);
-        let monthData = { dates: datesMonth, orderCounts: orderCountsMonth };
+        const totalRevenueMonth = monthChart.map(item => item.totalPrice);
+        let monthData = { dates: datesMonth, orderCounts: orderCountsMonth ,totalRevenue:totalRevenueMonth};
   
         const datesYear = yearChart.map(item => item._id);
         const orderCountsYear = yearChart.map(item => item.count);
-        let yearData = { dates: datesYear, orderCounts: orderCountsYear };
+        const totalRevenueYear = yearChart.map(item => item.totalPrice);
+        let yearData = { dates: datesYear, orderCounts: orderCountsYear, totalRevenue:totalRevenueYear};
   
         const paymentMethodLabels = paymentMethodChart.map(item => item._id);
         const orderCountsByPaymentMethod = paymentMethodChart.map(item => item.count);
-        let paymentMethodData = { labels: paymentMethodLabels, orderCounts: orderCountsByPaymentMethod };
+        const totalRevenuepayment = paymentMethodChart.map(item => item.totalPrice);
+
+        let paymentMethodData = { labels: paymentMethodLabels, orderCounts: orderCountsByPaymentMethod,totalRevenue: totalRevenuepayment};
   
         // Send data as JSON response
         res.json({

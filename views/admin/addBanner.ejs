@@ -13,7 +13,8 @@
     <h1 class="text-center mb-4">Add New Banner</h1>
     <div class="row vh-100 bg-secondary rounded align-items-center justify-content-center mx-0">
       <div class="col-md-6">
-        <form action="/admin/addBanner" method="post" enctype="multipart/form-data">
+        <p id="error-message" style=" color: red;"></p>
+        <form action="/admin/addBanner" method="post" enctype="multipart/form-data" novalidate>
           <!-- Customize the form fields based on your banner model -->
           <div class="form-group">
             <label for="name">Name:</label>
@@ -36,6 +37,57 @@
     </div>
   </div>
   <!-- Improved Styling End -->
+
+  <!--validation script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var form = document.querySelector('form');
+      var errorMessageElement = document.getElementById('error-message');
+  
+      form.addEventListener('submit', function (event) {
+        // Reset previous error messages
+        resetErrorMessages();
+  
+        // Validate Name
+        var name = document.getElementById('name').value.trim();
+        if (name === '') {
+          displayErrorMessage('Please enter a name.');
+          event.preventDefault();
+          return false;
+        }
+  
+        // Validate Image
+        var image = document.getElementById('image').value.trim();
+        if (image === '') {
+          displayErrorMessage('Please select an image.');
+          event.preventDefault();
+          return false;
+        }
+  
+        // Validate Description
+        var description = document.getElementById('description').value.trim();
+        if (description === '') {
+          displayErrorMessage('Please enter a description.');
+          event.preventDefault();
+          return false;
+        }
+  
+        // Allow form submission if validation passes
+        return true;
+      });
+  
+      function displayErrorMessage(message) {
+        errorMessageElement.textContent = message;
+      }
+  
+      function resetErrorMessages() {
+        errorMessageElement.textContent = '';
+      }
+    });
+  </script>
+  
+  <!--validation script -->
+
 
   <!-- Footer Start -->
   <%- include("../partials/adminfooter.ejs") %>

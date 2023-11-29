@@ -43,7 +43,7 @@ const sendCategoryOffer = async (req, res) => {
 
   const applyOffer = async (req, res) => {
     const { categoryId, percentage } = req.body;
-  
+   console.log("inside offerapply");
     try {
       // Find the category by its ID
       const categories = await category.findById(categoryId);
@@ -64,6 +64,9 @@ const sendCategoryOffer = async (req, res) => {
         const realPrice = productss.price
         productss.price = updatedPrice;
         productss.realPrice=realPrice
+        console.log("realprice",realPrice);
+        console.log("realprice",updatedPrice);
+
         await productss.save();
       }
   

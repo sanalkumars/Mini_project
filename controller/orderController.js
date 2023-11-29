@@ -91,7 +91,7 @@ const viewdetails = async (req, res) => {
 
     // Find the order by its ID
     const order = await orders.findById(orderId).populate('products.productId').populate('addressId');
-    console.log(order);
+    
 
     if (!order) {
       res.redirect('/admin/error') // Handle case where order is not found
@@ -187,7 +187,7 @@ const processOrder = async (req, res) => {
       productId: item.productId,
       quantity: item.quantity,
     }));
-
+   console.log("productid is :",cartItems.productId);
     const orderId = generateOrderId()
     console.log("the coustome orderId is :",orderId);
 
