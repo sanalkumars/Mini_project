@@ -51,7 +51,7 @@
 
           <div class="container p-0 m-0 px-1 pb-3">
             <div class="address_Form p-4">
-              <form action="/addAddress" method="post">
+              <form action="/addAddress" method="post" onsubmit="return validateForm()" novalidate>
                 <div class="row d-flex">
                   <div class="col-lg-6 col-12 d-flex flex-column p-2 gap-2 ">
                     <label for="name">Full Name*</label>
@@ -236,6 +236,61 @@
   </section>
 
   <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+<!-- script for address form validation in checkout-->
+<script>
+  function validateForm() {
+      var name = document.getElementsByName('name')[0].value.trim();
+      var houseName = document.getElementsByName('houseName')[0].value.trim();
+      var street = document.getElementsByName('street')[0].value.trim();
+      var city = document.getElementsByName('city')[0].value.trim();
+      var state = document.getElementsByName('state')[0].value;
+      var zip = document.getElementsByName('zip')[0].value.trim();
+
+      // Validate Full Name
+      if (name === '') {
+          alert('Please enter your Full Name');
+          return false;
+      }
+
+      // Validate House Name
+      if (houseName === '') {
+          alert('Please enter your House Name');
+          return false;
+      }
+
+      // Validate Street
+      if (street === '') {
+          alert('Please enter your Street');
+          return false;
+      }
+
+      // Validate City
+      if (city === '') {
+          alert('Please enter your City');
+          return false;
+      }
+
+      // Validate State
+      if (state === '') {
+          alert('Please select your State');
+          return false;
+      }
+
+      // Validate ZIP code
+      if (zip === '' || isNaN(zip)||zip.length!==6) {
+          alert('Please enter a valid ZIP code');
+          return false;
+      }
+
+      // If all validations pass, allow form submission
+      return true;
+  }
+</script>
+
+<!-- script for address form validation in checkout-->
+
+
 <!--script to check wheather the wallet balance is sufficient or not-->
 <script>
  document.getElementById("processOrder").addEventListener("click", function () {

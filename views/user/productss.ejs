@@ -49,11 +49,11 @@
           <label class="form-label" style="color: blue;">Sort by Price:</label>
           <div>
             <input type="radio" id="ascendingOrder" name="sortOrder" value="asc" onchange="sortProducts()" <%= sortOrder === 'asc' ? 'checked' : '' %>>
-            <label for="ascendingOrder">Ascending Order</label>
+            <label for="ascendingOrder">Lower To Higher Price</label>
           </div>
           <div>
             <input type="radio" id="descendingOrder" name="sortOrder" value="desc" onchange="sortProducts()" <%= sortOrder === 'desc' ? 'checked' : '' %>>
-            <label for="descendingOrder">Descending Order</label>
+            <label for="descendingOrder">Higher To Lower Price</label>
           </div>
         </div>
         

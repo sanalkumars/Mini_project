@@ -191,42 +191,81 @@ const signupPost = async (req, res) => {
 };
 
 
+// const loginPost = async (req, res) => {
+//   try {
+//     const { email } = req.body;
+//     const check = await userData.findOne({ email: req.body.email });
+
+//     if (check) {
+//       const result = await bcrypt.compare(req.body.password, check.password);
+//       if (result) {
+//         // Passwords match, perform the rest of your logic
+//         const otp = generateOTP();
+//         console.log(otp);
+//         if (check.isblocked) {
+//           res.render("user/login", { error: "you are blocked by admin !!!" });
+//         }
+//         req.session.user = req.body.email;
+//         // req.session.otp = { code: otp, timestamp: Date.now() }; 
+//         req.session.otp = otp;
+//         req.session.requestedOTP = true;
+//         data = true
+//         await sendOTPByEmail(email, otp);
+//         res.redirect('/otp')
+//       } else {
+//         // Passwords do not match
+//         res.render("user/login", { error1: "Wrong Password !!!" });
+//       }
+//     } else {
+//       // User with the provided email was not found
+//       res.render("user/login", { error1: "User not found !!!" });
+//     }
+//   } catch (error) {
+//     console.error(error);
+
+//     // Log the specific error message
+//     console.error(error.message);
+
+//     // Render an error page or send an appropriate error message
+//     res.render("error", { errorMessage: "An error occurred while processing your request." });
+//   }
+// };
 const loginPost = async (req, res) => {
   try {
-    const { email } = req.body;
-    const check = await userData.findOne({ email: req.body.email });
+    const { email, password } = req.body;
+    const user = await userData.findOne({ email });
 
-    if (check) {
-      const result = await bcrypt.compare(req.body.password, check.password);
-      if (result) {
-        // Passwords match, perform the rest of your logic
+    if (user) {
+      if (user.isBlocked) {
+        console.log("User is blocked");
+        return res.render("user/login", { error1: "You are blocked by admin !!!" });
+      }
+
+      const passwordMatch = await bcrypt.compare(password, user.password);
+
+      if (passwordMatch) {
         const otp = generateOTP();
         console.log(otp);
-        if (check.isblocked) {
-          res.render("user/login", { error: "you are blocked by admin !!!" });
-        }
-        req.session.user = req.body.email;
-        // req.session.otp = { code: otp, timestamp: Date.now() }; 
+
+        req.session.user = email;
         req.session.otp = otp;
+        data= true
         req.session.requestedOTP = true;
-        data = true
+
         await sendOTPByEmail(email, otp);
-        res.redirect('/otp')
+        
+        return res.redirect('/otp');
       } else {
         // Passwords do not match
-        res.render("user/login", { error1: "Wrong Password !!!" });
+        return res.render("user/login", { error1: "Wrong Password !!!" });
       }
     } else {
       // User with the provided email was not found
-      res.render("user/login", { error1: "User not found !!!" });
+      return res.render("user/login", { error1: "User not found !!!" });
     }
   } catch (error) {
     console.error(error);
-
-    // Log the specific error message
     console.error(error.message);
-
-    // Render an error page or send an appropriate error message
     res.render("error", { errorMessage: "An error occurred while processing your request." });
   }
 };

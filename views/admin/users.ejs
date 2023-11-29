@@ -56,7 +56,7 @@
                         </div>
                     </div>
                 </div>
-                <script>
+                <!-- <script>
                     const buttons = document.querySelectorAll("button");
                 
                     buttons.forEach(button => {
@@ -81,6 +81,41 @@
                                 }
                             })
                             .catch(error => {
+                                console.error(error);
+                            });
+                        });
+                        
+                    });
+                    
+                </script> -->
+                <script>
+                    const buttons = document.querySelectorAll("button");
+                
+                    buttons.forEach(button => {
+                        button.addEventListener("click", () => {
+                            const userId = button.getAttribute("data-user-id");
+                            const userBlocked = button.getAttribute("data-user-blocked") === "true";
+                
+                            // Toggle the button text and data attribute immediately.
+                            button.setAttribute("data-user-blocked", !userBlocked);
+                            button.textContent = userBlocked ? 'Unblock' : 'Block';
+                
+                            // Send an AJAX request to your server based on the updated button status.
+                            const url = userBlocked ? `/admin/unblock/${userId}` : `/admin/block/${userId}`;
+                
+                            fetch(url, {
+                                method: "GET",
+                            })
+                            .then(response => {
+                                if (response.status !== 200) {
+                                    // If the request fails, revert the button text and data attribute.
+                                    button.setAttribute("data-user-blocked", userBlocked);
+                                    button.textContent = userBlocked ? 'Block' : 'Unblock';
+                                    console.error("Request failed.");
+                                }
+                            })
+                            .catch(error => {
+                                // Handle errors or display a message if the request fails.
                                 console.error(error);
                             });
                         });
