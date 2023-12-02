@@ -34,6 +34,7 @@
                             <div class="form-group">
                                 <label for="name">Product Name:</label>
                                 <input type="text" id="name" name="name" value="<%= product.name %>" class="form-control" required>
+                                <span id="nameError" class="text-danger error-message"></span>
                             </div>
                             <div class="form-group">
                                 <label for="category">Category:</label>
@@ -42,23 +43,28 @@
                                     <option value="Clothing" <%= product.category === 'Clothing' ? 'selected' : '' %>>Clothing</option>
                                     <option value="Supplements" <%= product.category === 'Supplements' ? 'selected' : '' %>>Supplements</option>
                                 </select>
+                                <span id="categoryError" class="text-danger error-message"></span>
                             </div>
                             <div class="form-group">
                                 <label for="description">Description:</label>
                                 <textarea id="description" name="description" rows="6" cols="40" class="form-control" required><%= product.description %></textarea>
+                                <span id="descriptionError" class="text-danger error-message"></span>
                             </div>
                             <div class="form-group">
                                 <label for="status">Status:</label>
                                 <input type="text" id="status" name="status" value="<%= product.status %>" class="form-control" required>
+                                <span id="statusError" class="text-danger error-message"></span>
                             </div>
                             <div class="form-group">
                                 <label for="price">Price:</label>
                                 <input type="number" id="price" name="price" value="<%= product.price %>" class="form-control" required>
+                                <span id="priceError" class="text-danger error-message"></span>
                             </div>
 
                             <div class="form-group">
                                 <label for="quantity">Quantity:</label>
                                 <input type="number" id="quantity" name="quantity" value="<%= product.quantity <= 0 ? 0 : product.quantity %>" class="form-control" required>
+                                <span id="quantityError" class="text-danger error-message"></span>
                             </div>
                             
                             
@@ -96,6 +102,7 @@
                             <div class="mb-3">
                                 <label for="offer" class="form-label">Product Offer  </label>
                                 <input type="number" id="offer" name="offer" class="form-control" value="<%= product.offer%>" min="0" max="100">
+                                <span id="offerError" class="text-danger error-message"></span>
                             </div>
                             <br>
                             <button type="submit" class="btn btn-primary">Update Product</button>
@@ -118,74 +125,80 @@
 
 <!--script form form validation is -->
 
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-      const form = document.getElementById('productForm');
-  
-      form.addEventListener('submit', function (event) {
-        if (!validateForm()) {
-          event.preventDefault();
+        const form = document.getElementById('productForm');
+
+        form.addEventListener('submit', function (event) {
+            if (!validateForm()) {
+                event.preventDefault();
+            }
+        });
+
+        function validateForm() {
+            let isValid = true;
+
+            // Reset previous error messages
+            document.querySelectorAll('.error-message').forEach(function (element) {
+                element.innerText = '';
+            });
+
+            // Validation for Product Name
+            const name = document.getElementById('name').value;
+            if (name.trim() === '') {
+                isValid = false;
+                document.getElementById('nameError').innerText = 'Please enter a valid Product Name.';
+            }
+
+            // Validation for Category
+            const category = document.getElementById('category').value;
+            if (category.trim() === '') {
+                isValid = false;
+                document.getElementById('categoryError').innerText = 'Please select a valid Category.';
+            }
+
+            // Validation for Description
+            const description = document.getElementById('description').value;
+            if (description.trim() === '') {
+                isValid = false;
+                document.getElementById('descriptionError').innerText = 'Enter some valid description .';
+            }
+
+            // Validation for Status
+            const status = document.getElementById('status').value;
+            if (status.trim() === '') {
+                isValid = false;
+                document.getElementById('statusError').innerText = ' Enter a valid Status.';
+            }
+
+            // Validation for Price
+            const price = parseFloat(document.getElementById('price').value);
+            if (isNaN(price) || price < 0) {
+                isValid = false;
+                document.getElementById('priceError').innerText = 'Enter a valid number for Price.';
+            }
+
+            // Validation for Quantity
+            const quantity = parseInt(document.getElementById('quantity').value, 10);
+            if (isNaN(quantity) || quantity < 0) {
+                isValid = false;
+                document.getElementById('quantityError').innerText = 'Enter a valid Quantity.';
+            }
+
+            // Validation for Offer
+            const offer = parseInt(document.getElementById('offer').value, 10);
+            if (isNaN(offer) || offer < 0 || offer > 100) {
+                isValid = false;
+                document.getElementById('offerError').innerText = 'Enter a valid Offer percentage.';
+            }
+
+            // Add additional validations as needed
+
+            return isValid;
         }
-      });
-  
-      function validateForm() {
-        let isValid = true;
-  
-        // Validate Product Name
-        const name = document.getElementById('name').value;
-        if (name.trim() === '') {
-          alert('Please enter a valid Product Name.');
-          isValid = false;
-        }
-  
-        // Validate Category
-        const category = document.getElementById('category').value;
-        if (category.trim() === '') {
-          alert('Please select a valid Category.');
-          isValid = false;
-        }
-  
-        // Validate Description
-        const description = document.getElementById('description').value;
-        if (description.trim() === '') {
-          alert('Please fill this field.');
-          isValid = false;
-        }
-  
-        // Validate Status
-        const status = document.getElementById('status').value;
-        if (status.trim() === '') {
-          alert('Please enter a valid Status.');
-          isValid = false;
-        }
-  
-        // Validate Price
-        const price = parseFloat(document.getElementById('price').value);
-        if (isNaN(price) || price < 0) {
-          alert('Please enter a valid number for Price.');
-          isValid = false;
-        }
-  
-        // Validate Quantity
-        const quantity = parseInt(document.getElementById('quantity').value, 10);
-        if (isNaN(quantity) || quantity < 0) {
-          alert('Please enter a valid  Quantity.');
-          isValid = false;
-        }
-  
-        // Validate Offer
-        const offer = parseInt(document.getElementById('offer').value, 10);
-        if (isNaN(offer) || offer < 0 || offer > 100) {
-          alert('Please enter a valid Offer percentage ');
-          isValid = false;
-        }
-  
-        // Add additional validations as needed
-  
-        return isValid;
-      }
     });
-  </script>
+</script>
   
 
 

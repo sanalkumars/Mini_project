@@ -28,23 +28,28 @@
                             <div class="mb-3">
                                 <label for="couponName" class="form-label">Coupon Name*</label>
                                 <input type="text" class="form-control" name="couponName" id="couponName" required>
+                                <span id="couponNameError" class="text-danger"></span>
                             </div>
                             <div class="mb-3">
                                 <label for="couponValue" class="form-label">Enter Coupon Percentage*</label>
                                 <input type="text" class="form-control" name="couponValue" id="couponValue" required>
+                                <span id="couponValueError" class="text-danger"></span>
                             </div>
                             <div class="row">
                                 <div class="col-md-4 mb-3">
                                     <label for="maxValue" class="form-label">Max Value*</label>
                                     <input type="text" class="form-control" name="maxValue" id="maxValue" required>
+                                    <span id="maxValueError" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label for="minValue" class="form-label">Min Value*</label>
                                     <input type="text" class="form-control" name="minValue" id="minValue" required>
+                                    <span id="minValueError" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label for="expiryDate" class="form-label">Expiry Date*</label>
                                     <input type="date" class="form-control" name="expiryDate" id="expiryDate" required>
+                                    <span id="expiryDateError" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="text-success mb-3"><%= locals.suMessage ? suMessage : " " %></div>
@@ -59,26 +64,44 @@
             
             <script>
                 function validateForm() {
+                    // Reset error messages
+                    document.getElementById("couponNameError").innerText = "";
+                    document.getElementById("couponValueError").innerText = "";
+                    document.getElementById("maxValueError").innerText = "";
+                    document.getElementById("minValueError").innerText = "";
+                    document.getElementById("expiryDateError").innerText = "";
+
                     var couponName = document.getElementById("couponName").value;
                     var couponValue = parseFloat(document.getElementById("couponValue").value);
                     var maxValue = parseFloat(document.getElementById("maxValue").value);
                     var minValue = parseFloat(document.getElementById("minValue").value);
-            
-                    if (couponName === "" || isNaN(couponValue) || isNaN(maxValue) || isNaN(minValue)) {
-                        alert("Please fill in all fields.");
+
+                    if (couponName === "") {
+                        document.getElementById("couponNameError").innerText = "Please enter a coupon name.";
                         return false;
                     }
-            
-                    if (minValue <= 0) {
-                        alert("Please enter a valid minimum value");
+
+                    if (isNaN(couponValue) || couponValue <= 0 || couponValue >= 100) {
+                        document.getElementById("couponValueError").innerText = "Please enter a valid percentage for coupon value.";
                         return false;
                     }
-            
-                    if (couponValue <= 0 || couponValue >= 100) {
-                        alert("Please enter a valid percentege for coupon value");
+
+                    if (isNaN(maxValue)) {
+                        document.getElementById("maxValueError").innerText = "Please enter a valid max value.";
                         return false;
                     }
-            
+
+                    if (isNaN(minValue) || minValue <= 0) {
+                        document.getElementById("minValueError").innerText = "Please enter a valid minimum value.";
+                        return false;
+                    }
+
+                    var expiryDate = document.getElementById("expiryDate").value;
+                    if (expiryDate === "") {
+                        document.getElementById("expiryDateError").innerText = "Please enter the expiry date.";
+                        return false;
+                    }
+
                     // If all validations pass, submit the form
                     document.getElementById("formCoupon").submit();
                 }

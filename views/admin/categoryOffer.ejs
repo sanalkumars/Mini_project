@@ -15,6 +15,7 @@
             <div class="container-fluid pt-4 px-4">
                 <div class="row vh-100 bg-secondary rounded align-items-center justify-content-center mx-0">
                     <div class="col-md-8">
+                        <p id="errorMsg" style="text-align: center; color: red;"></p>
                         <h1 class="text-center mb-4">Active Categories</h1>
                         <ul class="list-group">
                             <% activeCategories.forEach(category => { %>
@@ -40,14 +41,17 @@
             <script>
                 function applyOffer(categoryId) {
                     var percentageInput = document.getElementById('percentage_' + categoryId);
+                    var errorMsg = document.getElementById('errorMsg');
                     var percentage = percentageInput.value;
                     var categoryIdValue = document.getElementById('categoryId_' + categoryId).value;
-            
-                    // Validate the offer percentage
-                    if (percentage < 1 || percentage > 100 || isNaN(percentage)) {
-                        alert('Please enter a valid offer percentage!!!.');
+
+                  // Validate the offer percentage
+                     if (percentage < 1 || percentage > 100 || isNaN(percentage)) {
+                      errorMsg.textContent = 'Please enter a valid offer percentage.';
                         return;
-                    }
+                      } else {
+                              errorMsg.textContent = ''; // Clear previous error message
+                      }
             
                     // Make an AJAX request to send the data to the backend
                     var xhr = new XMLHttpRequest();

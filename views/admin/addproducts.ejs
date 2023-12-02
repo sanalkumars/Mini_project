@@ -8,106 +8,134 @@
     <%- include("../partials/adminHeader.ejs") %>
 
 <div class="container my-5">
-    <div class="row justify-content-center">
+
+   <div class="row justify-content-center">
         <div class="col-md-8">
-            
+
             <div class="card">
                 <div class="card-header bg-primary text-white">
                     <h3 class="text-center">Add products</h3>
                 </div>
 
                 <div class="card-body">
-                     <h1 style="align-items: center;">Add Product</h1>
-    <form id="productForm" action="/admin/addproducts" method="post" enctype="multipart/form-data" novalidate>
-        <!-- Add the 'enctype' attribute for handling file uploads -->
+                    <h1 style="align-items: center;">Add Product</h1>
+                    <form id="productForm" action="/admin/addproducts" method="post" enctype="multipart/form-data" novalidate>
+                        <!-- Add the 'enctype' attribute for handling file uploads -->
 
-        <label for="name">Product Name:</label>
-        <input type="text" id="productName" name="name" required><br>
+                        <div class="form-group">
+                            <label for="productName">Product Name:</label>
+                            <input type="text" id="productName" name="name" class="form-control" required>
+                            <span id="productNameError" class="text-danger error-message"></span>
+                        </div>
 
-        <label for="category">Category:</label>
-        <select id="category" name="category" required>
-            <% categories.forEach(categories =>{%>
-            <option value="<%=categories.category %>"><%= categories.category %></option>
-            <% } ) %>
-        </select><br>
-        <label for="message">Description:</label>
-        <textarea id="message" name="description" rows="6" cols="40" required></textarea><br>
-        
-        <span id="priceError" style="color: red;"></span> <br>
-        <label for="price">Price:</label>
-        <input type="number" id="price" name="price" required><br>
-        
+                        <div class="form-group">
+                            <label for="category">Category:</label>
+                            <select id="category" name="category" class="form-control" required>
+                                <% categories.forEach(categories =>{%>
+                                <option value="<%=categories.category %>"><%= categories.category %></option>
+                                <% } ) %>
+                            </select>
+                            <span id="categoryError" class="text-danger error-message"></span>
+                        </div>
 
-        <label for="quantity">Quantity:</label>
-        <input type="number" id="quantity" name="quantity" required><br>
+                        <div class="form-group">
+                            <label for="message">Description:</label>
+                            <textarea id="message" name="description" rows="6" cols="40" class="form-control" required></textarea>
+                            <span id="descriptionError" class="text-danger error-message"></span>
+                        </div>
 
-        <label for="image">Product Image:</label>
-        <input type="file" id="image" name="image" accept="image/*" required><br> 
+                        <div class="form-group">
+                            <label for="price">Price:</label>
+                            <input type="number" id="price" name="price" class="form-control" required>
+                            <span id="priceError" class="text-danger error-message"></span>
+                        </div>
 
-        <label for="additionalimages">Additional  Images:</label>
-        <input type="file" id="additionalimages" name="additionalimages" accept="image/*" multiple required><br> 
-        <button class="btn btn-primary" type="submit">Add Product</button>
-    </form>
+                        <div class="form-group">
+                            <label for="quantity">Quantity:</label>
+                            <input type="number" id="quantity" name="quantity" class="form-control" required>
+                            <span id="quantityError" class="text-danger error-message"></span>
+                        </div>
 
+                        <div class="form-group">
+                            <label for="image">Product Image:</label>
+                            <input type="file" id="image" name="image" accept="image/*" class="form-control" required>
+                            <span id="mainImageError" class="text-danger error-message"></span>
+                        </div>
 
+                        <div class="form-group">
+                            <label for="additionalimages">Additional Images:</label>
+                            <input type="file" id="additionalimages" name="additionalimages" accept="image/*" multiple class="form-control" required>
+                            <span id="additionalImagesError" class="text-danger error-message"></span>
+                        </div>
+
+                        <button class="btn btn-primary" type="submit">Add Product</button>
+                    </form>
                 </div>
 
             </div>
         </div>
-    </div>
+    
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+      document.addEventListener("DOMContentLoaded", function () {
           const productForm = document.getElementById("productForm");
-      
-          productForm.addEventListener("submit", function (event) {
-            // Reset previous error messages
-            document.getElementById("priceError").textContent = "";
-      
-            // Validate Product Name
-            const productName = document.getElementById("productName").value.trim();
-            if (productName === "") {
-              alert("Please enter a product name.");
-              event.preventDefault();
-              return false;
-            }
-      
-            // Validate Price
-            const price = document.getElementById("price").value.trim();
-            if (isNaN(price) || price <= 0) {
-              document.getElementById("priceError").textContent =
-                "Please enter a valid price greater than 0.";
-              event.preventDefault();
-              return false;
-            }
-      
-            // Validate Quantity
-            const quantity = document.getElementById("quantity").value.trim();
-            if (isNaN(quantity) || quantity <= 0) {
-              alert("Please enter a valid quantity .");
-              event.preventDefault();
-              return false;
-            }
-      
-            // Validate Main Image
-            const mainImage = document.getElementById("image").value.trim();
-            if (mainImage === "") {
-              alert("Please select a main product image.");
-              event.preventDefault();
-              return false;
-            }
-      
-            // Validate Additional Images
-            const additionalImages = document.getElementById("additionalimages").files;
-            if (additionalImages.length === 0) {
-              alert("Please select at least one additional product image.");
-              event.preventDefault();
-              return false;
-            }
-      
-            return true; // Allow form submission
-          });
-        });
-      </script>
-      
-    <%- include("../partials/adminfooter.ejs") %>
 
+          productForm.addEventListener("submit", function (event) {
+              // Reset previous error messages
+              document.querySelectorAll('.error-message').forEach(function (element) {
+                  element.innerText = '';
+              });
+
+              // Validate Product Name
+              const productName = document.getElementById("productName").value.trim();
+              if (productName === "") {
+                  document.getElementById("productNameError").textContent = 'Please enter a product name.';
+                  event.preventDefault();
+              }
+
+              // Validate Category
+              const category = document.getElementById("category").value.trim();
+              if (category === "") {
+                  document.getElementById("categoryError").textContent = 'Please select a valid category.';
+                  event.preventDefault();
+              }
+
+              // Validate Description
+              const description = document.getElementById("message").value.trim();
+              if (description === "") {
+                  document.getElementById("descriptionError").textContent = 'Please enter a product description.';
+                  event.preventDefault();
+              }
+
+              // Validate Price
+              const price = parseFloat(document.getElementById("price").value.trim());
+              if (isNaN(price) || price <= 0) {
+                  document.getElementById("priceError").textContent = 'Please enter a valid price greater than 0.';
+                  event.preventDefault();
+              }
+
+              // Validate Quantity
+              const quantity = parseInt(document.getElementById("quantity").value.trim(), 10);
+              if (isNaN(quantity) || quantity <= 0) {
+                  document.getElementById("quantityError").textContent = 'Please enter a valid quantity.';
+                  event.preventDefault();
+              }
+
+              // Validate Main Image
+              const mainImage = document.getElementById("image").value.trim();
+              if (mainImage === "") {
+                  document.getElementById("mainImageError").textContent = 'Please select a main product image.';
+                  event.preventDefault();
+              }
+
+              // Validate Additional Images
+              const additionalImages = document.getElementById("additionalimages").files;
+              if (additionalImages.length === 0) {
+                  document.getElementById("additionalImagesError").textContent = 'Please select at least one additional product image.';
+                  event.preventDefault();
+              }
+          });
+      });
+  </script>
+      </div>
+    <%- include("../partials/adminfooter.ejs") %>
+  </div>

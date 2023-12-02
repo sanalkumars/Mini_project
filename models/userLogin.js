@@ -1,5 +1,7 @@
 const mongoose = require("mongoose")
 
+ const DB_URL= process.env.ATLASDB_URL
+// mongoose.connect(DB_URL)
 mongoose.connect("mongodb://127.0.0.1:27017/BE_FIT")
 .then(()=>{
     console.log("mongodb connected");
