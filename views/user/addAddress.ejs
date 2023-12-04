@@ -17,14 +17,17 @@
                             <div class="form-group">
                                 <label for="houseName">House Name:</label>
                                 <input type="text" class="form-control" name="houseName" required>
+                                <div class="error-message text-danger " id="houseNameError"></div>
                             </div>
                             <div class="form-group">
                                 <label for="street">Street:</label>
                                 <input type="text" class="form-control" name="street" required>
+                                <div class="error-message text-danger" id="streetError"></div>
                             </div>
                             <div class="form-group">
                                 <label for="city">City:</label>
                                 <input type="text" class="form-control" name="city" required>
+                                <div class="error-message text-danger" id="cityError"></div>
                             </div>
                             <div class="form-group">
                                 <label for="state">State:</label>
@@ -37,6 +40,7 @@
                             <div class="form-group">
                                 <label for="zip">ZIP Code:</label>
                                 <input type="text" class="form-control" name="zip" required>
+                                <div class="error-message  text-danger" id="zipError"></div>
                             </div>
                             <div class="form-group">
                                 <button type="submit" class="btn btn-primary">save</button>
@@ -62,39 +66,31 @@
             city = city.trim();
 
             // Check if any of the required fields are empty
-            if (houseName === "" || street === "" || city === "" || state === "" || zip === "") {
-                alert("All fields must be filled out");
-                return false;
-            }
+            document.getElementById("houseNameError").innerHTML = houseName === "" ? "House name is required" : "";
+            document.getElementById("streetError").innerHTML = street === "" ? "Street is required" : "";
+            document.getElementById("cityError").innerHTML = city === "" ? "City name is required" : "";
+            document.getElementById("zipError").innerHTML = zip === "" ? "ZIP Code is required" : "";
 
             // Check if text fields contain only letters
-            if (!/^[a-zA-Z\s]+$/.test(houseName)) {
-                alert("Please enter a valid House name");
-                return false;
-            }
-            if ( !/^[a-zA-Z]+$/.test(street) ) {
-                alert("Please enter a valid street");
-                return false;
-            }
-            if ( !/^[a-zA-Z]+$/.test(city)) {
-                alert("Please enter a valid city name");
-                return false;
-            }
-
+            document.getElementById("houseNameError").innerHTML += !/^[a-zA-Z\s]+$/.test(houseName) ? "Please enter a valid House name" : "";
+            document.getElementById("streetError").innerHTML += !/^[a-zA-Z]+$/.test(street) ? "Please enter a valid street" : "";
+            document.getElementById("cityError").innerHTML += !/^[a-zA-Z]+$/.test(city) ? "Please enter a valid city name" : "";
 
             // Check if ZIP Code contains only numbers
-            if (!/^\d+$/.test(zip)) {
-                alert("Please enter a valid zip code!!!");
-                return false;
-            }
+            document.getElementById("zipError").innerHTML += !/^\d+$/.test(zip) ? "Please enter a valid zip code!!!" : "";
 
             // Check if zip code is exactly 6 characters long
-            if (zip.length !== 6) {
-                alert("ZIP Code must be 6 characters long");
-                return false;
-            }
+            document.getElementById("zipError").innerHTML += zip.length !== 6 ? "ZIP Code must be 6 characters long" : "";
 
             // Additional validation logic can be added as needed
+
+            // Check if there are any error messages
+            var errorMessages = document.querySelectorAll('.error-message');
+            for (var i = 0; i < errorMessages.length; i++) {
+                if (errorMessages[i].innerHTML !== "") {
+                    return false; // Return false if there are errors
+                }
+            }
 
             return true;
         }
