@@ -1,5 +1,5 @@
 const express = require("express")
-const { getUsers } = require("../controller/adminController")
+// const { getUsers } = require("../controller/adminController")
 const router = express.Router()
 const multer = require("multer")
 
