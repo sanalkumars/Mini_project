@@ -8,7 +8,7 @@ const Cropper = require('cropperjs');
 const banner = require('../models/banner')
 // const orders = require("../models/order")
 
-const upload = multer({ dest: "/public/uploads" })
+const upload = multer({ dest: "public/uploads" })
 
 // function for rendering 404 error
 
