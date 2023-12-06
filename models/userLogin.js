@@ -1,8 +1,8 @@
 const mongoose = require("mongoose")
 
  const DB_URL= process.env.ATLASDB_URL
-  mongoose.connect(DB_URL)
-// mongoose.connect("mongodb://127.0.0.1:27017/BE_FIT")
+//   mongoose.connect(DB_URL)
+ mongoose.connect("mongodb://127.0.0.1:27017/BE_FIT")
 .then(()=>{
     console.log("mongodb connected");
 })
@@ -19,7 +19,7 @@ const loginSchema = new mongoose.Schema({
     },
     email:{
         type:String,
-        required:true,
+        required:true, 
        
     },
     password:{

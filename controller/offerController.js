@@ -32,7 +32,7 @@ const sendCategoryOffer = async (req, res) => {
     try {
       const activeCategories = await category.find({ isDeleted: false });
       const categories = await category.find();
-      res.render('admin/categoryoffer', { activeCategories, categories });
+      res.render('admin/categoryOffer', { activeCategories, categories });
     } catch (error) {
       console.error(error);
       res.status(500).send('Internal Server Error');
